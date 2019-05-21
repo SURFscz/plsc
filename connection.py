@@ -20,7 +20,11 @@ class Connection(object):
         passwd = config['passwd']
 
         self.c = ldap.initialize(uri)
-        self.c.simple_bind_s(binddn, passwd)
+
+        if binddn == 'external':
+            self.c.sasl_external_bind_s()
+        else:
+            self.c.simple_bind_s(binddn, passwd)
 
     def search(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
         if not basedn:

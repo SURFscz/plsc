@@ -1,4 +1,4 @@
-import os, hashlib
+import os, hashlib, json
 import ldap
 from base64 import b64encode
 
@@ -19,10 +19,22 @@ def dn2rdns(dn):
 
 def find_cos(c, service):
     cos = {}
-    r = c.search(None, "(&(objectClass=organization)(labeledURI={}))".format(service), ['o','dnQualifier'])
+    r = c.search(None, "(&(objectClass=organization)(labeledURI={}))".format(service), ['o','dnQualifier','description'])
     for dn, entry in r:
         rdns = dn2rdns(dn)
-        cos[rdns['o'][0]] = entry['dnQualifier']
+        j = entry.get('description', None)
+        description = {}
+        if j:
+            try:
+                description = json.loads(j[0].decode())
+            except Exception as e:
+                print("find_cos: {}".format(e))
+        if entry.get('dnQualifier', None):
+            cos[rdns['o'][0]] = entry['dnQualifier']
+        elif description.get('comanage_id', None):
+            cos[rdns['o'][0]] = [description['comanage_id'].encode()]
+        else:
+            cos[rdns['o'][0]] = entry['o']
     return cos
 
 def find_services(c):

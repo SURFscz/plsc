@@ -38,11 +38,18 @@ for client_name, cos in clients.items():
 
     # Build client skeleton
     for co, entry in cos:
-        r = src.rfind("ou=Groups,o={}".format(co), '(objectClass=groupOfNames)')
-        dn, entry = list(r.items())[0]
+        r = src.rfind("o={}".format(co), '(objectClass=*)', [], ldap.SCOPE_BASE)
+        if len(r):
+            dn, entry = list(r.items())[0]
+        else:
+            continue
         j = entry.get('description', None)
+        description = {}
         if j:
-            description = json.loads(j[0].decode())
+            try:
+                description = json.loads(j[0].decode())
+            except:
+                pass
         if entry.get('dnQualifier', None):
             bco = entry['dnQualifier'][0]
         elif description.get('comanage_id', None):
@@ -70,6 +77,7 @@ for client_name, cos in clients.items():
         gid_entry = {'objectClass':[b'top',b'device'], 'serialNumber':[str(config['gid']).encode()]}
         #print("  gid_dn: {}".format(gid_dn))
         dst.add(gid_dn, gid_entry)
+    print()
 
 # Find entries
 if False:
