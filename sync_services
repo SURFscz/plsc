@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+
+import os, yaml, json
+import ldap, ldap.modlist
+import hashlib
+from base64 import b64encode
+
+import util
+from connection import Connection
+
+with open("plsc.yml") as f:
+    config = yaml.safe_load(f)
+
+src = Connection(config['ldap']['src'])
+dst = Connection(config['ldap']['dst'])
+
+services = util.find_services(src)
+clients = util.find_clients(src, services)
+
+#print("c: {}".format(clients))
+
+for client_name, cos in clients.items():
+    print("client: {}".format(client_name))
+
+    dc = client_name
+    bdc = dc.encode()
+    dc_dn = 'dc=' + dc + ',' + dst.basedn
+    dc_entry = {'objectClass':[b'dcObject',b'organization'],'o':[bdc]}
+
+    #print("dc_dn: {}".format(dc_dn))
+    dst.add(dc_dn, dc_entry)
+
+    admin_dn = 'cn=admin,' + dc_dn
+    pwd = util.make_secret(config['pwd'])
+    admin_entry = {'objectClass':[b'organizationalRole',b'simpleSecurityObject'],'userPassword':[pwd.encode()]}
+    #print("  admin_dn: {}".format(admin_dn))
+    dst.add(admin_dn, admin_entry)
+
+    # Build client skeleton
+    for co, entry in cos:
+        r = src.rfind("ou=Groups,o={}".format(co), '(objectClass=groupOfNames)')
+        dn, entry = list(r.items())[0]
+        j = entry.get('description', None)
+        if j:
+            description = json.loads(j[0].decode())
+        if entry.get('dnQualifier', None):
+            bco = entry['dnQualifier'][0]
+        elif description.get('comanage_id', None):
+            bco = description['comanage_id'].encode()
+        else:
+            bco = entry['o'][0]
+        co_dn = 'o=' + bco.decode() + ',' + dc_dn
+        co_entry = {'objectClass':[b'top',b'organization',b'extensibleObject'],'o':[bco],'description':co.encode()}
+        dst.add(co_dn, co_entry)
+        print("co: " + co_dn)
+
+        for ou in ['Groups', 'People', 'Sequence', 'Services']:
+            bou = ou.encode()
+            ou_dn = 'ou=' + ou + ',' + co_dn
+            ou_entry = {'objectClass':[b'top',b'organizationalUnit'],'ou':[bou]}
+            #print("  ou_dn: {}".format(ou_dn))
+            dst.add(ou_dn, ou_entry)
+
+        uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + co_dn
+        uid_entry = {'objectClass':[b'top',b'device'], 'serialNumber':[str(config['uid']).encode()]}
+        #print("  uid_dn: {}".format(uid_dn))
+        dst.add(uid_dn, uid_entry)
+
+        gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + co_dn
+        gid_entry = {'objectClass':[b'top',b'device'], 'serialNumber':[str(config['gid']).encode()]}
+        #print("  gid_dn: {}".format(gid_dn))
+        dst.add(gid_dn, gid_entry)
+
+# Find entries
+if False:
+  try:
+    r = dst.search(dst.basedn)
+    for dn, entry in r:
+      print("dn: {}".format(dn))
+      print("  {}".format(entry))
+  except Exception as e:
+    print(e)
