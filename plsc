@@ -1,0 +1,172 @@
+#!/usr/bin/env python
+
+import yaml, re
+
+import util
+from connection import Connection
+
+
+with open("plsc.yml") as f:
+  config = yaml.safe_load(f)
+
+src = Connection(config['ldap']['src'])
+dst = Connection(config['ldap']['dst'])
+
+services = util.find_services(src)
+clients = util.find_clients(src, services)
+
+# Create phase
+print("--- Create ---")
+for service, cos in clients.items():
+    print("service: {}".format(service))
+    for co_name, co_id in cos:
+        co_id = co_id[0].decode()
+        print("- co: {}/{}".format(co_name, co_id))
+        print("  People")
+        src_dns = src.rfind("ou=People,o={}".format(co_name), '(ObjectClass=person)')
+
+        for src_dn, src_entry in src_dns.items():
+            print("  - srcdn: {}".format(src_dn))
+            src_uid = src_entry['uid'][0].decode()
+
+            # Here's the magic: Build the new person entry
+            dst_entry = {}
+            dst_entry['objectClass'] = [b'inetOrgPerson', b'person', b'posixAccount']
+            dst_entry['uid'] = [src_uid.encode()]
+            dst_entry['cn'] = src_entry['cn']
+            dst_entry['sn'] = src_entry['sn']
+            dst_entry['homeDirectory'] = ['/home/{}'.format(src_uid).encode()]
+
+            dst_dns = dst.rfind("ou=People,o={},dc={}".format(co_id, service), "(&(ObjectClass=person)(uid={}))".format(src_uid))
+
+            if len(dst_dns) == 1:
+                dst_dn, old_entry = list(dst_dns.items())[0]
+                new_entry = old_entry.copy()
+                for attr, values in dst_entry.items():
+                    new_entry[attr] = values
+                ldif = dst.modify(dst_dn, old_entry, new_entry)
+                print("    - mod: {}".format(ldif))
+
+            elif len(dst_dns) == 0:
+                uid = dst.get_sequence("cn=uidNumberSequence,ou=Sequence,o={},dc={},{}".format(co_id, service, dst.basedn))
+                dst_entry['uidNumber'] = str(uid).encode()
+                gid = dst.get_sequence("cn=gidNumberSequence,ou=Sequence,o={},dc={},{}".format(co_id, service, dst.basedn))
+                dst_entry['gidNumber'] = str(gid).encode()
+                dst_dn = "uid={},ou=People,o={},dc={},{}".format(src_uid, co_id,service,dst.basedn)
+                ldif = dst.add(dst_dn, dst_entry)
+                print("    - add: {}".format(ldif))
+
+            else:
+                print("    - Too many dstdn's")
+
+        print("\n  Groups")
+        src_dns = src.rfind('ou=Groups,o={}'.format(co_name), '(&(objectClass=groupOfNames)(!(objectClass=labeledURIObject))(!(cn=GRP:CO:*)))')
+        for src_dn, src_entry in src_dns.items():
+            print("  - srcdn: {}".format(src_dn))
+            src_rdns = util.dn2rdns(src_dn)
+            src_cn = src_rdns['cn'][0]
+            src_type = src_entry['ou'][0].decode()
+
+            # Here's the magic: Build the new group entry
+            m = re.search('^(?:GRP)?(?:CO)?(?:COU)?:(.*?)$', src_cn)
+            dst_cn = src_type + "_" + m.group(1) if m.group(1) else ""
+
+            dst_entry = {}
+            dst_entry['objectClass'] = [b'extensibleObject', b'posixGroup', b'sczGroup']
+            dst_entry['cn'] = [dst_cn.encode()]
+            dst_entry['description'] = [src_cn.encode()]
+
+            members = []
+
+            # Build members
+            for member in src_entry['member']:
+                member_rdns = util.dn2rdns(member)
+                # Is member user?
+                if member_rdns.get('uid', None):
+                    dns = dst.rfind("ou=People,o={},dc={}".format(co_id, service), "(uid={})".format(member_rdns['uid'][0]))
+                # member is group?
+                elif member_rdns.get('cn', None):
+                    dns = dst.rfind("ou=Groups,o={},dc={}".format(co_id, service), "(description={})".format(member_rdns['cn'][0]))
+
+                if len(dns) == 1:
+                    member_dst_dn, member_dst_entry = list(dns.items())[0]
+                    members.append(member_dst_dn.encode())
+
+            dst_entry['sczMember'] = members
+
+            dst_dns = dst.rfind("ou=Groups,o={},dc={}".format(co_id, service), "(&(ObjectClass=posixGroup)(description={}))".format(src_cn))
+
+            if len(dst_dns) == 1:
+                dst_dn, old_entry = list(dst_dns.items())[0]
+                new_entry = old_entry.copy()
+                for attr, values in dst_entry.items():
+                    new_entry[attr] = values
+                    ldif = dst.modify(dst_dn, old_entry, new_entry)
+                print("    - mod: {}".format(ldif))
+
+            elif len(dst_dns) == 0:
+                gid = dst.get_sequence("cn=gidNumberSequence,ou=Sequence,o={},dc={},{}".format(co_id, service, dst.basedn))
+                dst_entry['gidNumber'] = str(gid).encode()
+                dst_dn = "cn={},ou=Groups,o={},dc={},{}".format(dst_cn, co_id, service, dst.basedn)
+                ldif = dst.add(dst_dn, dst_entry)
+                print("    - add: {}".format(ldif))
+
+            else:
+                print("    - Too many dstdn's")
+
+        print()
+
+# Cleanup phase
+print("--- Cleanup ---")
+for service, cos in clients.items():
+    print("service: {}".format(service))
+
+    organizations = dst.rfind("dc={}".format(service), '(&(objectClass=organization)(objectClass=extensibleObject))')
+    for o_dn, o_entry in organizations.items():
+        #print("o: {}".format(o_dn))
+        #print("entry: {}".format(o_entry))
+
+        if o_entry.get('description', None):
+            co_name = o_entry['description'][0].decode()
+
+            o_rdns = util.dn2rdns(o_dn)
+            print("o: {}".format(o_rdns['o'][0]))
+
+            print("People")
+            dst_dns = dst.rfind("ou=People,o={},dc={}".format(o_rdns['o'][0], service), '(objectClass=person)')
+            for dst_dn, dst_entry in dst_dns.items():
+                #print("  - dstdn: {}".format(dst_dn))
+                #print("    entry: {}".format(dst_entry))
+
+                if dst_entry.get('uid', None):
+                    src_uid = dst_entry['uid'][0].decode()
+                    src_dns = src.rfind("ou=People,o={}".format(co_name), '(uid={})'.format(src_uid))
+                    if len(src_dns):
+                        for src_dn, src_entry in src_dns.items():
+                            pass
+                            #print("   - srcdn: {}".format(src_dn))
+                    else:
+                        print("  - dstdn: {}".format(dst_dn))
+                        print("    srcdn not found, deleting {}".format(dst_dn))
+                        dst.delete(dst_dn)
+
+            print("\nGroups")
+            dst_dns = dst.rfind("ou=Groups,o={},dc={}".format(o_rdns['o'][0], service), '(objectClass=sczGroup)')
+            for dst_dn, dst_entry in dst_dns.items():
+                #print("  - dstdn: {}".format(dst_dn))
+                #print("    entry: {}".format(dst_entry))
+
+                if dst_entry.get('description', None):
+                    src_cn = dst_entry['description'][0].decode()
+                    src_dns = src.rfind("ou=Groups,o={}".format(co_name), '(cn={})'.format(src_cn))
+                    if len(src_dns):
+                        for src_dn, src_entry in src_dns.items():
+                            pass
+                            #print("   - srcdn: {}".format(src_dn))
+                    else:
+                        print("  - dstdn: {}".format(dst_dn))
+                        print("    srcdn not found, deleting {}".format(dst_dn))
+                        dst.delete(dst_dn)
+
+
+            print()

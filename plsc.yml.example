@@ -1,0 +1,15 @@
+---
+ldap:
+  src:
+    uri: ldap://ldap.vm.scz-vm.net
+    basedn: dc=scz,dc=vnet
+    binddn: cn=John Doe,dc=scz,dc=vnet
+    passwd: changethispassword
+  dst:
+    uri: ldap://ldap.vm.scz-vm.net
+    basedn: dc=clients,dc=vnet
+    binddn: cn=admin,dc=clients,dc=vnet
+    passwd: changethispassword
+pwd: changethispassword
+uid: 1000
+gid: 1000

@@ -1,0 +1,6 @@
+pkg-resources
+pyasn1
+pyasn1-modules
+python-ldap
+PyYAML
+
