@@ -130,9 +130,9 @@ for service, cos in clients.items():
             co_name = o_entry['description'][0].decode()
 
             o_rdns = util.dn2rdns(o_dn)
-            print("o: {}".format(o_rdns['o'][0]))
+            print("- o: {}".format(o_rdns['o'][0]))
 
-            print("People")
+            print("  - People")
             dst_dns = dst.rfind("ou=People,o={},dc={}".format(o_rdns['o'][0], service), '(objectClass=person)')
             for dst_dn, dst_entry in dst_dns.items():
                 #print("  - dstdn: {}".format(dst_dn))
@@ -146,11 +146,11 @@ for service, cos in clients.items():
                             pass
                             #print("   - srcdn: {}".format(src_dn))
                     else:
-                        print("  - dstdn: {}".format(dst_dn))
-                        print("    srcdn not found, deleting {}".format(dst_dn))
+                        print("    - dstdn: {}".format(dst_dn))
+                        print("      srcdn not found, deleting {}".format(dst_dn))
                         dst.delete(dst_dn)
 
-            print("\nGroups")
+            print("\n  - Groups")
             dst_dns = dst.rfind("ou=Groups,o={},dc={}".format(o_rdns['o'][0], service), '(objectClass=sczGroup)')
             for dst_dn, dst_entry in dst_dns.items():
                 #print("  - dstdn: {}".format(dst_dn))
@@ -164,8 +164,8 @@ for service, cos in clients.items():
                             pass
                             #print("   - srcdn: {}".format(src_dn))
                     else:
-                        print("  - dstdn: {}".format(dst_dn))
-                        print("    srcdn not found, deleting {}".format(dst_dn))
+                        print("    - dstdn: {}".format(dst_dn))
+                        print("      srcdn not found, deleting {}".format(dst_dn))
                         dst.delete(dst_dn)
 
 

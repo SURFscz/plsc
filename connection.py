@@ -3,7 +3,7 @@ import ldap, ldap.modlist
 class Connection(object):
 
     # Connection parameters
-    uri =None
+    uri = None
     binddn = None
     passwd = None
 
