@@ -20,22 +20,22 @@ print("--- Create ---")
 for service, cos in clients.items():
     print("service: {}".format(service))
     for co_name, co_id in cos:
-        co_id = co_id[0].decode()
+        co_id = co_id[0]
         print("- co: {}/{}".format(co_name, co_id))
         print("  People")
         src_dns = src.rfind("ou=People,o={}".format(co_name), '(ObjectClass=person)')
 
         for src_dn, src_entry in src_dns.items():
             print("  - srcdn: {}".format(src_dn))
-            src_uid = src_entry['uid'][0].decode()
+            src_uid = src_entry['uid'][0]
 
             # Here's the magic: Build the new person entry
             dst_entry = {}
-            dst_entry['objectClass'] = [b'inetOrgPerson', b'person', b'posixAccount']
-            dst_entry['uid'] = [src_uid.encode()]
+            dst_entry['objectClass'] = ['inetOrgPerson', 'person', 'posixAccount']
+            dst_entry['uid'] = [src_uid]
             dst_entry['cn'] = src_entry['cn']
             dst_entry['sn'] = src_entry['sn']
-            dst_entry['homeDirectory'] = ['/home/{}'.format(src_uid).encode()]
+            dst_entry['homeDirectory'] = ['/home/{}'.format(src_uid)]
 
             dst_dns = dst.rfind("ou=People,o={},dc={}".format(co_id, service), "(&(ObjectClass=person)(uid={}))".format(src_uid))
 
@@ -49,9 +49,9 @@ for service, cos in clients.items():
 
             elif len(dst_dns) == 0:
                 uid = dst.get_sequence("cn=uidNumberSequence,ou=Sequence,o={},dc={},{}".format(co_id, service, dst.basedn))
-                dst_entry['uidNumber'] = str(uid).encode()
+                dst_entry['uidNumber'] = [str(uid)]
                 gid = dst.get_sequence("cn=gidNumberSequence,ou=Sequence,o={},dc={},{}".format(co_id, service, dst.basedn))
-                dst_entry['gidNumber'] = str(gid).encode()
+                dst_entry['gidNumber'] = [str(gid)]
                 dst_dn = "uid={},ou=People,o={},dc={},{}".format(src_uid, co_id,service,dst.basedn)
                 ldif = dst.add(dst_dn, dst_entry)
                 print("    - add: {}".format(ldif))
@@ -65,16 +65,16 @@ for service, cos in clients.items():
             print("  - srcdn: {}".format(src_dn))
             src_rdns = util.dn2rdns(src_dn)
             src_cn = src_rdns['cn'][0]
-            src_type = src_entry['ou'][0].decode()
+            src_type = src_entry['ou'][0]
 
             # Here's the magic: Build the new group entry
             m = re.search('^(?:GRP)?(?:CO)?(?:COU)?:(.*?)$', src_cn)
             dst_cn = src_type + "_" + m.group(1) if m.group(1) else ""
 
             dst_entry = {}
-            dst_entry['objectClass'] = [b'extensibleObject', b'posixGroup', b'sczGroup']
-            dst_entry['cn'] = [dst_cn.encode()]
-            dst_entry['description'] = [src_cn.encode()]
+            dst_entry['objectClass'] = ['extensibleObject', 'posixGroup', 'sczGroup']
+            dst_entry['cn'] = [dst_cn]
+            dst_entry['description'] = [src_cn]
 
             members = []
 
@@ -90,7 +90,7 @@ for service, cos in clients.items():
 
                 if len(dns) == 1:
                     member_dst_dn, member_dst_entry = list(dns.items())[0]
-                    members.append(member_dst_dn.encode())
+                    members.append(member_dst_dn)
 
             dst_entry['sczMember'] = members
 
@@ -106,7 +106,7 @@ for service, cos in clients.items():
 
             elif len(dst_dns) == 0:
                 gid = dst.get_sequence("cn=gidNumberSequence,ou=Sequence,o={},dc={},{}".format(co_id, service, dst.basedn))
-                dst_entry['gidNumber'] = str(gid).encode()
+                dst_entry['gidNumber'] = [str(gid)]
                 dst_dn = "cn={},ou=Groups,o={},dc={},{}".format(dst_cn, co_id, service, dst.basedn)
                 ldif = dst.add(dst_dn, dst_entry)
                 print("    - add: {}".format(ldif))
@@ -127,7 +127,7 @@ for service, cos in clients.items():
         #print("entry: {}".format(o_entry))
 
         if o_entry.get('description', None):
-            co_name = o_entry['description'][0].decode()
+            co_name = o_entry['description'][0]
 
             o_rdns = util.dn2rdns(o_dn)
             print("- o: {}".format(o_rdns['o'][0]))
@@ -139,7 +139,7 @@ for service, cos in clients.items():
                 #print("    entry: {}".format(dst_entry))
 
                 if dst_entry.get('uid', None):
-                    src_uid = dst_entry['uid'][0].decode()
+                    src_uid = dst_entry['uid'][0]
                     src_dns = src.rfind("ou=People,o={}".format(co_name), '(uid={})'.format(src_uid))
                     if len(src_dns):
                         for src_dn, src_entry in src_dns.items():
@@ -157,7 +157,7 @@ for service, cos in clients.items():
                 #print("    entry: {}".format(dst_entry))
 
                 if dst_entry.get('description', None):
-                    src_cn = dst_entry['description'][0].decode()
+                    src_cn = dst_entry['description'][0]
                     src_dns = src.rfind("ou=Groups,o={}".format(co_name), '(cn={})'.format(src_cn))
                     if len(src_dns):
                         for src_dn, src_entry in src_dns.items():

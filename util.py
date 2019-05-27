@@ -19,35 +19,34 @@ def dn2rdns(dn):
 
 def find_cos(c, service):
     cos = {}
-    r = c.search(None, "(&(objectClass=organization)(labeledURI={}))".format(service), ['o','dnQualifier','description'])
-    for dn, entry in r:
+    r = c.find(None, "(&(objectClass=organization)(labeledURI={}))".format(service), ['o','dnQualifier','description'])
+    for dn, entry in r.items():
         rdns = dn2rdns(dn)
         j = entry.get('description', None)
         description = {}
         if j:
             try:
-                description = json.loads(j[0].decode())
+                description = json.loads(j[0])
             except Exception as e:
                 print("find_cos: {}".format(e))
         if entry.get('dnQualifier', None):
             cos[rdns['o'][0]] = entry['dnQualifier']
         elif description.get('comanage_id', None):
-            cos[rdns['o'][0]] = [description['comanage_id'].encode()]
+            cos[rdns['o'][0]] = [description['comanage_id']]
         else:
             cos[rdns['o'][0]] = entry['o']
     return cos
 
 def find_services(c):
     services = []
-    r = c.search(None, '(&(objectClass=organization)(labeledURI=*))', ['labeledURI'])
-    for dn, entry in r:
+    r = c.find(None, '(&(objectClass=organization)(labeledURI=*))', ['labeledURI'])
+    for dn, entry in r.items():
         services.extend(entry['labeledURI'])
     return list(set(services))
 
 def find_clients(c, services):
     clients = {}
     for service in services:
-        service = service.decode()
         clients[service] = []
         cos = find_cos(c, service)
         for co in cos.items():

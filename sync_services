@@ -2,8 +2,6 @@
 
 import os, yaml, json
 import ldap, ldap.modlist
-import hashlib
-from base64 import b64encode
 
 import util
 from connection import Connection
@@ -15,24 +13,23 @@ src = Connection(config['ldap']['src'])
 dst = Connection(config['ldap']['dst'])
 
 services = util.find_services(src)
+#print("services: {}".format(services))
 clients = util.find_clients(src, services)
-
-#print("c: {}".format(clients))
+#print("clients: {}".format(clients))
 
 for client_name, cos in clients.items():
     print("client: {}".format(client_name))
 
     dc = client_name
-    bdc = dc.encode()
     dc_dn = 'dc=' + dc + ',' + dst.basedn
-    dc_entry = {'objectClass':[b'dcObject',b'organization'],'o':[bdc]}
+    dc_entry = {'objectClass':['dcObject','organization'],'o':[dc]}
 
     #print("dc_dn: {}".format(dc_dn))
     dst.add(dc_dn, dc_entry)
 
     admin_dn = 'cn=admin,' + dc_dn
     pwd = util.make_secret(config['pwd'])
-    admin_entry = {'objectClass':[b'organizationalRole',b'simpleSecurityObject'],'userPassword':[pwd.encode()]}
+    admin_entry = {'objectClass':['organizationalRole','simpleSecurityObject'],'userPassword':[pwd]}
     #print("  admin_dn: {}".format(admin_dn))
     dst.add(admin_dn, admin_entry)
 
@@ -47,34 +44,33 @@ for client_name, cos in clients.items():
         description = {}
         if j:
             try:
-                description = json.loads(j[0].decode())
+                description = json.loads(j[0])
             except:
                 pass
         if entry.get('dnQualifier', None):
-            bco = entry['dnQualifier'][0]
+            o = entry['dnQualifier'][0]
         elif description.get('comanage_id', None):
-            bco = description['comanage_id'].encode()
+            o = description['comanage_id']
         else:
-            bco = entry['o'][0]
-        co_dn = 'o=' + bco.decode() + ',' + dc_dn
-        co_entry = {'objectClass':[b'top',b'organization',b'extensibleObject'],'o':[bco],'description':co.encode()}
+            o = entry['o'][0]
+        co_dn = 'o=' + o + ',' + dc_dn
+        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[o],'description':[co]}
         dst.add(co_dn, co_entry)
         print("co: " + co_dn)
 
         for ou in ['Groups', 'People', 'Sequence', 'Services']:
-            bou = ou.encode()
             ou_dn = 'ou=' + ou + ',' + co_dn
-            ou_entry = {'objectClass':[b'top',b'organizationalUnit'],'ou':[bou]}
+            ou_entry = {'objectClass':['top','organizationalUnit'],'ou':[ou]}
             #print("  ou_dn: {}".format(ou_dn))
             dst.add(ou_dn, ou_entry)
 
         uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + co_dn
-        uid_entry = {'objectClass':[b'top',b'device'], 'serialNumber':[str(config['uid']).encode()]}
+        uid_entry = {'objectClass':['top','device'], 'serialNumber':[str(config['uid'])]}
         #print("  uid_dn: {}".format(uid_dn))
         dst.add(uid_dn, uid_entry)
 
         gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + co_dn
-        gid_entry = {'objectClass':[b'top',b'device'], 'serialNumber':[str(config['gid']).encode()]}
+        gid_entry = {'objectClass':['top','device'], 'serialNumber':[str(config['gid'])]}
         #print("  gid_dn: {}".format(gid_dn))
         dst.add(gid_dn, gid_entry)
     print()

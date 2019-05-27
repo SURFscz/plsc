@@ -26,6 +26,24 @@ class Connection(object):
         else:
             self.c.simple_bind_s(binddn, passwd)
 
+    def encode(self, entry):
+        r = {}
+        for k, v in entry.items():
+            rv = []
+            for ev in v:
+                rv.append(ev.encode())
+            r[k] = rv
+        return r
+
+    def decode(self, entry):
+        r = {}
+        for k, v in entry.items():
+            rv = []
+            for ev in v:
+                rv.append(ev.decode())
+            r[k] = rv
+        return r
+
     def search(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
         if not basedn:
             basedn = self.basedn
@@ -36,7 +54,7 @@ class Connection(object):
         try:
             r = self.search(basedn, fltr, attrs, scope)
             for dn, entry in r:
-                dns[dn] = entry
+                dns[dn] = self.decode(entry)
         except Exception as e:
             print("find: {}".format(e))
         return dns
@@ -49,32 +67,37 @@ class Connection(object):
         return self.find(b, fltr, attrs, scope)
 
     def add(self, dn, entry):
-        addlist = ldap.modlist.addModlist(entry)
+        addlist = ldap.modlist.addModlist(self.encode(entry))
         try:
             self.c.add_s(dn, addlist)
         except Exception as e:
-            pass
-            #print(e)
+            #pass
+            print("{}\n  {}".format(dn, e))
         return addlist
 
     def modify(self, dn, old_entry, new_entry):
-        modlist = ldap.modlist.modifyModlist(old_entry, new_entry)
+        modlist = ldap.modlist.modifyModlist(self.encode(old_entry), self.encode(new_entry))
         try:
             self.c.modify_s(dn, modlist)
         except Exception as e:
-            pass
-            #print(e)
+            #pass
+            print("{}\n  {}".format(dn, e))
         return modlist
 
     def delete(self, dn):
-        return self.c.delete_s(dn)
+        try:
+            self.c.delete_s(dn)
+        except Exception as e:
+            #pass
+            print("{}\n  {}".format(dn, e))
 
     def get_sequence(self, dn):
         seq = 1000
         r = self.c.search_s(dn, ldap.SCOPE_BASE)
         for dn, old_entry in r:
+            old_entry = self.decode(old_entry)
             new_entry = old_entry.copy()
-            seq = int(new_entry['serialNumber'][0].decode()) + 1
-            new_entry['serialNumber'] = [ str(seq).encode() ]
+            seq = int(new_entry['serialNumber'][0]) + 1
+            new_entry['serialNumber'] = [ str(seq) ]
             self.modify(dn, old_entry, new_entry)
         return seq
