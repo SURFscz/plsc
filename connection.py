@@ -2,15 +2,10 @@ import ldap, ldap.modlist
 
 class Connection(object):
 
-    # Connection parameters
-    uri = None
-    binddn = None
-    passwd = None
+    # LDAP connection, private
+    __c = None
 
-    # LDAP connection
-    c = None
-
-    # BaseDN
+    # BaseDN, public
     basedn = None
 
     def __init__(self, config):
@@ -19,14 +14,14 @@ class Connection(object):
         binddn = config['binddn']
         passwd = config['passwd']
 
-        self.c = ldap.initialize(uri)
+        self.__c = ldap.initialize(uri)
 
         if binddn == 'external':
-            self.c.sasl_external_bind_s()
+            self.__c.sasl_external_bind_s()
         else:
-            self.c.simple_bind_s(binddn, passwd)
+            self.__c.simple_bind_s(binddn, passwd)
 
-    def encode(self, entry):
+    def __encode(self, entry):
         r = {}
         for k, v in entry.items():
             rv = []
@@ -35,7 +30,7 @@ class Connection(object):
             r[k] = rv
         return r
 
-    def decode(self, entry):
+    def __decode(self, entry):
         r = {}
         for k, v in entry.items():
             rv = []
@@ -44,17 +39,17 @@ class Connection(object):
             r[k] = rv
         return r
 
-    def search(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
+    def __search(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
         if not basedn:
             basedn = self.basedn
-        return self.c.search_s(basedn, scope, fltr, attrs)
+        return self.__c.search_s(basedn, scope, fltr, attrs)
 
     def find(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
         dns = {}
         try:
-            r = self.search(basedn, fltr, attrs, scope)
+            r = self.__search(basedn, fltr, attrs, scope)
             for dn, entry in r:
-                dns[dn] = self.decode(entry)
+                dns[dn] = self.__decode(entry)
         except Exception as e:
             print("find: {}".format(e))
         return dns
@@ -67,18 +62,18 @@ class Connection(object):
         return self.find(b, fltr, attrs, scope)
 
     def add(self, dn, entry):
-        addlist = ldap.modlist.addModlist(self.encode(entry))
+        addlist = ldap.modlist.addModlist(self.__encode(entry))
         try:
-            self.c.add_s(dn, addlist)
+            self.__c.add_s(dn, addlist)
         except Exception as e:
             #pass
             print("{}\n  {}".format(dn, e))
         return addlist
 
     def modify(self, dn, old_entry, new_entry):
-        modlist = ldap.modlist.modifyModlist(self.encode(old_entry), self.encode(new_entry))
+        modlist = ldap.modlist.modifyModlist(self.__encode(old_entry), self.__encode(new_entry))
         try:
-            self.c.modify_s(dn, modlist)
+            self.__c.modify_s(dn, modlist)
         except Exception as e:
             #pass
             print("{}\n  {}".format(dn, e))
@@ -86,16 +81,16 @@ class Connection(object):
 
     def delete(self, dn):
         try:
-            self.c.delete_s(dn)
+            self.__c.delete_s(dn)
         except Exception as e:
             #pass
             print("{}\n  {}".format(dn, e))
 
     def get_sequence(self, dn):
         seq = 1000
-        r = self.c.search_s(dn, ldap.SCOPE_BASE)
+        r = self.__c.search_s(dn, ldap.SCOPE_BASE)
         for dn, old_entry in r:
-            old_entry = self.decode(old_entry)
+            old_entry = self.__decode(old_entry)
             new_entry = old_entry.copy()
             seq = int(new_entry['serialNumber'][0]) + 1
             new_entry['serialNumber'] = [ str(seq) ]
