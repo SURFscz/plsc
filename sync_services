@@ -14,10 +14,10 @@ dst = Connection(config['ldap']['dst'])
 
 services = util.find_services(src)
 #print("services: {}".format(services))
-clients = util.find_clients(src, services)
-#print("clients: {}".format(clients))
+collaborations = util.find_collaborations(src, services)
+#print("collaborations: {}".format(collaborations))
 
-for client_name, cos in clients.items():
+for client_name, cos in collaborations.items():
     print("client: {}".format(client_name))
 
     dc = client_name

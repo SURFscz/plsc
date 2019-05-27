@@ -13,11 +13,11 @@ src = Connection(config['ldap']['src'])
 dst = Connection(config['ldap']['dst'])
 
 services = util.find_services(src)
-clients = util.find_clients(src, services)
+collaborations = util.find_collaborations(src, services)
 
 # Create phase
 print("--- Create ---")
-for service, cos in clients.items():
+for service, cos in collaborations.items():
     print("service: {}".format(service))
     for co_name, co_id in cos:
         co_id = co_id[0]
@@ -118,7 +118,7 @@ for service, cos in clients.items():
 
 # Cleanup phase
 print("--- Cleanup ---")
-for service, cos in clients.items():
+for service, cos in collaborations.items():
     print("service: {}".format(service))
 
     organizations = dst.rfind("dc={}".format(service), '(&(objectClass=organization)(objectClass=extensibleObject))')

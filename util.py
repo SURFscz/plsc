@@ -44,11 +44,11 @@ def find_services(c):
         services.extend(entry['labeledURI'])
     return list(set(services))
 
-def find_clients(c, services):
-    clients = {}
+def find_collaborations(c, services):
+    col = {}
     for service in services:
-        clients[service] = []
+        col[service] = []
         cos = find_cos(c, service)
         for co in cos.items():
-            clients[service].append(co)
-    return clients
+            col[service].append(co)
+    return col
