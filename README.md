@@ -4,7 +4,7 @@ This project is a Python implementation aiming for LDAP to LDAP synchronization.
 
 ## Install
 
-For local development we advice to make use of Pythion Virtual Environment. The installation commands are specified below.
+For local development we advice to make use of Python Virtual Environment. The installation commands are specified below.
 
 ## Sample Synchronisation configuration
 

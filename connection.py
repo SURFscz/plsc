@@ -9,6 +9,9 @@ class Connection(object):
     basedn = None
 
     def __init__(self, config):
+        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, 0)
+        ldap.set_option( ldap.OPT_X_TLS_DEMAND, True )
+
         self.basedn = config['basedn']
         uri = config['uri']
         binddn = config['binddn']

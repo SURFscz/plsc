@@ -29,12 +29,16 @@ def find_cos(c, service):
                 description = json.loads(j[0])
             except Exception as e:
                 print("find_cos: {}".format(e))
+
         if entry.get('dnQualifier', None):
             cos[rdns['o'][0]] = entry['dnQualifier']
+        elif description.get('identifier', None):
+            cos[rdns['o'][0]] = [description['identifier']]
         elif description.get('comanage_id', None):
             cos[rdns['o'][0]] = [description['comanage_id']]
         else:
             cos[rdns['o'][0]] = entry['o']
+
     return cos
 
 def find_services(c):
@@ -51,4 +55,5 @@ def find_collaborations(c, services):
         cos = find_cos(c, service)
         for co in cos.items():
             col[service].append(co)
+
     return col

@@ -49,6 +49,8 @@ for client_name, cos in collaborations.items():
                 pass
         if entry.get('dnQualifier', None):
             o = entry['dnQualifier'][0]
+        elif description.get('identifier', None):
+            o = description['identifier']
         elif description.get('comanage_id', None):
             o = description['comanage_id']
         else:
