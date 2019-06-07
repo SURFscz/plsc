@@ -4,5 +4,6 @@ include/
 lib/
 plsc.yml
 share/
+lib64/
+pyenv.cfg
 *.swp
-
