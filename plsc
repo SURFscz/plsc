@@ -2,6 +2,7 @@
 
 import sys
 import yaml, re
+import socket
 
 import util
 from connection import Connection
@@ -15,6 +16,7 @@ with open(sys.argv[1]) as f:
 
 src = Connection(config['ldap']['src'])
 dst = Connection(config['ldap']['dst'])
+fqdn = socket.getfqdn()
 
 services = util.find_services(src)
 collaborations = util.find_collaborations(src, services)
@@ -26,6 +28,15 @@ for service, cos in collaborations.items():
     for co_name, co_id in cos:
         co_id = co_id[0]
         print("- co: {}/{}".format(co_name, co_id))
+
+        organizations = dst.rfind("o={},dc={}".format(co_id, service), '(&(objectClass=organization)(objectClass=extensibleObject))')
+        if len(organizations):
+            o_dn, o_entry = list(organizations.items())[0]
+            co_fqdn = o_entry.get('host', None)
+            if not fqdn in co_fqdn:
+                print("skipping {}".format(co_fqdn))
+                continue
+
         print("  People")
         src_dns = src.rfind("ou=People,o={}".format(co_name), '(ObjectClass=person)')
 
@@ -132,6 +143,11 @@ for service, cos in collaborations.items():
 
         if o_entry.get('description', None):
             co_name = o_entry['description'][0]
+            co_fqdn = o_entry.get('host', None)
+
+            if not fqdn in co_fqdn:
+                print("skipping {}".format(co_fqdn))
+                continue
 
             o_rdns = util.dn2rdns(o_dn)
             print("- o: {}".format(o_rdns['o'][0]))

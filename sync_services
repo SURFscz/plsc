@@ -3,6 +3,7 @@
 import sys
 import os, yaml, json
 import ldap, ldap.modlist
+import socket
 
 import util
 from connection import Connection
@@ -16,6 +17,7 @@ with open(sys.argv[1]) as f:
 
 src = Connection(config['ldap']['src'])
 dst = Connection(config['ldap']['dst'])
+fqdn = socket.getfqdn();
 
 services = util.find_services(src)
 #print("services: {}".format(services))
@@ -61,7 +63,7 @@ for client_name, cos in collaborations.items():
         else:
             o = entry['o'][0]
         co_dn = 'o=' + o + ',' + dc_dn
-        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[o],'description':[co]}
+        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[o],'description':[co],'host':[fqdn]}
         dst.add(co_dn, co_entry)
         print("co: " + co_dn)
 
