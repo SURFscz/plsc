@@ -23,7 +23,7 @@ services = util.find_services(src)
 #print("services: {}".format(services))
 collaborations = util.find_collaborations(src, services)
 #print("collaborations: {}".format(collaborations))
-
+src_cos = {}
 for client_name, cos in collaborations.items():
     print("client: {}".format(client_name))
 
@@ -42,6 +42,7 @@ for client_name, cos in collaborations.items():
 
     # Build client skeleton
     for co, entry in cos:
+        src_cos.setdefault(client_name, []).append(co)
         r = src.rfind("o={}".format(co), '(objectClass=*)', [], ldap.SCOPE_BASE)
         if len(r):
             dn, entry = list(r.items())[0]
@@ -84,12 +85,27 @@ for client_name, cos in collaborations.items():
         dst.add(gid_dn, gid_entry)
     print()
 
+# Cleanup phase
+print("--- cleanup ---")
 # Find entries
-if False:
-  try:
-    r = dst.search(dst.basedn)
-    for dn, entry in r:
-      print("dn: {}".format(dn))
-      print("  {}".format(entry))
-  except Exception as e:
-    print(e)
+dst_services = dst.rfind('', '(&(dc=*)(objectClass=dcObject))', ['dc'], ldap.SCOPE_ONELEVEL)
+rm_cos = {}
+for k, v in dst_services.items():
+    dst_service = v['dc'][0]
+    print("dc: {}".format(dst_service))
+    dst_collaborations = dst.rfind('dc={}'.format(dst_service), '(&(host={})(objectClass=organization))'.format(fqdn), ['o', 'description'], ldap.SCOPE_SUBTREE)
+    dst_co = {}
+    for k, v in dst_collaborations.items():
+        co_name = v['description'][0]
+        co_nr = v['o'][0]
+        print("  co: {}/{}".format(co_name, co_nr))
+        if co_name in src_cos.get(dst_service, []):
+          print("   - in src")
+        else:
+          print("   - not in src")
+          rm_cos.setdefault(dst_service, []).append(co_nr)
+for svc, cos in rm_cos.items():
+    for co in cos:
+      dst_dn = "o={},dc={},{}".format(co, svc, dst.basedn)
+      print("rm {}".format(dst_dn))
+      dst.rm(dst_dn)

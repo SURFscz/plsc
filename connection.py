@@ -86,8 +86,21 @@ class Connection(object):
         try:
             self.__c.delete_s(dn)
         except Exception as e:
-            #pass
             print("{}\n  {}".format(dn, e))
+
+    def rm(self, dn):
+        r = self.find(dn)
+        leefs = {}
+        for k, v in r.items():
+            level = len(ldap.dn.explode_dn(k))
+            leefs[k] = level
+        # Reverse sort the leefs on level
+        leefs_sorted = sorted(leefs.items(), key=lambda kv: kv[1], reverse=True)
+        for (dn_sorted, level) in leefs_sorted:
+            try:
+                self.__c.delete_s(dn_sorted)
+            except Exception as e:
+                print("{}\n  {}".format(dn, e))
 
     def get_sequence(self, dn):
         seq = 1000
