@@ -32,7 +32,7 @@ for service, cos in collaborations.items():
         organizations = dst.rfind("o={},dc={}".format(co_id, service), '(&(objectClass=organization)(objectClass=extensibleObject))')
         if len(organizations):
             o_dn, o_entry = list(organizations.items())[0]
-            co_fqdn = o_entry.get('host', None)
+            co_fqdn = o_entry.get('host', [])
             if not fqdn in co_fqdn:
                 print("skipping {}".format(co_fqdn))
                 continue
@@ -48,9 +48,20 @@ for service, cos in collaborations.items():
             dst_entry = {}
             dst_entry['objectClass'] = ['inetOrgPerson', 'person', 'posixAccount']
             dst_entry['uid'] = [src_uid]
-            dst_entry['cn'] = src_entry['cn']
-            dst_entry['sn'] = src_entry['sn']
+            dst_entry['cn'] = src_entry.get('cn', [])
+            dst_entry['sn'] = src_entry.get('sn', [])
+            dst_entry['mail'] = src_entry.get('mail', [])
             dst_entry['homeDirectory'] = ['/home/{}'.format(src_uid)]
+
+            eduPersonPrincipalName = src_entry.get('eduPersonPrincipalName', [])
+            if len(eduPersonPrincipalName):
+                dst_entry['objectClass'].append('eduPerson')
+                dst_entry['eduPersonPrincipalName'] = eduPersonPrincipalName
+
+            sshPublicKey = src_entry.get('sshPublicKey', [])
+            if len(sshPublicKey):
+                dst_entry['objectClass'].append('ldapPublicKey')
+                dst_entry['sshPublicKey'] = sshPublicKey
 
             dst_dns = dst.rfind("ou=People,o={},dc={}".format(co_id, service), "(&(ObjectClass=person)(uid={}))".format(src_uid))
 
@@ -143,7 +154,7 @@ for service, cos in collaborations.items():
 
         if o_entry.get('description', None):
             co_name = o_entry['description'][0]
-            co_fqdn = o_entry.get('host', None)
+            co_fqdn = o_entry.get('host', [])
 
             if not fqdn in co_fqdn:
                 print("skipping {}".format(co_fqdn))
