@@ -1,0 +1,239 @@
+#!/usr/bin/env python
+# -*- coding: future_fstrings -*-
+
+import sys
+import yaml, re
+import socket
+import copy
+
+import util
+from connection import Connection
+from sbs import SBS
+
+import ipdb
+#ipdb.set_trace()
+
+if len(sys.argv) < 2:
+    sys.exit(sys.argv[0] + "  <conf.yml>")
+    exit()
+
+with open(sys.argv[1]) as f:
+  config = yaml.safe_load(f)
+
+src = SBS(config['sbs']['src'])
+dst = Connection(config['ldap']['dst'])
+fqdn = socket.getfqdn()
+#print(f"fqdn: {fqdn}")
+
+# Find all CO's in SBS
+collaborations = src.service_collaborations()
+
+# vc keeps track of visited CO's so we can delete what
+# we have not seen in the Cleanup phase
+vc = {}
+
+# Create phase
+print("--- Create ---")
+for service, cos in collaborations.items():
+    vc[service] = {}
+    print("service: {}".format(service))
+
+    # Create service if necessary
+    service_dn = f"dc={service},{dst.basedn}"
+    service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
+    if len(service_dns) == 0:
+        service_entry = {'objectClass':['dcObject', 'organization'],'dc':[service],'o':[fqdn]}
+        dst.add(service_dn, service_entry)
+        admin_dn = 'cn=admin,' + service_dn
+        admin_entry = {'objectClass':['organizationalRole', 'simpleSecurityObject'],'cn':['admin'],'userPassword':[config['pwd']]}
+        dst.add(admin_dn, admin_entry)
+        seq_dn = 'ou=Sequence,' + service_dn
+        seq_entry = {'objectClass':['top','organizationalUnit'],'ou':['Sequence']}
+        dst.add(seq_dn,seq_entry)
+        uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + service_dn
+        uid_entry = {'objectClass':['top','device'], 'serialNumber':[config['uid']]}
+        dst.add(uid_dn, uid_entry)
+        gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + service_dn
+        gid_entry = {'objectClass':['top','device'], 'serialNumber':[config['gid']]}
+        dst.add(gid_dn, gid_entry)
+
+    # Ordered dn
+    ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
+    if len(ordered_dns) == 0:
+        ordered_dn = f"dc=ordered,dc={service},{dst.basedn}"
+        ordered_entry = {'objectClass':['dcObject', 'organization'],'dc':['ordered'],'o':[fqdn]}
+        dst.add(ordered_dn, ordered_entry)
+
+    for co_id, co in cos.items():
+        co_identifier = co['identifier']
+        short_name = co['short_name']
+
+        print("- co: {}/{}".format(co_id, co_identifier))
+        vc[service][co_identifier] = {}
+        vc[service][co_identifier]['roles'] = {}
+        vc[service][co_identifier]['members'] = []
+
+        # Skip unknown CO's
+        organizations = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(objectClass=extensibleObject)(o={co_identifier}))")
+        if len(organizations):
+            o_dn, o_entry = list(organizations.items())[0]
+            co_fqdn = o_entry.get('host', [])
+            if not fqdn in co_fqdn:
+                print("skipping {}".format(co_fqdn))
+                continue
+
+        # Create CO if necessary
+        co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[co_identifier],'description':[short_name],'host':[fqdn]}
+        co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
+        if len(co_dns) == 0:
+            dst.add(co_dn, co_entry)
+            for ou in ['Groups', 'People']:
+                ou_dn = 'ou=' + ou + ',' + co_dn
+                ou_entry = {'objectClass':['top','organizationalUnit'],'ou':[ou]}
+                dst.add(ou_dn, ou_entry)
+
+        print("  - People")
+        users = src.users(co_id)
+        #print(f"users: {users}")
+
+        for src_id, src_detail in users.items():
+            #print(f"user: {src_detail}")
+            src_user = src_detail['user']
+            print("    - src_id: {}/{}".format(src_id, src_user['uid']))
+            src_uid = util.uid(src_user)
+
+            service_attributes = src.service_attributes(service, src_user['uid'])
+            #print(f"service_attributes: {service_attributes}")
+
+            vc[service][co_identifier]['members'].append(src_uid)
+
+            dst_dn = f"uid={src_uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+            dst_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(ObjectClass=person)(uid={src_uid}))")
+
+            dst_entry = {}
+            dst_entry['objectClass'] = ['inetOrgPerson', 'person', 'posixAccount', 'ldapPublicKey', 'eduPerson']
+
+            if len(dst_dns) >= 1:
+                old_dn, old_entry = list(dst_dns.items())[0]
+                dst_entry['uidNumber'] = old_entry.get('uidNumber', 0)
+                dst_entry['gidNumber'] = old_entry.get('gidNumber', 0)
+            elif len(dst_dns) == 0:
+                uid = dst.get_sequence(f"cn=uidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+                dst_entry['uidNumber'] = [uid]
+                gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+                dst_entry['gidNumber'] = [gid]
+
+            # Here's the magic: Build the new person entry
+            dst_entry['uid'] = [src_uid]
+            dst_entry['cn'] = service_attributes.get('name', ['n/a'])
+            dst_entry['sn'] = service_attributes.get('family_name', ['n/a'])
+            dst_entry['mail'] = service_attributes.get('email', [])
+            dst_entry['homeDirectory'] = ['/home/{}'.format(src_uid.encode('unicode-escape').decode('ascii'))]
+            dst_entry['sshPublicKey'] = service_attributes.get('ssh_key', None) or ['n/a']
+            eppn = f"{src_user['id']}@{co['short_name']}.{fqdn}"
+            dst_entry['eduPersonScopedAffiliation'] = [eppn]
+            #dst_entry['eduPersonTargetedID'] = [eppn]
+
+            ldif = dst.store(dst_dn, dst_entry)
+            print(f"      - store: {ldif}")
+
+            print("  - Groups")
+            roles = src_detail['roles']
+
+            for grp_id, grp_name in roles.items():
+                print("    - grp: {}/{}".format(grp_id, grp_name))
+                vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(src_uid)
+
+                grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup)(cn={grp_name}))")
+
+                #ipdb.set_trace()
+                grp_entry = {}
+                grp_entry['objectClass'] = ['extensibleObject', 'posixGroup', 'sczGroup']
+
+                if len(grp_dns) == 1:
+                    old_dn, old_entry = list(grp_dns.items())[0]
+                    grp_entry = copy.deepcopy(old_entry)
+                    #for attr, values in old_entry.items():
+                        #grp_entry[attr] = values
+                    sczMembers =  old_entry.get('sczMember', [])
+                    if dst_dn not in sczMembers:
+                        grp_entry.setdefault('sczMember', []).append(dst_dn)
+                    #ldif = dst.modify(grp_dn, old_entry, grp_entry)
+                    #print("      - mod: {}".format(ldif))
+                elif len(grp_dns) == 0:
+                    gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+                    grp_entry['gidNumber'] = [gid]
+                    grp_entry['sczMember'] = [ dst_dn ]
+                    #grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                else:
+                    print("Too many dn's, this shouldn't happen")
+
+                # Here's the magic: Build the new group entry
+                grp_entry['cn'] = [grp_name]
+                grp_entry['description'] = [grp_id]
+
+                ldif = dst.store(grp_dn, grp_entry)
+                print("      - store: {}".format(ldif))
+
+#exit(0)
+# Cleanup phase
+print("\n\n--- Cleanup ---")
+for service, cos in collaborations.items():
+    print(f"service: {service}")
+
+    organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
+    for o_dn, o_entry in organizations.items():
+        if o_entry.get('description', None):
+            co_name = o_entry['description'][0]
+            co_fqdn = o_entry.get('host', [])
+
+            if not fqdn in co_fqdn:
+                print("skipping {}".format(co_fqdn))
+                continue
+
+            o_rdns = util.dn2rdns(o_dn)
+            co = o_rdns['o'][0]
+            dc = o_rdns['dc'][1]
+
+            print(f"o_rdns: {o_rdns}")
+            print("  - People")
+            src_members = vc.get(dc, {}).get(co, {}).get('members', [])
+            dst_dns = dst.rfind("ou=People,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
+            for dst_dn, dst_entry in dst_dns.items():
+                print("    - dstdn: {}".format(dst_dn))
+                if dst_entry.get('uid', None):
+                    dst_uid = dst_entry['uid'][0]
+                    if dst_uid not in src_members:
+                        print("      dst_uid not found in src_members, deleting {}".format(dst_dn))
+                        dst.delete(dst_dn)
+
+            print("  - Groups")
+            dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service), '(objectClass=sczGroup)')
+            for dst_dn, dst_entry in dst_dns.items():
+                print("    - dstdn: {}".format(dst_dn))
+                src_id = dst_entry.get('description', None)
+                if not src_id == None:
+                    new_entry = copy.deepcopy(dst_entry)
+                    src_id = src_id[0]
+                    dst_members = new_entry.get('sczMember', [])
+                    src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(int(src_id), [])
+                    removed = False
+                    for dst_member in dst_members:
+                        dst_uid = util.dn2rdns(dst_member)['uid'][0]
+                        print("      - dst_member: {}".format(dst_uid))
+                        if dst_uid not in src_members:
+                            print("        dst_member not found, deleting {}".format(dst_uid))
+                            dst_members.remove(dst_member)
+                            removed = True
+                    if removed:
+                        dst.modify(dst_dn, dst_entry, new_entry)
+
+            print("  - CO")
+            print(f"    - dstdn: {o_dn}")
+            if vc[service].get(co, None) == None:
+                print(f"   - {c} not found in our services, deleting")
+                dst.rdelete(o_dn)
+
+        print()

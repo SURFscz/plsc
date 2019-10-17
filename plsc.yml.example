@@ -10,6 +10,11 @@ ldap:
     basedn: dc=clients,dc=vnet
     binddn: cn=admin,dc=clients,dc=vnet
     passwd: changethispassword
+sbs:
+  src:
+    host: https://sbs.example.net
+    user: sysread
+    passwd: changethispassword
 pwd: changethispassword
 uid: 1000
 gid: 1000

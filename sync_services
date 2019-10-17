@@ -108,4 +108,4 @@ for svc, cos in rm_cos.items():
     for co in cos:
       dst_dn = "o={},dc={},{}".format(co, svc, dst.basedn)
       print("rm {}".format(dst_dn))
-      dst.rm(dst_dn)
+      dst.rdelete(dst_dn)
