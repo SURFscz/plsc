@@ -138,11 +138,11 @@ for service, cos in collaborations.items():
             ldif = dst.store(dst_dn, dst_entry)
             print(f"      - store: {ldif}")
 
-            print("  - Groups")
+            print("    - Groups")
             roles = src_detail['roles']
 
             for grp_id, grp_name in roles.items():
-                print("    - grp: {}/{}".format(grp_id, grp_name))
+                print("      - grp: {}/{}".format(grp_id, grp_name))
                 vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(src_uid)
 
                 grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -155,18 +155,13 @@ for service, cos in collaborations.items():
                 if len(grp_dns) == 1:
                     old_dn, old_entry = list(grp_dns.items())[0]
                     grp_entry = copy.deepcopy(old_entry)
-                    #for attr, values in old_entry.items():
-                        #grp_entry[attr] = values
                     sczMembers =  old_entry.get('sczMember', [])
                     if dst_dn not in sczMembers:
                         grp_entry.setdefault('sczMember', []).append(dst_dn)
-                    #ldif = dst.modify(grp_dn, old_entry, grp_entry)
-                    #print("      - mod: {}".format(ldif))
                 elif len(grp_dns) == 0:
                     gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
                     grp_entry['gidNumber'] = [gid]
                     grp_entry['sczMember'] = [ dst_dn ]
-                    #grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
                 else:
                     print("Too many dn's, this shouldn't happen")
 
@@ -177,9 +172,11 @@ for service, cos in collaborations.items():
                 ldif = dst.store(grp_dn, grp_entry)
                 print("      - store: {}".format(ldif))
 
+    print()
+
 #exit(0)
 # Cleanup phase
-print("\n\n--- Cleanup ---")
+print("-- Cleanup ---")
 for service, cos in collaborations.items():
     print(f"service: {service}")
 
@@ -197,7 +194,6 @@ for service, cos in collaborations.items():
             co = o_rdns['o'][0]
             dc = o_rdns['dc'][1]
 
-            print(f"o_rdns: {o_rdns}")
             print("  - People")
             src_members = vc.get(dc, {}).get(co, {}).get('members', [])
             dst_dns = dst.rfind("ou=People,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
