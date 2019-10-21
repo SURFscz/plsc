@@ -83,4 +83,4 @@ def uid(user):
     if isinstance(username, list):
         username = username[0]
 
-    return username.replace(',','\,')
+    return ldap.dn.escape_dn_chars(username)
