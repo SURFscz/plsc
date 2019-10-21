@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: future_fstrings -*-
 
 import sys
 import os, yaml, json
@@ -27,18 +28,32 @@ src_cos = {}
 for client_name, cos in collaborations.items():
     print("client: {}".format(client_name))
 
-    dc = client_name
-    dc_dn = 'dc=' + dc + ',' + dst.basedn
-    dc_entry = {'objectClass':['dcObject','organization'],'o':[dc]}
-
-    #print("dc_dn: {}".format(dc_dn))
+    svc = client_name
+    svc_dn = f"dc={svc},{dst.basedn}"
+    dc_entry = {'objectClass':['dcObject','organization'],'o':[svc]}
+    dst.add(svc_dn, dc_entry)
+    dc_dn = f"dc=ordered,dc={svc},{dst.basedn}"
     dst.add(dc_dn, dc_entry)
 
-    admin_dn = 'cn=admin,' + dc_dn
+    admin_dn = f"cn=admin,{dc_dn}"
     pwd = util.make_secret(config['pwd'])
     admin_entry = {'objectClass':['organizationalRole','simpleSecurityObject'],'userPassword':[pwd]}
-    #print("  admin_dn: {}".format(admin_dn))
     dst.add(admin_dn, admin_entry)
+
+    seq_dn = 'ou=Sequence,' + svc_dn
+    seq_entry = {'objectClass':['top','organizationalUnit'],'ou':['Sequence']}
+    #print("  seq_dn: {}".format(seq_dn))
+    dst.add(seq_dn, seq_entry)
+
+    uid_dn = 'cn=uidNumberSequence,' + seq_dn
+    uid_entry = {'objectClass':['top','device'], 'serialNumber':[str(config['uid'])]}
+    #print("  uid_dn: {}".format(uid_dn))
+    dst.add(uid_dn, uid_entry)
+
+    gid_dn = 'cn=gidNumberSequence,' + seq_dn
+    gid_entry = {'objectClass':['top','device'], 'serialNumber':[str(config['gid'])]}
+    #print("  gid_dn: {}".format(gid_dn))
+    dst.add(gid_dn, gid_entry)
 
     # Build client skeleton
     for co, entry in cos:
@@ -64,25 +79,16 @@ for client_name, cos in collaborations.items():
         else:
             o = entry['o'][0]
         co_dn = 'o=' + o + ',' + dc_dn
-        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[o],'description':[co],'host':[fqdn]}
+        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[o],'description':[co],'host':[f"{fqdn}:plsc"]}
         dst.add(co_dn, co_entry)
         print("co: " + co_dn)
 
-        for ou in ['Groups', 'People', 'Sequence', 'Services']:
+        for ou in ['Groups', 'People']:
             ou_dn = 'ou=' + ou + ',' + co_dn
             ou_entry = {'objectClass':['top','organizationalUnit'],'ou':[ou]}
             #print("  ou_dn: {}".format(ou_dn))
             dst.add(ou_dn, ou_entry)
 
-        uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + co_dn
-        uid_entry = {'objectClass':['top','device'], 'serialNumber':[str(config['uid'])]}
-        #print("  uid_dn: {}".format(uid_dn))
-        dst.add(uid_dn, uid_entry)
-
-        gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + co_dn
-        gid_entry = {'objectClass':['top','device'], 'serialNumber':[str(config['gid'])]}
-        #print("  gid_dn: {}".format(gid_dn))
-        dst.add(gid_dn, gid_entry)
     print()
 
 # Cleanup phase
@@ -93,7 +99,7 @@ rm_cos = {}
 for k, v in dst_services.items():
     dst_service = v['dc'][0]
     print("dc: {}".format(dst_service))
-    dst_collaborations = dst.rfind('dc={}'.format(dst_service), '(&(host={})(objectClass=organization))'.format(fqdn), ['o', 'description'], ldap.SCOPE_SUBTREE)
+    dst_collaborations = dst.rfind('dc=ordered,dc={}'.format(dst_service), '(&(host={}:{})(objectClass=organization))'.format(fqdn,'plsc'), ['o', 'description'], ldap.SCOPE_SUBTREE)
     dst_co = {}
     for k, v in dst_collaborations.items():
         co_name = v['description'][0]
@@ -106,6 +112,6 @@ for k, v in dst_services.items():
           rm_cos.setdefault(dst_service, []).append(co_nr)
 for svc, cos in rm_cos.items():
     for co in cos:
-      dst_dn = "o={},dc={},{}".format(co, svc, dst.basedn)
+      dst_dn = "o={},dc=ordered,dc={},{}".format(co, svc, dst.basedn)
       print("rm {}".format(dst_dn))
       dst.rdelete(dst_dn)

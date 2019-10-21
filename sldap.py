@@ -1,3 +1,5 @@
+# -*- coding: future_fstrings -*-
+
 import ldap, ldap.modlist
 
 class sLDAP(object):
@@ -69,7 +71,7 @@ class sLDAP(object):
         try:
             self.__c.add_s(dn, addlist)
         except Exception as e:
-            print("{}\n  {}".format(dn, e))
+            print("  {}: {}".format(e, dn))
         return addlist
 
     def modify(self, dn, old_entry, new_entry):
@@ -77,7 +79,7 @@ class sLDAP(object):
         try:
             self.__c.modify_s(dn, modlist)
         except Exception as e:
-            print("{}\n  {}".format(dn, e))
+            print("  {}: {}".format(e, dn))
         return modlist
 
     # store tries to add, then modifies if exists.

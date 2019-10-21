@@ -42,6 +42,7 @@ for service, cos in collaborations.items():
         print(f"- co: {co_id}")
 
         co_dn = f"dc=flat,dc={service},{dst.basedn}"
+        '''
         organizations = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(objectClass=extensibleObject)(o={co_id}))")
         if len(organizations):
             o_dn, o_entry = list(organizations.items())[0]
@@ -49,6 +50,7 @@ for service, cos in collaborations.items():
             if not fqdn in co_fqdn:
                 print("skipping {}".format(co_fqdn))
                 continue
+        '''
 
         # Flat dn
         flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")

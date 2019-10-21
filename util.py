@@ -1,3 +1,5 @@
+# -*- coding: future_fstrings -*-
+
 import os, hashlib, json
 import ldap
 from base64 import b64encode
