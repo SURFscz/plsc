@@ -76,11 +76,11 @@ def find_ordered_collaborations(c, services):
     return col
 
 def uid(user):
-    username = user.get('username', None)
+    username = user.get('uid', None)
     if not username:
         raise Exception("User: {} does not contain username")
 
     if isinstance(username, list):
         username = username[0]
 
-    return username.replace(',','').replace('.','')
+    return username.replace(',','\,')
