@@ -7,7 +7,7 @@ import socket
 import copy
 
 import util
-from connection import Connection
+from sldap import sLDAP
 from sbs import SBS
 
 import ipdb
@@ -21,7 +21,7 @@ with open(sys.argv[1]) as f:
   config = yaml.safe_load(f)
 
 src = SBS(config['sbs']['src'])
-dst = Connection(config['ldap']['dst'])
+dst = sLDAP(config['ldap']['dst'])
 fqdn = socket.getfqdn()
 #print(f"fqdn: {fqdn}")
 

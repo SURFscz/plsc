@@ -5,7 +5,7 @@ import yaml, re
 import socket
 
 import util
-from connection import Connection
+from sldap import sLDAP
 
 if len(sys.argv) < 2:
     sys.exit(sys.argv[0] + "  <conf.yml>")
@@ -14,8 +14,8 @@ if len(sys.argv) < 2:
 with open(sys.argv[1]) as f:
   config = yaml.safe_load(f)
 
-src = Connection(config['ldap']['src'])
-dst = Connection(config['ldap']['dst'])
+src = sLDAP(config['ldap']['src'])
+dst = sLDAP(config['ldap']['dst'])
 fqdn = socket.getfqdn()
 
 services = util.find_services(src)
