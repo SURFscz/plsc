@@ -21,7 +21,6 @@ with open(sys.argv[1]) as f:
 
 src = sLDAP(config['ldap']['src'])
 dst = sLDAP(config['ldap']['dst'])
-fqdn = socket.getfqdn()
 
 services = util.find_ordered_services(src)
 print(f"s: {services}")
@@ -42,21 +41,12 @@ for service, cos in collaborations.items():
         print(f"- co: {co_id}")
 
         co_dn = f"dc=flat,dc={service},{dst.basedn}"
-        '''
-        organizations = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(objectClass=extensibleObject)(o={co_id}))")
-        if len(organizations):
-            o_dn, o_entry = list(organizations.items())[0]
-            co_fqdn = o_entry.get('host', [])
-            if not fqdn in co_fqdn:
-                print("skipping {}".format(co_fqdn))
-                continue
-        '''
 
         # Flat dn
         flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
         if len(flat_dns) == 0:
             flat_dn = f"dc=flat,dc={service},{dst.basedn}"
-            flat_entry = {'objectClass':['dcObject', 'organization'],'dc':['flat'],'o':[fqdn]}
+            flat_entry = {'objectClass':['dcObject', 'organization'],'dc':['flat'],'o':[service]}
             dst.add(flat_dn, flat_entry)
             for ou in ['Groups', 'People']:
                 ou_dn = 'ou=' + ou + ',' + flat_dn
