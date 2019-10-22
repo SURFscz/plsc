@@ -87,12 +87,21 @@ for service, cos in collaborations.items():
             vc['groups'].add(grp_cn)
 
             members = []
+            scz_members = grp_entry.get('sczMember', [])
 
             # Build members, remove o= from member DN's
-            for member in grp_entry['sczMember']:
+            for member in scz_members:
                 member_rdns = util.dn2rdns(member)
-                member_uid = member_rdns['uid'][0]
-                member_dn = f"uid={member_uid},ou=People,{co_dn}"
+                # members can be persons or groups
+                member_uid = member_rdns.get('uid', [])
+                member_cn = member_rdns.get('cn', [])
+                if len(member_uid):
+                  member_dn = f"uid={member_uid[0]},ou=People,{co_dn}"
+                elif len(member_cn):
+                  member_dn = f"cn={member_cn[0]},ou=Groups,{co_dn}"
+                else:
+                  # no valid member found?
+                  continue
                 members.append(member_dn)
                 #print(f"uid: {member_dn}")
 
