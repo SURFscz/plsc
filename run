@@ -1,0 +1,4 @@
+#!/bin/sh
+bin/python ./plsc plsc.yml
+bin/python ./slp-ordered plsc.yml
+bin/python ./plsc-flat plsc.yml

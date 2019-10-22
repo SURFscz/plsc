@@ -19,7 +19,7 @@ if len(sys.argv) < 2:
 with open(sys.argv[1]) as f:
   config = yaml.safe_load(f)
 
-src = sLDAP(config['ldap']['src'])
+src = sLDAP(config['ldap']['dst'])
 dst = sLDAP(config['ldap']['dst'])
 
 services = util.find_ordered_services(src)
