@@ -7,6 +7,6 @@ elif [ ! -f "$1" ]; then
   exit 1
 fi
 
-bin/python ./plsc "$1"
+#bin/python ./plsc "$1"
 bin/python ./slp-ordered "$1"
 bin/python ./plsc-flat "$1"
