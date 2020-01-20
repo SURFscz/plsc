@@ -1,0 +1,12 @@
+#!/bin/sh
+if [ -z "$1" ]; then
+  echo "No configuration given"
+  exit 1
+elif [ ! -f "$1" ]; then
+  echo "configuration not found"
+  exit 1
+fi
+
+#bin/python ./plsc "$1"
+bin/python ./slp-ordered "$1"
+bin/python ./plsc-flat "$1"

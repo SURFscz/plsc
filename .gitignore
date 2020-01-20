@@ -3,6 +3,7 @@ bin/
 include/
 lib/
 plsc.yml
+sbs.yml
 share/
 lib64
 pyvenv.cfg

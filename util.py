@@ -1,3 +1,5 @@
+# -*- coding: future_fstrings -*-
+
 import os, hashlib, json
 import ldap
 from base64 import b64encode
@@ -48,6 +50,13 @@ def find_services(c):
         services.extend(entry['labeledURI'])
     return list(set(services))
 
+def find_ordered_services(c):
+    services = []
+    r = c.find(None, '(objectClass=dcObject)', ['dc'], scope=ldap.SCOPE_ONELEVEL)
+    for dn, entry in r.items():
+        services.extend(entry['dc'])
+    return list(set(services))
+
 def find_collaborations(c, services):
     col = {}
     for service in services:
@@ -57,3 +66,23 @@ def find_collaborations(c, services):
             col[service].append(co)
 
     return col
+
+def find_ordered_collaborations(c, services):
+    col = {}
+    for service in services:
+        col[service] = []
+        cos = c.rfind(f"dc=ordered,dc={service}", "(objectClass=organization)", ['o'], scope=ldap.SCOPE_ONELEVEL)
+        for co, entry in cos.items():
+            col[service].append(entry['o'][0])
+
+    return col
+
+def uid(user):
+    username = user.get('uid', None)
+    if not username:
+        raise Exception("User: {} does not contain username")
+
+    if isinstance(username, list):
+        username = username[0]
+
+    return ldap.dn.escape_dn_chars(username)

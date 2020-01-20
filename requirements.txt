@@ -3,4 +3,6 @@ pyasn1
 pyasn1-modules
 python-ldap
 PyYAML
-
+future-fstrings
+ipdb
+requests

@@ -1,6 +1,8 @@
+# -*- coding: future_fstrings -*-
+
 import ldap, ldap.modlist
 
-class Connection(object):
+class sLDAP(object):
 
     # LDAP connection, private
     __c = None
@@ -29,7 +31,7 @@ class Connection(object):
         for k, v in entry.items():
             rv = []
             for ev in v:
-                rv.append(ev.encode())
+                rv.append(str(ev).encode())
             r[k] = rv
         return r
 
@@ -38,7 +40,7 @@ class Connection(object):
         for k, v in entry.items():
             rv = []
             for ev in v:
-                rv.append(ev.decode())
+                rv.append(str(ev.decode()))
             r[k] = rv
         return r
 
@@ -69,8 +71,7 @@ class Connection(object):
         try:
             self.__c.add_s(dn, addlist)
         except Exception as e:
-            #pass
-            print("{}\n  {}".format(dn, e))
+            print("  {}: {}".format(e, dn))
         return addlist
 
     def modify(self, dn, old_entry, new_entry):
@@ -78,9 +79,19 @@ class Connection(object):
         try:
             self.__c.modify_s(dn, modlist)
         except Exception as e:
-            #pass
-            print("{}\n  {}".format(dn, e))
+            print("  {}: {}".format(e, dn))
         return modlist
+
+    # store tries to add, then modifies if exists.
+    def store(self, dn, new_entry):
+        dst_dns = self.find(dn)
+        if len(dst_dns) == 1:
+            dn, entry = list(dst_dns.items())[0]
+            return self.modify(dn, entry, new_entry)
+        elif len(dst_dns) == 0:
+            return self.add(dn, new_entry)
+        else:
+            return "Too many dn's This shouldn't happen"
 
     def delete(self, dn):
         try:
@@ -88,19 +99,12 @@ class Connection(object):
         except Exception as e:
             print("{}\n  {}".format(dn, e))
 
-    def rm(self, dn):
-        r = self.find(dn)
-        leefs = {}
-        for k, v in r.items():
-            level = len(ldap.dn.explode_dn(k))
-            leefs[k] = level
-        # Reverse sort the leefs on level
-        leefs_sorted = sorted(leefs.items(), key=lambda kv: kv[1], reverse=True)
-        for (dn_sorted, level) in leefs_sorted:
-            try:
-                self.__c.delete_s(dn_sorted)
-            except Exception as e:
-                print("{}\n  {}".format(dn, e))
+    def rdelete(self, dn):
+        children = self.find(dn, scope=ldap.SCOPE_ONELEVEL)
+        if len(children):
+          for child_dn in children:
+            self.rdelete(child_dn)
+        self.delete(dn)
 
     def get_sequence(self, dn):
         seq = 1000

@@ -3,12 +3,17 @@ ldap:
   src:
     uri: ldap://ldap.vm.scz-vm.net
     basedn: dc=scz,dc=vnet
-    binddn: cn=John Doe,dc=scz,dc=vnet
+    binddn: cn=admin,dc=scz,dc=vnet
     passwd: changethispassword
   dst:
     uri: ldap://ldap.vm.scz-vm.net
-    basedn: dc=clients,dc=vnet
+    basedn: dc=services,dc=vnet
     binddn: cn=admin,dc=clients,dc=vnet
+    passwd: changethispassword
+sbs:
+  src:
+    host: https://sbs.example.net
+    user: sysread
     passwd: changethispassword
 pwd: changethispassword
 uid: 1000
