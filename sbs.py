@@ -60,7 +60,7 @@ class SBS(object):
     return self.api(f"api/collaborations/{c_id}")
 
   def authgroup(self, c_id, a_id):
-    return self.api(f"api/authorisation_groups/{a_id}/{c_id}")
+    return self.api(f"api/groups/{a_id}/{c_id}")
 
   def service_attributes(self, entity_id, uid):
     t = {
@@ -76,7 +76,7 @@ class SBS(object):
       'urn:mace:terena.org:attribute-def:schacHomeOrganization': 'schac_home_organisation',
       'urn:oid:1.3.6.1.4.1.24552.1.1.1.13': 'ssh_key',
     }
-    a = self.api(f"api/user_service_profiles/attributes?service_entity_id={entity_id}&uid={uid}")
+    a = self.api(f"api/users/attributes?service_entity_id={entity_id}&uid={uid}")
     r = {}
     for k,v in a.items():
       r[t.get(k,'other')] = v
@@ -105,7 +105,7 @@ class SBS(object):
         'user': u['user'],
         'roles': { 0: f"co_{co['name']}" }
       }
-    for a in co['authorisation_groups']:
+    for a in co['groups']:
       a_id = a['id']
       auth_group = self.authgroup(c_id, a_id)
       for m in auth_group['collaboration_memberships']:
