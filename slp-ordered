@@ -80,7 +80,7 @@ for service, cos in collaborations.items():
             co_fqdn = o_entry.get('host', [])
             if not fqdn in co_fqdn:
                 print("skipping {}".format(co_fqdn))
-                continue
+                #continue
 
         # Create CO if necessary
         co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -176,6 +176,7 @@ for service, cos in collaborations.items():
     print()
 
 #exit(0)
+print("vc: {}".format(vc))
 # Cleanup phase
 print("-- Cleanup ---")
 for service, cos in collaborations.items():
@@ -189,7 +190,7 @@ for service, cos in collaborations.items():
 
             if not fqdn in co_fqdn:
                 print("skipping {}".format(co_fqdn))
-                continue
+                #continue
 
             o_rdns = util.dn2rdns(o_dn)
             co = o_rdns['o'][0]
@@ -228,14 +229,14 @@ for service, cos in collaborations.items():
                             removed = True
                     if removed:
                         dst.modify(dst_dn, dst_entry, new_entry)
-                    if grp_name not in vc.get(dc, {}).get(co, {}).get('groups'):
+                    if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
                         print("        grp_name not found, deleting {}".format(dst_dn))
                         dst.delete(dst_dn)
 
             print("  - CO")
             print(f"    - dstdn: {o_dn}")
             if vc[service].get(co, None) == None:
-                print(f"   - {c} not found in our services, deleting")
+                print(f"   - {co} not found in our services, deleting")
                 dst.rdelete(o_dn)
 
         print()
