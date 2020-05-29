@@ -1,4 +1,5 @@
 #!/bin/sh
+export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 if [ -z "$1" ]; then
   echo "No configuration given"
   exit 1

@@ -56,7 +56,8 @@ class sLDAP(object):
             for dn, entry in r:
                 dns[dn] = self.__decode(entry)
         except Exception as e:
-            print("find: {}".format(e))
+            #print("find: {}".format(e))
+            pass
         return dns
 
     def rfind(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
@@ -84,7 +85,7 @@ class sLDAP(object):
 
     # store tries to add, then modifies if exists.
     def store(self, dn, new_entry):
-        dst_dns = self.find(dn)
+        dst_dns = self.find(dn, scope=ldap.SCOPE_BASE)
         if len(dst_dns) == 1:
             dn, entry = list(dst_dns.items())[0]
             return self.modify(dn, entry, new_entry)

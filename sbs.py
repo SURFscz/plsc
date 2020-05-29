@@ -53,14 +53,17 @@ class SBS(object):
 
     panic(f"Organisation {id} not found !")
 
+  def service(self, s_id):
+    return self.api(f"api/services/{s_id}")
+
   def collaborations(self):
     return self.api('api/collaborations/all')
 
   def collaboration(self, c_id):
     return self.api(f"api/collaborations/{c_id}")
 
-  def authgroup(self, c_id, a_id):
-    return self.api(f"api/groups/{a_id}/{c_id}")
+  def group(self, c_id, g_id):
+    return self.api(f"api/groups/{g_id}/{c_id}")
 
   def service_attributes(self, entity_id, uid):
     t = {
@@ -105,10 +108,10 @@ class SBS(object):
         'user': u['user'],
         'roles': { 0: f"co_{co['name']}" }
       }
-    for a in co['groups']:
-      a_id = a['id']
-      auth_group = self.authgroup(c_id, a_id)
-      for m in auth_group['collaboration_memberships']:
-        users[u['user_id']]['roles'][a_id] = f"group_{a['name']}"
+    for group in co['groups']:
+      g_id = group['id']
+      g = self.group(c_id, g_id)
+      for m in g['collaboration_memberships']:
+        users[m['user_id']]['roles'][g_id] = f"group_{g['name']}"
     return users
 
