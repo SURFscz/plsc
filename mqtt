@@ -34,12 +34,7 @@ def collaboration(method, action, msg):
     if action == "collaborations/invites":
         print(f"discarding collaborations invites msg")
         return
-    print(f"handling collaboration {method} {action} {msg}")
-    if method == 'delete':
-        split = action.split('/')
-        cid = split[1]
-    else:
-        cid = msg['id']
+    cid = msg['id']
     print(f"handling collaboration {method} {action} {cid} {msg}")
     # Handling POST makes no sense, since a new CO is not
     # Connected to any service?
@@ -50,24 +45,16 @@ def collaboration(method, action, msg):
 
 
 def service(method, action, msg):
-    if method == 'delete':
-        sid = action.split('/')[1]
-    else:
-        sid = msg['id']
-    print(f"handling service {method} {action} {sid} {msg}")
+    sid = msg['id']
+    print(f"handling service {method} {action} {sid}")
     if method == 'delete':
         mqtt_util.delete_service(src, dst, config, sid)
     else:
         mqtt_util.create_service(src, dst, config, sid)
 
 def collab_service(method, action, msg):
-    if method == 'delete':
-        split = action.split('/')
-        cid = split[1]
-        sid = split[2]
-    else:
-        cid = msg['collaboration_id']
-        sid = msg['service_id']
+    cid = msg['collaboration_id']
+    sid = msg['service_id']
     print(f"handling collaboration service {method} s:{sid} c:{cid} {msg}")
     service = src.service(sid)
     seid = service['entity_id']
@@ -77,6 +64,12 @@ def collab_service(method, action, msg):
     else:
         mqtt_util.create_collaboration(src, dst, config, cid, sid)
         
+def collab_member(method, action, msg):
+    cid = msg['collaboration_id']
+    uid = msg['user_id']
+    print(f"handling collaboration membership {method} u:{uid} c:{cid} {msg}")
+    mqtt_util.collab_member(src, dst, config, cid, uid)
+
 def invitation(method, action, msg):
     if action == 'invitations/accept' and method == 'put':
         print(f"handling invitations {method} {action} {msg}")
@@ -99,13 +92,11 @@ def join_request(method, action, msg):
 
 def group(method, action, msg):
     print(f"handling group {method} {action} {msg}")
+    gid = msg['id']
+    cid = msg['collaboration_id']
     if method == "delete":
-        split = action.split('/')
-        gid = split[1]
-        mqtt_util.delete_group(src, dst, config, gid)
+        mqtt_util.delete_group(src, dst, config, cid, gid, msg)
     else:
-        gid = msg['id']
-        cid = msg['collaboration_id']
         mqtt_util.add_group(src, dst, config, cid, gid)
 
 def group_member(method, action, msg):
@@ -122,6 +113,7 @@ def on_message(client, userdata, message):
     print("-")
     switcher = {
         'collaborations': collaboration,
+        'collaboration_memberships': collab_member,
         'services': service,
         'collaborations_services': collab_service,
         'invitations': invitation,
