@@ -242,12 +242,9 @@ def add_group(src, dst, config, cid, gid):
 def group_users(src, dst, config, cid, gid):
     print(f"Doing memberships for group {gid} in co {cid}")
     services = src.service_collaborations()
-    for service, s in services.items():
-        if not s.get(int(cid), False):
-            continue
-        users = src.users(cid)
-        for uid, user in users.items():
-            create_groups(src, dst, config, cid, service, user)
+    users = src.users(cid)
+    for uid, user in users.items():
+        create_user(src, dst, config, cid, user)
 
 def remove_group_users(src, dst, config, cid, gid):
     print(f"Remove users group {gid} in co {cid}")

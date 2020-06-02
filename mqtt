@@ -9,7 +9,7 @@ import threading
 import traceback
 import paho.mqtt.client as client
 
-import util, mqtt_util
+import util, mqtt_util, mqtt_flat
 from sldap import sLDAP
 from sbs import SBS
 
@@ -29,6 +29,7 @@ mqtt_client = config['mqtt']['client']
 
 def unknown(method, action, msg):
     print(f"don\'t know what to do with {method} {action} {msg}")
+    return 0
 
 def collaboration(method, action, msg):
     if action == "collaborations/invites":
@@ -42,7 +43,7 @@ def collaboration(method, action, msg):
         mqtt_util.delete_collaboration(src, dst, config, cid)
     elif method == 'put':
         mqtt_util.update_collaboration(src, dst, config, cid)
-
+    return cid
 
 def service(method, action, msg):
     sid = msg['id']
@@ -51,6 +52,7 @@ def service(method, action, msg):
         mqtt_util.delete_service(src, dst, config, sid)
     else:
         mqtt_util.create_service(src, dst, config, sid)
+    return 0
 
 def collab_service(method, action, msg):
     cid = msg['collaboration_id']
@@ -63,12 +65,14 @@ def collab_service(method, action, msg):
         mqtt_util.remove_collaboration(src, dst, config, cid, sid)
     else:
         mqtt_util.create_collaboration(src, dst, config, cid, sid)
+    return cid
         
 def collab_member(method, action, msg):
     cid = msg['collaboration_id']
     uid = msg['user_id']
     print(f"handling collaboration membership {method} u:{uid} c:{cid} {msg}")
     mqtt_util.collab_member(src, dst, config, cid, uid)
+    return cid
 
 def invitation(method, action, msg):
     if action == 'invitations/accept' and method == 'put':
@@ -79,6 +83,7 @@ def invitation(method, action, msg):
         mqtt_util.create_user(src, dst, config, cid, users[uid])
     else:
         print(f"discarding invitations {method} {action} {msg}")
+    return cid
 
 def join_request(method, action, msg):
     if action == 'join_requests/accept' and method == 'put':
@@ -89,6 +94,7 @@ def join_request(method, action, msg):
         mqtt_util.create_user(src, dst, config, cid, users[uid])
     else:
         print(f"discarding join_request {method} {action} {msg}")
+    return cid
 
 def group(method, action, msg):
     print(f"handling group {method} {action} {msg}")
@@ -98,6 +104,7 @@ def group(method, action, msg):
         mqtt_util.delete_group(src, dst, config, cid, gid, msg)
     else:
         mqtt_util.add_group(src, dst, config, cid, gid)
+    return cid
 
 def group_member(method, action, msg):
     print(f"handling group_member {method} {action} {msg}")
@@ -108,6 +115,7 @@ def group_member(method, action, msg):
     else:
         gid = msg['group_id']
         mqtt_util.group_users(src, dst, config, cid, gid)
+    return cid
 
 def on_message(client, userdata, message):
     print("-")
@@ -129,7 +137,8 @@ def on_message(client, userdata, message):
 
     func = switcher.get(subject, unknown)
     try:
-        func(method, action, msg)
+        cid = func(method, action, msg)
+        mqtt_flat.flatten(dst, dst, src, config, cid)
     except:
         traceback.print_exc()
 
