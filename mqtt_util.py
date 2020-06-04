@@ -3,6 +3,39 @@ import ldap
 import json
 import util
 import copy
+import paho.mqtt.publish as publish
+import paho.mqtt.subscribe as subscribe
+
+class mqttClient():
+    enabled = False
+    client_id = None
+    host = None
+
+    def __init__(self, config, *args, **kwargs):
+        self.enabled = config['enabled']
+        self.host = config['host']
+        self.client_id = config['client_id']
+
+    def publish(self, *args, **kwargs):
+        r = False
+        if self.enabled:
+            try:
+                publish.single(*args, hostname=self.host, retain=False, qos=1, client_id=self.client_id, **kwargs)
+                print("{} {}".format(args[0], kwargs['payload']))
+                r = True
+            except Exception as e:
+                print(f"Fail {e}")
+        return r
+
+    def subscribe(self, *args, **kwargs):
+        r = False
+        if self.enabled:
+            try:
+                msg = subscribe.simple(*args, hostname=self.host, qos=1,  client_id=self.client_id, clean_session=False, **kwargs)
+                r = msg
+            except Exception as e:
+                print(f"Fail {e}")
+        return r
 
 def create_service(src, dst, config, sid):
     s = src.service(sid)
@@ -79,6 +112,7 @@ def remove_collaboration(src, dst, config, cid, sid):
 def update_collaboration(src, dst, config, cid):
     # Collaborations can only be created when they
     # belong to a service
+    # TODO This does not handle CO renaming correctly!!!
     print(f"updating collaboration {cid}")
     co = src.collaboration(cid)
     co_identifier = co['identifier']
@@ -115,7 +149,8 @@ def collab_member(src, dst, config, cid, uid):
         if not s.get(int(cid), False):
             continue
         users = src.users(cid)
-        create_groups(src, dst, config, cid, service, user[uid])
+        print(f"users: {users}")
+        create_groups(src, dst, config, cid, service, users[uid])
 
 def create_user(src, dst, config, cid, user):
     details = user['user']
@@ -157,7 +192,7 @@ def create_user(src, dst, config, cid, user):
         ldif = dst.store(dst_dn, dst_entry)
         print(f"create user: {dst_dn}")
 
-        roles = user['roles']
+        #roles = user['roles']
         create_groups(src, dst, config, cid, service, user)
 
 def create_groups(src, dst, config, cid, service, user):
@@ -289,4 +324,55 @@ def clean_group(src, dst, config, cid, service, group):
     ldif = dst.store(grp_dn, grp_entry)
     print(f"update group: {grp_dn}")
 
+
+def clean_collaboration(src, dst, config, cid):
+    # This is untested code
+    print(f"Collaboration cleanup for co {cid}")
+    co = src.collaboration(cid)
+    co_identifier = co['identifier']
+    services = src.service_collaborations()
+    for service, cos in services.items():
+        if not cid in cos:
+            continue
+
+        # Handle co membership
+        users = {}
+        for u in co['collaboration_memberships']:
+            users[u['user_id']] = {
+                'user': u['user']
+            }
+
+        grp_id = 0
+        grp_name = f"co_{co['name']}"
+        print(f"grp_id {grp_id} group {grp_name}")
+
+        members = []
+        for uid, user in users.items():
+            print(f"uid {uid} user {user['user']['uid']} {json.dumps(user)}")
+            uid = util.uid(user['user'])
+            user_dn = f"uid={uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+            members.append(user_dn)
+
+        grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup)(cn={grp_name}))")
+        print(f"grp_dn {grp_dn}")
+        if len(grp_dns) == 1:
+            old_dn, old_entry = list(grp_dns.items())[0]
+            grp_entry = copy.deepcopy(old_entry)
+            grp_entry['sczMember'] = members
+        else:
+            print("No or too many dn's, this shouldn't happen?")
+
+        # Here's the magic: Build the new group entry
+        grp_entry['cn'] = [grp_name]
+        grp_entry['description'] = [grp_id]
+
+        ldif = dst.store(grp_dn, grp_entry)
+        print(f"update group: {grp_dn}")
+
+        users = {}
+        for group in co['groups']:
+            gid = group['id']
+            grp = src.group(cid, gid)
+            clean_group(src, dst, config, cid, service, grp)
 

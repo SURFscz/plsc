@@ -7,9 +7,9 @@ import socket
 import copy
 import threading
 import traceback
-import paho.mqtt.client as client
 
 import util, mqtt_util, mqtt_flat
+from mqtt_util import mqttClient
 from sldap import sLDAP
 from sbs import SBS
 
@@ -24,8 +24,6 @@ src = SBS(config['sbs']['src'])
 dst = sLDAP(config['ldap']['dst'])
 fqdn = socket.getfqdn() + ':slp'
 mqtt_topic = config['mqtt']['topic']
-mqtt_host = config['mqtt']['host']
-mqtt_client = config['mqtt']['client']
 
 def unknown(method, action, msg):
     print(f"don\'t know what to do with {method} {action} {msg}")
@@ -35,7 +33,7 @@ def collaboration(method, action, msg):
     if action == "collaborations/invites":
         print(f"discarding collaborations invites msg")
         return
-    cid = msg['id']
+    cid = int(msg['id'])
     print(f"handling collaboration {method} {action} {cid} {msg}")
     # Handling POST makes no sense, since a new CO is not
     # Connected to any service?
@@ -46,7 +44,7 @@ def collaboration(method, action, msg):
     return cid
 
 def service(method, action, msg):
-    sid = msg['id']
+    sid = int(msg['id'])
     print(f"handling service {method} {action} {sid}")
     if method == 'delete':
         mqtt_util.delete_service(src, dst, config, sid)
@@ -55,8 +53,8 @@ def service(method, action, msg):
     return 0
 
 def collab_service(method, action, msg):
-    cid = msg['collaboration_id']
-    sid = msg['service_id']
+    cid = int(msg['collaboration_id'])
+    sid = int(msg['service_id'])
     print(f"handling collaboration service {method} s:{sid} c:{cid} {msg}")
     service = src.service(sid)
     seid = service['entity_id']
@@ -68,17 +66,20 @@ def collab_service(method, action, msg):
     return cid
         
 def collab_member(method, action, msg):
-    cid = msg['collaboration_id']
-    uid = msg['user_id']
-    print(f"handling collaboration membership {method} u:{uid} c:{cid} {msg}")
-    mqtt_util.collab_member(src, dst, config, cid, uid)
+    print(f"handling collaboration membership {method} {action} {msg}")
+    cid = int(msg['collaboration_id'])
+    uid = int(msg['user_id'])
+    if method == 'delete':
+        mqtt_util.clean_collaboration(src, dst, config, cid)
+    else:
+        mqtt_util.collab_member(src, dst, config, cid, uid)
     return cid
 
 def invitation(method, action, msg):
     if action == 'invitations/accept' and method == 'put':
         print(f"handling invitations {method} {action} {msg}")
-        cid = msg['collaboration_id']
-        uid = msg['user_id']
+        cid = int(msg['collaboration_id'])
+        uid = int(msg['user_id'])
         users = src.users(cid)
         mqtt_util.create_user(src, dst, config, cid, users[uid])
     else:
@@ -88,18 +89,19 @@ def invitation(method, action, msg):
 def join_request(method, action, msg):
     if action == 'join_requests/accept' and method == 'put':
         print(f"handling join_request {method} {action} {msg}")
-        cid = msg['collaboration_id']
-        uid = msg['user_id']
+        cid = int(msg['collaboration_id'])
+        uid = int(msg['user_id'])
         users = src.users(cid)
         mqtt_util.create_user(src, dst, config, cid, users[uid])
+        return cid
     else:
         print(f"discarding join_request {method} {action} {msg}")
-    return cid
+        return 0
 
 def group(method, action, msg):
     print(f"handling group {method} {action} {msg}")
-    gid = msg['id']
-    cid = msg['collaboration_id']
+    cid = int(msg['collaboration_id'])
+    gid = int(msg['id'])
     if method == "delete":
         mqtt_util.delete_group(src, dst, config, cid, gid, msg)
     else:
@@ -108,16 +110,16 @@ def group(method, action, msg):
 
 def group_member(method, action, msg):
     print(f"handling group_member {method} {action} {msg}")
-    cid = msg['collaboration_id']
+    cid = int(msg['collaboration_id'])
     if method == "delete":
-        gid = msg['id']
+        gid = int(msg['id'])
         mqtt_util.remove_group_users(src, dst, config, cid, gid)
     else:
-        gid = msg['group_id']
+        gid = int(msg['group_id'])
         mqtt_util.group_users(src, dst, config, cid, gid)
     return cid
 
-def on_message(client, userdata, message):
+def on_message(message):
     print("-")
     switcher = {
         'collaborations': collaboration,
@@ -142,19 +144,8 @@ def on_message(client, userdata, message):
     except:
         traceback.print_exc()
 
-def on_log(client, userdata, level, buf):
-    print("log: ",buf)
-
-mqtt = client.Client(mqtt_client, clean_session=False)
-mqtt.connect(mqtt_host)
-
-mqtt.subscribe(mqtt_topic, qos=1)
-mqtt.on_message = on_message
-#mqtt.on_log = on_log
-mqtt.loop_start()
-
-#forever = threading.Event()
-#forever.wait()
+mqtt = mqttClient(config['mqtt'])
 
 while True:
-    time.sleep(1)
+    msg = mqtt.subscribe(mqtt_topic)
+    on_message(msg)
