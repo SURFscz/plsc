@@ -45,8 +45,7 @@ def create_service(src, dst, config, sid):
 
     # Create service if necessary
     service_dn = f"dc={service},{dst.basedn}"
-    #TODO We need to store sid in service so we can lookup on delete trigger
-    service_entry = {'objectClass':['dcObject', 'organization'],'dc':[service],'o':[service, sid], 'description':[description]}
+    service_entry = {'objectClass':['dcObject', 'organization'],'dc':[service],'o':[service], 'description':[description]}
     dst.store(service_dn, service_entry)
     admin_dn = 'cn=admin,' + service_dn
     admin_entry = {'objectClass':['organizationalRole', 'simpleSecurityObject'],'cn':['admin'],'userPassword':[config['pwd']]}
@@ -133,6 +132,7 @@ def update_collaboration(src, dst, config, cid):
         #    ou_dn = 'ou=' + ou + ',' + co_dn
         #    ou_entry = {'objectClass':['top','organizationalUnit'],'ou':[ou]}
         #    dst.store(ou_dn, ou_entry)
+
 
 def delete_collaboration(src, dst, config, cid):
     service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(ObjectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
@@ -328,30 +328,40 @@ def clean_group(src, dst, config, cid, service, group):
 def clean_collaboration(src, dst, config, cid):
     # This is untested code
     print(f"Collaboration cleanup for co {cid}")
+
     co = src.collaboration(cid)
     co_identifier = co['identifier']
+
+    # Get expected groups and users
+    groups = src.collaboration_groups(cid)
+
     services = src.service_collaborations()
     for service, cos in services.items():
         if not cid in cos:
             continue
 
-        # Handle co membership
-        users = {}
-        for u in co['collaboration_memberships']:
-            users[u['user_id']] = {
-                'user': u['user']
-            }
+        old_groups = {}
 
+        # Find all groups in LDAP
+        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup))")
+        for grp_dn, grp in grp_dns.items():
+            name = grp['cn'][0]
+            old_groups[name] = grp_dn
+
+        # Handle co membership
         grp_id = 0
         grp_name = f"co_{co['name']}"
-        print(f"grp_id {grp_id} group {grp_name}")
+        print(f"CO group group {grp_name}")
 
         members = []
-        for uid, user in users.items():
-            print(f"uid {uid} user {user['user']['uid']} {json.dumps(user)}")
-            uid = util.uid(user['user'])
+        for user_id in groups['groups'][0]['members']:
+            user = groups['users'][user_id]
+            uid = util.uid(user)
             user_dn = f"uid={uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
             members.append(user_dn)
+
+        grp_entry = {}
+        grp_entry['objectClass'] = ['extensibleObject', 'posixGroup', 'sczGroup']
 
         grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
         grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup)(cn={grp_name}))")
@@ -359,20 +369,32 @@ def clean_collaboration(src, dst, config, cid):
         if len(grp_dns) == 1:
             old_dn, old_entry = list(grp_dns.items())[0]
             grp_entry = copy.deepcopy(old_entry)
-            grp_entry['sczMember'] = members
+        elif len(grp_dns) == 0:
+            gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+            grp_entry['gidNumber'] = [gid]
+            grp_entry['sczMember'] = [ user_dn ]
         else:
-            print("No or too many dn's, this shouldn't happen?")
+            print("Too many dn's, this shouldn't happen")
 
         # Here's the magic: Build the new group entry
-        grp_entry['cn'] = [grp_name]
-        grp_entry['description'] = [grp_id]
+        grp_entry['sczMember'] = members
+        grp_entry['cn'] = [ grp_name ]
+        grp_entry['description'] = [ grp_id ]
 
         ldif = dst.store(grp_dn, grp_entry)
         print(f"update group: {grp_dn}")
 
-        users = {}
-        for group in co['groups']:
-            gid = group['id']
-            grp = src.group(cid, gid)
-            clean_group(src, dst, config, cid, service, grp)
+        grps = []
+        for gid, grp in groups['groups'].items():
+            grps.append(grp['name'])
+        for name, grp_dn in old_groups.items():
+            if not name in grps:
+                print(f"remove group: {grp_dn}")
+                dst.rdelete(grp_dn)
+
+def test(src, dst, config, cid):
+    users = src.collaboration_users(cid)
+    print("users: {}".format(json.dumps(users)))
+    groups = src.collaboration_groups(cid)
+    print("groups: {}".format(json.dumps(groups)))
 

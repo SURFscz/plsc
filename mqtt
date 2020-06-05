@@ -41,6 +41,7 @@ def collaboration(method, action, msg):
         mqtt_util.delete_collaboration(src, dst, config, cid)
     elif method == 'put':
         mqtt_util.update_collaboration(src, dst, config, cid)
+        mqtt_util.clean_collaboration(src, dst, config, cid)
     return cid
 
 def service(method, action, msg):

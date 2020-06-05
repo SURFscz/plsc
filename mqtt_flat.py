@@ -101,10 +101,6 @@ def flatten(src, dst, sbs, config, cid):
                 ldif = dst.store(dst_dn, grp_entry)
                 print("    - store: {}".format(ldif))
 
-            print()
-
-    #print(f"vc: {vc}")
-
     # Cleanup phase
     print("--- Cleanup ---")
     for service, cos in collaborations.items():
@@ -146,4 +142,3 @@ def flatten(src, dst, sbs, config, cid):
                     print("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
 
-        print()
