@@ -2,7 +2,7 @@
 
 import util
 import json
-import requests
+import requests, requests.auth
 
 class SBS(object):
   host = None
@@ -26,11 +26,7 @@ class SBS(object):
     #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
 
     if r.status_code == 200:
-      try:
-        return self.__get_json(r.text)
-      except:
-        utils.log_info(r.text)
-        return r.text
+       return self.__get_json(r.text)
     else:
       print(f"API: {request} returns: {r.status_code}")
 
@@ -51,7 +47,7 @@ class SBS(object):
       if o['id'] == org_id:
         return o
 
-    panic(f"Organisation {id} not found !")
+    raise Exception(f"Organisation {id} not found !")
 
   def collaborations(self):
     return self.api('api/collaborations/all')
