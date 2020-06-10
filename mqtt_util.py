@@ -288,15 +288,6 @@ def create_user(src, dst, config, cid, uid):
         #roles = user['roles']
         create_user_groups(src, dst, config, cid, user)
 
-'''
-def create_groups(src, dst, config, cid):
-    print(f"Creating groups for cid {cid}")
-    users = src.users(cid)
-
-    for uid,user in users.items():
-        create_user_groups(src, dst, config, cid, user)
-'''
-
 def create_user_groups(src, dst, config, cid, user):
     print(f"Creating groups for cid {cid} uid {user['user']['id']}")
     services = src.service_collaborations()
