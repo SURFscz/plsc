@@ -25,9 +25,16 @@ dst = sLDAP(config['ldap']['dst'])
 fqdn = socket.getfqdn() + ':slp'
 mqtt_topic = config['mqtt']['topic']
 
-def unknown(method, action, msg):
-    print(f"don\'t know what to do with {method} {action} {msg}")
-    return 0
+def service(method, action, msg):
+    sid = int(msg['id'])
+    print(f"handling service {method} {action} {sid}")
+    if method == 'post':
+        mqtt_util.create_service(src, dst, config, sid)
+    elif method == 'put':
+        mqtt_util.update_service(src, dst, config, sid)
+    elif method == 'delete':
+        mqtt_util.delete_service(src, dst, config, sid)
+    return False
 
 def collaboration(method, action, msg):
     if action == "collaborations/invites":
@@ -35,35 +42,22 @@ def collaboration(method, action, msg):
         return
     cid = int(msg['id'])
     print(f"handling collaboration {method} {action} {cid} {msg}")
-    # Handling POST makes no sense, since a new CO is not
-    # Connected to any service?
-    if method == 'delete':
-        mqtt_util.delete_collaboration(src, dst, config, cid)
+    if method == 'post':
+        mqtt_util.create_collaboration(src, dst, config, cid)
     elif method == 'put':
         mqtt_util.update_collaboration(src, dst, config, cid)
-        mqtt_util.clean_collaboration(src, dst, config, cid)
+    elif method == 'delete':
+        mqtt_util.delete_collaboration(src, dst, config, cid)
     return cid
-
-def service(method, action, msg):
-    sid = int(msg['id'])
-    print(f"handling service {method} {action} {sid}")
-    if method == 'delete':
-        mqtt_util.delete_service(src, dst, config, sid)
-    else:
-        mqtt_util.create_service(src, dst, config, sid)
-    return 0
 
 def collab_service(method, action, msg):
     cid = int(msg['collaboration_id'])
     sid = int(msg['service_id'])
     print(f"handling collaboration service {method} s:{sid} c:{cid} {msg}")
-    service = src.service(sid)
-    seid = service['entity_id']
-    print(f"seid: {seid}")
     if method == 'delete':
         mqtt_util.remove_collaboration(src, dst, config, cid, sid)
     else:
-        mqtt_util.create_collaboration(src, dst, config, cid, sid)
+        mqtt_util.create_collaboration(src, dst, config, cid)
     return cid
         
 def collab_member(method, action, msg):
@@ -77,27 +71,26 @@ def collab_member(method, action, msg):
     return cid
 
 def invitation(method, action, msg):
+    cid = False
     if action == 'invitations/accept' and method == 'put':
         print(f"handling invitations {method} {action} {msg}")
         cid = int(msg['collaboration_id'])
         uid = int(msg['user_id'])
-        users = src.users(cid)
-        mqtt_util.create_user(src, dst, config, cid, users[uid])
+        mqtt_util.create_user(src, dst, config, cid, uid)
     else:
         print(f"discarding invitations {method} {action} {msg}")
     return cid
 
 def join_request(method, action, msg):
+    cid = False
     if action == 'join_requests/accept' and method == 'put':
         print(f"handling join_request {method} {action} {msg}")
         cid = int(msg['collaboration_id'])
         uid = int(msg['user_id'])
-        users = src.users(cid)
-        mqtt_util.create_user(src, dst, config, cid, users[uid])
-        return cid
+        mqtt_util.create_user(src, dst, config, cid, uid)
     else:
         print(f"discarding join_request {method} {action} {msg}")
-        return 0
+    return cid
 
 def group(method, action, msg):
     print(f"handling group {method} {action} {msg}")
@@ -106,7 +99,7 @@ def group(method, action, msg):
     if method == "delete":
         mqtt_util.delete_group(src, dst, config, cid, gid, msg)
     else:
-        mqtt_util.add_group(src, dst, config, cid, gid)
+        mqtt_util.create_group(src, dst, config, cid, gid)
     return cid
 
 def group_member(method, action, msg):
@@ -120,17 +113,22 @@ def group_member(method, action, msg):
         mqtt_util.group_users(src, dst, config, cid, gid)
     return cid
 
+def unknown(method, action, msg):
+    print(f"don\'t know what to do with {method} {action} {msg}")
+    return False
+
+
 def on_message(message):
     print("-")
     switcher = {
-        'collaborations': collaboration,
-        'collaboration_memberships': collab_member,
         'services': service,
+        'collaborations': collaboration,
         'collaborations_services': collab_service,
-        'invitations': invitation,
-        'join_requests': join_request,
+        'collaboration_memberships': collab_member,
         'groups': group,
         'group_members': group_member,
+        'invitations': invitation,
+        'join_requests': join_request,
     }
     topic = message.topic
     method = topic.rsplit('/', 1)[-1]
@@ -141,7 +139,11 @@ def on_message(message):
     func = switcher.get(subject, unknown)
     try:
         cid = func(method, action, msg)
-        mqtt_flat.flatten(dst, dst, src, config, cid)
+        if cid:
+            # This misses deleted services for cid
+            # As flatten loops over services for cid
+            # It also misses deleted CO's
+            mqtt_flat.flatten(dst, dst, src, config, cid)
     except:
         traceback.print_exc()
 
