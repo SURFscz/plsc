@@ -3,6 +3,8 @@
 import util
 import json
 import requests, requests.auth
+import urllib3
+
 
 class SBS(object):
   host = None
@@ -13,6 +15,10 @@ class SBS(object):
     self.host = config.get('host', 'localhost')
     self.user = config.get('user', 'sysread')
     self.password = config.get('passwd', 'changethispassword')
+    self.verify_ssl = config.get('verify_ssl', 'true')
+
+    if not self.verify_ssl:
+      urllib3.disable_warnings()
 
   def __get_json(self, string, title=None):
     data = json.loads(string)
@@ -22,7 +28,11 @@ class SBS(object):
     return json.dumps(data)
 
   def api(self, request, method='GET', headers=None, data=None):
-    r = requests.request(method, url=f"{self.host}/{request}", headers=headers, auth=requests.auth.HTTPBasicAuth(self.user, self.password), data=data)
+    r = requests.request(method, url=f"{self.host}/{request}",
+                         headers=headers,
+                         auth=requests.auth.HTTPBasicAuth(self.user, self.password),
+                         verify=self.verify_ssl,
+                         data=data)
     #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
 
     if r.status_code == 200:
