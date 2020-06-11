@@ -33,7 +33,7 @@ def service(method, action, msg):
     elif method == 'put':
         mqtt_util.update_service(src, dst, config, sid)
     elif method == 'delete':
-        mqtt_util.delete_service(src, dst, config, sid)
+        mqtt_util.delete_service(src, dst, config, msg)
     return False
 
 def collaboration(method, action, msg):
