@@ -59,14 +59,17 @@ class SBS(object):
 
     raise Exception(f"Organisation {id} not found !")
 
+  def service(self, s_id):
+    return self.api(f"api/services/{s_id}")
+
   def collaborations(self):
     return self.api('api/collaborations/all')
 
   def collaboration(self, c_id):
     return self.api(f"api/collaborations/{c_id}")
 
-  def authgroup(self, c_id, a_id):
-    return self.api(f"api/groups/{a_id}/{c_id}")
+  def group(self, c_id, g_id):
+    return self.api(f"api/groups/{g_id}/{c_id}")
 
   def service_attributes(self, entity_id, uid):
     t = {
@@ -111,10 +114,65 @@ class SBS(object):
         'user': u['user'],
         'roles': { 0: f"co_{co['name']}" }
       }
-    for a in co['groups']:
-      a_id = a['id']
-      auth_group = self.authgroup(c_id, a_id)
-      for m in auth_group['collaboration_memberships']:
-        users[u['user_id']]['roles'][a_id] = f"group_{a['name']}"
+    for group in co['groups']:
+      g_id = group['id']
+      g = self.group(c_id, g_id)
+      for m in g['collaboration_memberships']:
+        users[m['user_id']]['roles'][g_id] = f"group_{g['name']}"
     return users
+
+  def collaboration_users(self, c_id):
+    # Warning, this function returns a dict of all CO groups
+    # and one for their membership per user
+    # group[0] is allways the virtual CO group co_{name}
+    # All other groups are called group_{name}
+    co = self.collaboration(c_id)
+    users = {
+      'groups': {
+        0: f"co_{co['name']}",
+      },
+      'users': {}
+    }
+    for u in co['collaboration_memberships']:
+      users['users'][u['user_id']] = {
+        'user': u['user'],
+        'groups': [ 0 ]
+      }
+    for group in co['groups']:
+      g_id = group['id']
+      g = self.group(c_id, g_id)
+      users['groups'][g_id] = f"group_{g['name']}"
+      for m in g['collaboration_memberships']:
+        users['users'][m['user_id']]['groups'].append(g_id)
+    return users
+
+  def collaboration_groups(self, c_id):
+    # Warning, this function returns a dict for all CO users
+    # and one their membership per group
+    # group[0] is allways the virtual CO group co_{name}
+    # All other groups are called group_{name}
+    co = self.collaboration(c_id)
+    groups = {
+      'users': {},
+      'groups': {
+        0: {
+          'members': []
+        },
+      },
+    }
+    for u in co['collaboration_memberships']:
+      groups['groups'][0]['name'] = f"co_{co['name']}"
+      groups['groups'][0]['members'].append(u['user_id'])
+      groups['users'][u['user_id']] = u['user']
+    for group in co['groups']:
+      g_id = group['id']
+      groups['groups'][g_id] = {
+        'members': []
+      }
+      g = self.group(c_id, g_id)
+      for m in g['collaboration_memberships']:
+        groups['groups'][g_id]['members'].append(m['user_id'])
+        groups['groups'][g_id]['name'] = f"group_{g['name']}"
+        groups['users'][m['user_id']] = m['user']
+    return groups
 

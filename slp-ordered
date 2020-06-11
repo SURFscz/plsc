@@ -5,12 +5,13 @@ import sys
 import yaml, re
 import socket
 import copy
+import ldap
 
 import util
 from sldap import sLDAP
 from sbs import SBS
 
-import ipdb
+#import ipdb
 #ipdb.set_trace()
 
 if len(sys.argv) < 2:
@@ -78,7 +79,7 @@ for service, cos in collaborations.items():
         if len(organizations):
             o_dn, o_entry = list(organizations.items())[0]
             co_fqdn = o_entry.get('host', [])
-            if not fqdn in co_fqdn:
+            if not fqdn in co_fqdn and False:
                 print("skipping {}".format(co_fqdn))
                 #continue
 
@@ -179,8 +180,14 @@ for service, cos in collaborations.items():
 print("vc: {}".format(vc))
 # Cleanup phase
 print("-- Cleanup ---")
-for service, cos in collaborations.items():
+service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
+for service_dn, s in service_dns.items():
+    service = s['dc'][0]
     print(f"service: {service}")
+    if vc.get(service, None) == None:
+        print(f"- {service} not found in our services, deleting")
+        service_dn = f"dc={service},{dst.basedn}"
+        dst.rdelete(service_dn)
 
     organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
     for o_dn, o_entry in organizations.items():
@@ -188,7 +195,7 @@ for service, cos in collaborations.items():
             co_name = o_entry['description'][0]
             co_fqdn = o_entry.get('host', [])
 
-            if not fqdn in co_fqdn:
+            if not fqdn in co_fqdn and False:
                 print("skipping {}".format(co_fqdn))
                 #continue
 

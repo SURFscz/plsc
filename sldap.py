@@ -57,7 +57,7 @@ class sLDAP(object):
             for dn, entry in r:
                 dns[dn] = self.__decode(entry)
         except ldap.NO_SUCH_OBJECT as e:
-                print(f"find: {e} on filter '{fltr}'")
+            print(f"find: {e} on filter '{fltr}'")
         except ldap.NO_RESULTS_RETURNED as e:
             print(f"find: {e} on filter '{fltr}'")
         return dns
@@ -89,7 +89,7 @@ class sLDAP(object):
 
     # store tries to add, then modifies if exists.
     def store(self, dn, new_entry):
-        dst_dns = self.find(dn)
+        dst_dns = self.find(dn, scope=ldap.SCOPE_BASE)
         if len(dst_dns) == 1:
             dn, entry = list(dst_dns.items())[0]
             return self.modify(dn, entry, new_entry)
