@@ -2,6 +2,7 @@
 
 import ldap, ldap.modlist
 
+
 class sLDAP(object):
 
     # LDAP connection, private
@@ -55,8 +56,10 @@ class sLDAP(object):
             r = self.__search(basedn, fltr, attrs, scope)
             for dn, entry in r:
                 dns[dn] = self.__decode(entry)
-        except Exception as e:
-            print("find: {}".format(e))
+        except ldap.NO_SUCH_OBJECT as e:
+                print(f"find: {e} on filter '{fltr}'")
+        except ldap.NO_RESULTS_RETURNED as e:
+            print(f"find: {e} on filter '{fltr}'")
         return dns
 
     def rfind(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
@@ -72,6 +75,7 @@ class sLDAP(object):
             self.__c.add_s(dn, addlist)
         except Exception as e:
             print("  {}: {}".format(e, dn))
+            raise e
         return addlist
 
     def modify(self, dn, old_entry, new_entry):
@@ -80,6 +84,7 @@ class sLDAP(object):
             self.__c.modify_s(dn, modlist)
         except Exception as e:
             print("  {}: {}".format(e, dn))
+            raise e
         return modlist
 
     # store tries to add, then modifies if exists.
@@ -98,6 +103,7 @@ class sLDAP(object):
             self.__c.delete_s(dn)
         except Exception as e:
             print("{}\n  {}".format(dn, e))
+            raise e
 
     def rdelete(self, dn):
         children = self.find(dn, scope=ldap.SCOPE_ONELEVEL)
