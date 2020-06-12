@@ -1,23 +1,22 @@
-#!/usr/bin/env python
-# -*- coding: future_fstrings -*-
+#!/usr/bin/env python3
+
+from typing import List
 
 import sys
-import yaml, re
-import socket
+import yaml
 import copy
 
 import util
 from sldap import sLDAP
 
-import ipdb
+#import ipdb
 #ipdb.set_trace()
 
 if len(sys.argv) < 2:
     sys.exit(sys.argv[0] + "  <conf.yml>")
-    exit()
 
 with open(sys.argv[1]) as f:
-  config = yaml.safe_load(f)
+    config = yaml.safe_load(f)
 
 src = sLDAP(config['ldap']['dst'])
 dst = sLDAP(config['ldap']['dst'])
@@ -29,7 +28,7 @@ collaborations = util.find_ordered_collaborations(src, services)
 print(f"c: {collaborations}")
 
 vc = {
-    'users': set(), # only unique values
+    'users': set(),  # only unique values
     'groups': set(),
 }
 
@@ -46,11 +45,11 @@ for service, cos in collaborations.items():
         flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
         if len(flat_dns) == 0:
             flat_dn = f"dc=flat,dc={service},{dst.basedn}"
-            flat_entry = {'objectClass':['dcObject', 'organization'],'dc':['flat'],'o':[service]}
+            flat_entry = {'objectClass': ['dcObject', 'organization'], 'dc': ['flat'], 'o': [service]}
             dst.add(flat_dn, flat_entry)
             for ou in ['Groups', 'People']:
                 ou_dn = 'ou=' + ou + ',' + flat_dn
-                ou_entry = {'objectClass':['top','organizationalUnit'],'ou':[ou]}
+                ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
                 dst.add(ou_dn, ou_entry)
 
         print("  - People")
@@ -63,13 +62,13 @@ for service, cos in collaborations.items():
             vc['users'].add(src_uid)
 
             dst_dn = f"uid={src_uid},ou=People,{co_dn}"
-            dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service), "(&(ObjectClass=person)(uid={}))".format(src_uid))
-            #ipdb.set_trace()
+            dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
+                                "(&(ObjectClass=person)(uid={}))".format(src_uid))
             # We can't just store People, we need to merge attributes
             if len(dst_dns) == 1:
                 old_dn, old_entry = list(dst_dns.items())[0]
-                for k,v in old_entry.items():
-                    src_entry.setdefault(k,[]).extend(v)
+                for k, v in old_entry.items():
+                    src_entry.setdefault(k, []).extend(v)
                     src_entry[k] = list(set(src_entry[k]))
             ldif = dst.store(dst_dn, src_entry)
             print("    - store: {}".format(ldif))
@@ -78,7 +77,7 @@ for service, cos in collaborations.items():
         grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=sczGroup)')
 
         for grp_dn, grp_entry in grp_dns.items():
-            print("  - grpdn: {}".format(grp_dn))
+            print("  - group_dn: {}".format(grp_dn))
 
             grp_rdns = util.dn2rdns(grp_dn)
             grp_cn = grp_rdns['cn'][0]
@@ -86,7 +85,7 @@ for service, cos in collaborations.items():
 
             vc['groups'].add(grp_cn)
 
-            members = []
+            members: List[str] = []
             scz_members = grp_entry.get('sczMember', [])
 
             # Build members, remove o= from member DN's
@@ -96,12 +95,12 @@ for service, cos in collaborations.items():
                 member_uid = member_rdns.get('uid', [])
                 member_cn = member_rdns.get('cn', [])
                 if len(member_uid):
-                  member_dn = f"uid={member_uid[0]},ou=People,{co_dn}"
+                    member_dn = f"uid={member_uid[0]},ou=People,{co_dn}"
                 elif len(member_cn):
-                  member_dn = f"cn={member_cn[0]},ou=Groups,{co_dn}"
+                    member_dn = f"cn={member_cn[0]},ou=Groups,{co_dn}"
                 else:
-                  # no valid member found?
-                  continue
+                    # no valid member found?
+                    continue
                 members.append(member_dn)
                 #print(f"uid: {member_dn}")
 

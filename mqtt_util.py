@@ -1,4 +1,3 @@
-# -*- coding: future_fstrings -*-
 import ldap
 import json
 import util
@@ -6,12 +5,13 @@ import copy
 import paho.mqtt.publish as publish
 import paho.mqtt.subscribe as subscribe
 
+
 class mqttClient():
     enabled = False
     client_id = None
     host = None
 
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config):
         self.enabled = config['enabled']
         self.host = config['host']
         self.client_id = config['client_id']
@@ -31,11 +31,13 @@ class mqttClient():
         r = False
         if self.enabled:
             try:
-                msg = subscribe.simple(*args, hostname=self.host, qos=1,  client_id=self.client_id, clean_session=False, **kwargs)
+                msg = subscribe.simple(*args, hostname=self.host, qos=1, client_id=self.client_id,
+                                       clean_session=False, **kwargs)
                 r = msg
             except Exception as e:
                 print(f"Fail {e}")
         return r
+
 
 def create_service(src, dst, config, sid):
     s = src.service(sid)
@@ -45,25 +47,28 @@ def create_service(src, dst, config, sid):
 
     # Create service if necessary
     service_dn = f"dc={service},{dst.basedn}"
-    service_entry = {'objectClass':['dcObject', 'organization'],'dc':[service],'o':[service], 'description':[description]}
+    service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service],
+                     'description': [description]}
     dst.store(service_dn, service_entry)
     admin_dn = 'cn=admin,' + service_dn
-    admin_entry = {'objectClass':['organizationalRole', 'simpleSecurityObject'],'cn':['admin'],'userPassword':[config['pwd']]}
+    admin_entry = {'objectClass': ['organizationalRole', 'simpleSecurityObject'], 'cn': ['admin'],
+                   'userPassword': [config['pwd']]}
     dst.store(admin_dn, admin_entry)
     seq_dn = 'ou=Sequence,' + service_dn
-    seq_entry = {'objectClass':['top','organizationalUnit'],'ou':['Sequence']}
-    dst.store(seq_dn,seq_entry)
+    seq_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': ['Sequence']}
+    dst.store(seq_dn, seq_entry)
     uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + service_dn
-    uid_entry = {'objectClass':['top','device'], 'cn':['uidNumberSequence'],'serialNumber':[config['uid']]}
+    uid_entry = {'objectClass': ['top', 'device'], 'cn': ['uidNumberSequence'], 'serialNumber': [config['uid']]}
     dst.store(uid_dn, uid_entry)
     gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + service_dn
-    gid_entry = {'objectClass':['top','device'], 'cn':['gidNumberSequence'],'serialNumber':[config['gid']]}
+    gid_entry = {'objectClass': ['top', 'device'], 'cn': ['gidNumberSequence'], 'serialNumber': [config['gid']]}
     dst.store(gid_dn, gid_entry)
 
     # Ordered dn
     ordered_dn = f"dc=ordered,dc={service},{dst.basedn}"
-    ordered_entry = {'objectClass':['dcObject', 'organization'],'dc':['ordered'],'o':[service]}
+    ordered_entry = {'objectClass': ['dcObject', 'organization'], 'dc': ['ordered'], 'o': [service]}
     dst.store(ordered_dn, ordered_entry)
+
 
 def update_service(src, dst, config, sid):
     s = src.service(sid)
@@ -73,31 +78,33 @@ def update_service(src, dst, config, sid):
     # A service update is just a create but if the
     # dn changed, we need to remove any lingering service
     # branch(es)
-    #create_service(src, dst, config, sid)
-    
+    # create_service(src, dst, config, sid)
+
     print(f"Removing stale service branches")
     services = src.service_collaborations()
 
     s_dns = []
-    for seid, cos in services.items():
-        s_dns.append(f"dc={seid},{dst.basedn}")
-        if seid == service:
+    for service_eid, cos in services.items():
+        s_dns.append(f"dc={service_eid},{dst.basedn}")
+        if service_eid == service:
             for cid in cos:
                 create_service_collaboration(src, dst, config, cid, sid)
 
     service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
     for service_dn in service_dns:
         print(f"Checking {service_dn}")
-        if not service_dn in s_dns:
+        if service_dn not in s_dns:
             print(f"-  deleting")
             dst.rdelete(service_dn)
 
-def delete_service(src, dst, config, msg):
+
+def delete_service(dst, msg):
     sid = msg['id']
     service = msg['entity_id']
     print(f"Deleting service {sid} {service}")
     service_dn = f"dc={service},{dst.basedn}"
     dst.rdelete(service_dn)
+
 
 def create_service_collaboration(src, dst, config, cid, sid):
     s = src.service(sid)
@@ -113,20 +120,23 @@ def create_service_collaboration(src, dst, config, cid, sid):
     short_name = co['short_name']
 
     co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-    co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[co_identifier, cid],'description':[short_name]}
-    co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
+    co_entry = {'objectClass': ['top', 'organization', 'extensibleObject'], 'o': [co_identifier, cid],
+                'description': [short_name]}
+    # TODO: why is this not used?
+    # co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
     dst.store(co_dn, co_entry)
 
     for ou in ['Groups', 'People']:
         ou_dn = 'ou=' + ou + ',' + co_dn
-        ou_entry = {'objectClass':['top','organizationalUnit'],'ou':[ou]}
+        ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
         dst.store(ou_dn, ou_entry)
 
     # And then there were users
     users = src.users(cid)
-    #print("users: {}".format(json.dumps(users)))
+    # print("users: {}".format(json.dumps(users)))
     for uid, user in users.items():
         create_service_user(src, dst, config, cid, uid, service)
+
 
 def create_collaboration(src, dst, config, cid):
     # We create the collaboration when we see a
@@ -136,6 +146,7 @@ def create_collaboration(src, dst, config, cid):
     for s in co['services']:
         sid = s['id']
         create_service_collaboration(src, dst, config, cid, sid)
+
 
 def update_collaboration(src, dst, config, cid):
     # TODO This does not handle CO renaming correctly!!!
@@ -148,18 +159,20 @@ def update_collaboration(src, dst, config, cid):
         service = s['entity_id']
         # The service should exist, but we may need to create it
         # if we missed the service create earlier?
-                # Create CO if necessary
+        # Create CO if necessary
         co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-        co_entry = {'objectClass':['top','organization','extensibleObject'],'o':[co_identifier, cid],'description':[short_name]}
-        #co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
+        co_entry = {'objectClass': ['top', 'organization', 'extensibleObject'], 'o': [co_identifier, cid],
+                    'description': [short_name]}
+        # co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
         print(f"storing {co_dn}")
         dst.store(co_dn, co_entry)
 
     # If the dn changed, we need to do some cleanup
     # because group and member dns also changed
-    clean_collaboration(src, dst, config, cid)
+    clean_collaboration(src, dst, cid)
 
-def remove_collaboration(src, dst, config, cid, sid):
+
+def remove_collaboration(src, dst, cid, sid):
     print(f"removing co {cid} from service {sid}")
     co = src.collaboration(cid)
     co_identifier = co['identifier']
@@ -169,7 +182,8 @@ def remove_collaboration(src, dst, config, cid, sid):
     co_dn = f"o={co_identifier},dc=ordered,{service_dn}"
     dst.rdelete(co_dn)
 
-def clean_collaboration(src, dst, config, cid):
+
+def clean_collaboration(src, dst, cid):
     # This is untested code
     print(f"Collaboration cleanup for co {cid}")
 
@@ -181,7 +195,7 @@ def clean_collaboration(src, dst, config, cid):
 
     services = src.service_collaborations()
     for service, cos in services.items():
-        if not cid in cos:
+        if cid not in cos:
             continue
 
         old_groups = {}
@@ -204,11 +218,11 @@ def clean_collaboration(src, dst, config, cid):
             user_dn = f"uid={uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
             members.append(user_dn)
 
-        grp_entry = {}
-        grp_entry['objectClass'] = ['extensibleObject', 'posixGroup', 'sczGroup']
+        grp_entry = {'objectClass': ['extensibleObject', 'posixGroup', 'sczGroup']}
 
         grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup)(cn={grp_name}))")
+        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                            f"(&(objectClass=sczGroup)(cn={grp_name}))")
         print(f"grp_dn {grp_dn}")
         if len(grp_dns) == 1:
             old_dn, old_entry = list(grp_dns.items())[0]
@@ -216,14 +230,15 @@ def clean_collaboration(src, dst, config, cid):
         elif len(grp_dns) == 0:
             gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
             grp_entry['gidNumber'] = [gid]
-            grp_entry['sczMember'] = [ user_dn ]
+            # TODO: make sure user_db is initialized
+            grp_entry['sczMember'] = [user_dn]
         else:
             print("Too many dn's, this shouldn't happen")
 
         # Here's the magic: Build the new group entry
         grp_entry['sczMember'] = members
-        grp_entry['cn'] = [ grp_name ]
-        grp_entry['description'] = [ grp_id ]
+        grp_entry['cn'] = [grp_name]
+        grp_entry['description'] = [grp_id]
 
         ldif = dst.store(grp_dn, grp_entry)
         print(f"update group: {grp_dn}")
@@ -232,27 +247,32 @@ def clean_collaboration(src, dst, config, cid):
         for gid, grp in groups['groups'].items():
             grps.append(grp['name'])
         for name, grp_dn in old_groups.items():
-            if not name in grps:
+            if name not in grps:
                 print(f"remove group: {grp_dn}")
                 dst.rdelete(grp_dn)
 
-def delete_collaboration(src, dst, config, cid):
-    service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(ObjectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
+
+def delete_collaboration(dst, cid):
+    service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(ObjectClass=organization))",
+                           scope=ldap.SCOPE_ONELEVEL)
     for service_dn in service_dns:
         co_dns = dst.find(service_dn, f"(&(objectClass=organization)(o={cid}))")
         for co_dn in co_dns:
             print(f"deleting co {co_dn}")
             dst.rdelete(co_dn)
 
+
 def collab_member(src, dst, config, cid, uid):
+    # TODO
     # This is untested code
     # Create groups is not user specific, which is a waste
     # Do we need to create the user first in case we missed
     # user create?
     # create_user(src, dst, config, cid, uid):
-    users = src.users(cid)
-    #create_user_groups(src, dst, config, cid, users[uid])
+    #users = src.users(cid)
+    # create_user_groups(src, dst, config, cid, users[uid])
     create_user(src, dst, config, cid, uid)
+
 
 def create_service_user(src, dst, config, cid, uid, service):
     print(f"Creating user {uid} for co {cid} in service {service}")
@@ -263,8 +283,7 @@ def create_service_user(src, dst, config, cid, uid, service):
     co_identifier = co['identifier']
     service_attributes = src.service_attributes(service, user['user']['uid'])
 
-    dst_entry = {}
-    dst_entry['objectClass'] = ['inetOrgPerson', 'person', 'posixAccount', 'ldapPublicKey', 'eduPerson']
+    dst_entry = {'objectClass': ['inetOrgPerson', 'person', 'posixAccount', 'ldapPublicKey', 'eduPerson']}
     dst_dn = f"uid={uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
     dst_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(ObjectClass=person)(uid={uid}))")
@@ -291,22 +310,24 @@ def create_service_user(src, dst, config, cid, uid, service):
     ldif = dst.store(dst_dn, dst_entry)
     print(f"create user: {dst_dn}")
 
-    #roles = user['roles']
-    create_service_user_groups(src, dst, config, cid, user, service)
+    # roles = user['roles']
+    create_service_user_groups(src, dst, cid, user, service)
+
 
 def create_user(src, dst, config, cid, uid):
     print(f"Creating user {uid} for co {cid}")
     services = src.service_collaborations()
     for service, cos in services.items():
-        if not cid in cos:
+        if cid not in cos:
             continue
 
         create_service_user(src, dst, config, cid, uid, service)
 
-def create_service_user_groups(src, dst, config, cid, user, service):
+
+def create_service_user_groups(src, dst, cid, user, service):
     print(f"Creating groups for cid {cid} uid {user['user']['id']}")
-    #services = src.service_collaborations()
-    #for service, s in services.items():
+    # services = src.service_collaborations()
+    # for service, s in services.items():
     #    if not cid in s:
     #        continue
 
@@ -318,22 +339,22 @@ def create_service_user_groups(src, dst, config, cid, user, service):
     user_dn = f"uid={uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
     for grp_id, grp_name in groups.items():
         print(f"grp_id {grp_id} grp_name {grp_name}")
-        grp_entry = {}
-        grp_entry['objectClass'] = ['extensibleObject', 'posixGroup', 'sczGroup']
+        grp_entry = {'objectClass': ['extensibleObject', 'posixGroup', 'sczGroup']}
 
         grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
-        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup)(cn={grp_name}))")
+        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                            f"(&(objectClass=sczGroup)(cn={grp_name}))")
         if len(grp_dns) == 1:
             old_dn, old_entry = list(grp_dns.items())[0]
             grp_entry = copy.deepcopy(old_entry)
-            sczMembers =  old_entry.get('sczMember', [])
+            sczMembers = old_entry.get('sczMember', [])
             if user_dn not in sczMembers:
                 grp_entry.setdefault('sczMember', []).append(user_dn)
         elif len(grp_dns) == 0:
             gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
             grp_entry['gidNumber'] = [gid]
-            grp_entry['sczMember'] = [ user_dn ]
+            grp_entry['sczMember'] = [user_dn]
         else:
             print("Too many dn's, this shouldn't happen")
 
@@ -344,7 +365,8 @@ def create_service_user_groups(src, dst, config, cid, user, service):
         ldif = dst.store(grp_dn, grp_entry)
         print(f"create group: {grp_dn}")
 
-def create_group(src, dst, config, cid, gid):
+
+def create_group(src, dst, cid, gid):
     print(f"Creating group")
     co = src.collaboration(cid)
     co_identifier = co['identifier']
@@ -353,12 +375,11 @@ def create_group(src, dst, config, cid, gid):
     grp_name = f"group_{group['name']}"
 
     print(f"grp_id {grp_id} grp_name {grp_name}")
-    grp_entry = {}
-    grp_entry['objectClass'] = ['extensibleObject', 'posixGroup', 'sczGroup']
+    grp_entry = {'objectClass': ['extensibleObject', 'posixGroup', 'sczGroup']}
 
     services = src.service_collaborations()
     for service, cos in services.items():
-        if not cid in cos:
+        if cid not in cos:
             continue
 
         grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -373,6 +394,7 @@ def create_group(src, dst, config, cid, gid):
         ldif = dst.store(grp_dn, grp_entry)
         print(f"create group: {grp_dn}")
 
+
 def remove_group_users(src, dst, config, cid, gid):
     print(f"Remove users group {gid} in co {cid}")
     services = src.service_collaborations()
@@ -380,9 +402,10 @@ def remove_group_users(src, dst, config, cid, gid):
         if not s.get(int(cid), False):
             continue
         group = src.group(cid, gid)
-        clean_group(src, dst, config, cid, service, group)
+        clean_group(src, dst, cid, service, group)
 
-def delete_group(src, dst, config, cid, gid, msg):
+
+def delete_group(src, dst, cid, gid, msg):
     print(f"Deleting group {gid} in co {cid}")
     co = src.collaboration(cid)
     co_identifier = co['identifier']
@@ -391,21 +414,23 @@ def delete_group(src, dst, config, cid, gid, msg):
 
     services = src.service_collaborations()
     for service, cos in services.items():
-        if not cid in cos:
+        if cid not in cos:
             continue
         grp_dn = f"cn={grp_cn},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
         dst.rdelete(grp_dn)
 
+
 def group_users(src, dst, config, cid, gid):
     print(f"Doing memberships for group {gid} in co {cid}")
-    services = src.service_collaborations()
+    #services = src.service_collaborations()
     users = src.users(cid)
     for uid, user in users.items():
         create_user(src, dst, config, cid, uid)
 
-def clean_group(src, dst, config, cid, service, group):
+
+def clean_group(src, dst, cid, service, group):
     print(f"Cleaning role for co {cid} in service {service}")
-    #print(f"role {role}")
+    # print(f"role {role}")
     co = src.collaboration(cid)
     co_identifier = co['identifier']
     grp_id = group['id']
@@ -421,7 +446,8 @@ def clean_group(src, dst, config, cid, service, group):
             members.append(user_dn)
 
     grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-    grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup)(cn={grp_name}))")
+    grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                        f"(&(objectClass=sczGroup)(cn={grp_name}))")
     print(f"grp_dn {grp_dn}")
     if len(grp_dns) == 1:
         old_dn, old_entry = list(grp_dns.items())[0]
@@ -430,9 +456,8 @@ def clean_group(src, dst, config, cid, service, group):
     else:
         print("No or too many dn's, this shouldn't happen?")
 
-    # Here's the magic: Build the new group entry
-    grp_entry['cn'] = [grp_name]
-    grp_entry['description'] = [grp_id]
+    #Here's the magic: Build the new group entry
+    grp_entry = {'cn': [grp_name], 'description': [grp_id]}
 
     ldif = dst.store(grp_dn, grp_entry)
     print(f"update group: {grp_dn}")
@@ -443,4 +468,3 @@ def test(src, dst, config, cid):
     print("users: {}".format(json.dumps(users)))
     groups = src.collaboration_groups(cid)
     print("groups: {}".format(json.dumps(groups)))
-

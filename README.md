@@ -1,4 +1,4 @@
-# PLSC, a Python implemention of LSC
+# PLSC, a Python implementation of LSC
 
 This project is a Python implementation aiming for LDAP to LDAP synchronization. We are inspired by the LSC project (https://lsc-project.org/doku.php)
 

@@ -1,3 +1,4 @@
+paho-mqtt
 urllib3
 setuptools
 pyasn1

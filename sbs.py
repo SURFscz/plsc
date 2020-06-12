@@ -1,8 +1,6 @@
-# -*- coding: future_fstrings -*-
-
-import util
 import json
-import requests, requests.auth
+import requests
+import requests.auth
 import urllib3
 
 
@@ -20,11 +18,13 @@ class SBS(object):
     if not self.verify_ssl:
       urllib3.disable_warnings()
 
-  def __get_json(self, string, title=None):
+  @staticmethod
+  def __get_json(string, title=None):
     data = json.loads(string)
     return data
 
-  def __put_json(self, data, title=None):
+  @staticmethod
+  def __put_json(data, title=None):
     return json.dumps(data)
 
   def api(self, request, method='GET', headers=None, data=None):
@@ -124,7 +124,7 @@ class SBS(object):
   def collaboration_users(self, c_id):
     # Warning, this function returns a dict of all CO groups
     # and one for their membership per user
-    # group[0] is allways the virtual CO group co_{name}
+    # group[0] is always the virtual CO group co_{name}
     # All other groups are called group_{name}
     co = self.collaboration(c_id)
     users = {
@@ -149,7 +149,7 @@ class SBS(object):
   def collaboration_groups(self, c_id):
     # Warning, this function returns a dict for all CO users
     # and one their membership per group
-    # group[0] is allways the virtual CO group co_{name}
+    # group[0] is always the virtual CO group co_{name}
     # All other groups are called group_{name}
     co = self.collaboration(c_id)
     groups = {

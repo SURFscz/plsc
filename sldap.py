@@ -1,6 +1,5 @@
-# -*- coding: future_fstrings -*-
-
-import ldap, ldap.modlist
+import ldap
+import ldap.modlist
 
 
 class sLDAP(object):
@@ -13,7 +12,7 @@ class sLDAP(object):
 
     def __init__(self, config):
         ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, 0)
-        ldap.set_option( ldap.OPT_X_TLS_DEMAND, True )
+        ldap.set_option(ldap.OPT_X_TLS_DEMAND, True)
 
         self.basedn = config['basedn']
         uri = config['uri']
@@ -27,7 +26,8 @@ class sLDAP(object):
         else:
             self.__c.simple_bind_s(binddn, passwd)
 
-    def __encode(self, entry):
+    @staticmethod
+    def __encode(entry):
         r = {}
         for k, v in entry.items():
             rv = []
@@ -36,7 +36,8 @@ class sLDAP(object):
             r[k] = rv
         return r
 
-    def __decode(self, entry):
+    @staticmethod
+    def __decode(entry):
         r = {}
         for k, v in entry.items():
             rv = []
@@ -45,29 +46,34 @@ class sLDAP(object):
             r[k] = rv
         return r
 
-    def __search(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
+    def __search(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
+        if attrs is None:
+            attrs = []
         if not basedn:
             basedn = self.basedn
-        return self.__c.search_s(basedn, scope, fltr, attrs)
+        return self.__c.search_s(basedn, scope, filter, attrs)
 
-    def find(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
+    def find(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
         dns = {}
         try:
-            r = self.__search(basedn, fltr, attrs, scope)
+            r = self.__search(basedn, filter, attrs, scope)
             for dn, entry in r:
                 dns[dn] = self.__decode(entry)
         except ldap.NO_SUCH_OBJECT as e:
-            print(f"find: {e} on filter '{fltr}'")
+            # nothing found, just return an empty result
+            #print(f"find: {e} on filter '{filter}'")
+            return {}
         except ldap.NO_RESULTS_RETURNED as e:
-            print(f"find: {e} on filter '{fltr}'")
+            print(f"find: {e} on filter '{filter}'")
+            raise e
         return dns
 
-    def rfind(self, basedn, fltr='(ObjectClass=*)', attrs=[], scope=ldap.SCOPE_SUBTREE):
+    def rfind(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
         if basedn:
             b = "{},{}".format(basedn, self.basedn)
         else:
             b = self.basedn
-        return self.find(b, fltr, attrs, scope)
+        return self.find(b, filter, attrs, scope)
 
     def add(self, dn, entry):
         addlist = ldap.modlist.addModlist(self.__encode(entry))
@@ -108,8 +114,8 @@ class sLDAP(object):
     def rdelete(self, dn):
         children = self.find(dn, scope=ldap.SCOPE_ONELEVEL)
         if len(children):
-          for child_dn in children:
-            self.rdelete(child_dn)
+            for child_dn in children:
+                self.rdelete(child_dn)
         self.delete(dn)
 
     def get_sequence(self, dn):
@@ -119,6 +125,6 @@ class sLDAP(object):
             old_entry = self.__decode(old_entry)
             new_entry = old_entry.copy()
             seq = int(new_entry['serialNumber'][0]) + 1
-            new_entry['serialNumber'] = [ str(seq) ]
+            new_entry['serialNumber'] = [str(seq)]
             self.modify(dn, old_entry, new_entry)
         return seq
