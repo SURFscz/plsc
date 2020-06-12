@@ -185,7 +185,7 @@ for service_dn, s in service_dns.items():
     print(f"service: {service}")
     if vc.get(service, None) is None:
         print(f"- {service} not found in our services, deleting")
-        service_dn = f"dc={service},{dst.basedn}"
+        #service_dn = f"dc={service},{dst.basedn}"
         dst.rdelete(service_dn)
 
     organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
