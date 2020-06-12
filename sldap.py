@@ -32,7 +32,7 @@ class sLDAP(object):
         for k, v in entry.items():
             rv = []
             for ev in v:
-                rv.append(str(ev).encode())
+                rv.append(str(ev).encode('UTF-8'))
             r[k] = rv
         return r
 
@@ -42,7 +42,7 @@ class sLDAP(object):
         for k, v in entry.items():
             rv = []
             for ev in v:
-                rv.append(str(ev.decode()))
+                rv.append(str(ev.decode('UTF-8')))
             r[k] = rv
         return r
 
