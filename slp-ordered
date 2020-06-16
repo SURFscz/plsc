@@ -10,6 +10,55 @@ import util
 from sldap import sLDAP
 from sbs import SBS
 
+from typing import Tuple, List, Dict, Optional, Union
+
+SBSPerson = Dict[str, str]
+LDAPEntry = Dict[str, List[Union[str, int]]]
+
+
+# Here's the magic: Build the new person entry
+def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
+    record: LDAPEntry = dict(
+        objectClass=['inetOrgPerson', 'person', 'posixAccount', 'eduPerson', 'voPerson']
+    )
+
+    record['eduPersonUniqueId'] = [sbs_uid]
+
+    record['displayName'] = [sbs_user.get('name')]
+    record['givenName'] = [sbs_user.get('givenName')]
+    record['sn'] = [sbs_user.get('family_name')]
+    # cn is required in the posixAccount schema, otherwise we wouldn't use it
+    record['cn'] = record['displayName']
+
+    record['mail'] = [sbs_user.get('email')]
+
+    # affiliation
+    record['voPersonExternalAffiliation'] = [sbs_user.get('scoped_affiliation')]
+    # TODO: fix this hack. ePSA is not stored in SBS, but as it is always fixes, we can hardcode it here
+    record['eduPersonScopedAffiliation'] = ['member@sram.surf.nl']
+
+    # principal name
+    record['voPersonExternalID'] = [sbs_user.get('eduperson_principal_name')]
+    record['eduPersonPrincipalName'] = ['bla']
+
+    # posixAccount
+    username = sbs_user.get('username')
+
+    record['uid'] = [username]
+    record['homeDirectory'] = [f'/home/{username}']
+    if sbs_user.get('ssh_key'):
+        record['sshPublicKey'] = [sbs_user.get('ssh_key')]
+        record['objectClass'].append('ldapPublicKey')
+
+    # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
+    for key, val in record.items():
+        record[key] = list(filter(None, record[key]))
+
+    rdn = f"uid={username}"
+
+    return rdn, record
+
+
 if len(sys.argv) < 2:
     sys.exit(sys.argv[0] + "  <conf.yml>")
 
@@ -19,7 +68,7 @@ with open(sys.argv[1]) as f:
 src = SBS(config['sbs']['src'])
 dst = sLDAP(config['ldap']['dst'])
 fqdn = socket.getfqdn() + ':slp'
-#print(f"fqdn: {fqdn}")
+# print(f"fqdn: {fqdn}")
 
 # Find all CO's in SBS
 collaborations = src.service_collaborations()
@@ -81,7 +130,7 @@ for service, cos in collaborations.items():
             co_fqdn = o_entry.get('host', [])
             if fqdn not in co_fqdn and False:
                 print("skipping {}".format(co_fqdn))
-                #continue
+                # continue
 
         # Create CO if necessary
         co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -97,52 +146,52 @@ for service, cos in collaborations.items():
 
         print("  - People")
         users = src.users(co_id)
-        #print(f"users: {users}")
+        # print(f"users: {users}")
 
         for src_id, src_detail in users.items():
-            #print(f"user: {src_detail}")
+            # print(f"user: {src_detail}")
             src_user = src_detail['user']
             print("    - src_id: {}/{}".format(src_id, src_user['uid']))
             src_uid = util.uid(src_user)
 
-            service_attributes = src.service_attributes(service, src_user['uid'])
-            #print(f"service_attributes: {service_attributes}")
+            # convert the BS data to an ldap record
+            dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
 
+            # add the uidNumber and gidNumber
+            uidNumber = None
+            gidNumber = None
+            dst_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(ObjectClass=person)(eduPersonUniqueId={src_uid}))")
+            if dst_dns:
+                old_dn, old_entry = list(dst_dns.items())[0]
+                uidNumber = old_entry.get('uidNumber', 0)[0]
+                gidNumber = old_entry.get('gidNumber', 0)[0]
+
+            if uidNumber is None:
+                uidNumber = dst.get_sequence(f"cn=uidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+            if gidNumber is None:
+                gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+
+            dst_entry['uidNumber'] = [uidNumber]
+            dst_entry['gidNumber'] = [gidNumber]
+
+            dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+
+            print(f"      - store {dst_dn}: ", end='')
+            try:
+                ldif = dst.store(dst_dn, dst_entry)
+            except ldap.OBJECT_CLASS_VIOLATION as e:
+                continue
+            print(ldif)
+
+            # record user as CO member
             vc[service][co_identifier]['members'].append(src_uid)
 
-            dst_dn = f"uid={src_uid},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-            dst_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(ObjectClass=person)(uid={src_uid}))")
-
-            dst_entry = {'objectClass': ['inetOrgPerson', 'person', 'posixAccount', 'ldapPublicKey', 'eduPerson']}
-
-            if len(dst_dns) >= 1:
-                old_dn, old_entry = list(dst_dns.items())[0]
-                dst_entry['uidNumber'] = old_entry.get('uidNumber', 0)
-                dst_entry['gidNumber'] = old_entry.get('gidNumber', 0)
-            elif len(dst_dns) == 0:
-                uid = dst.get_sequence(f"cn=uidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
-                dst_entry['uidNumber'] = [uid]
-                gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
-                dst_entry['gidNumber'] = [gid]
-
-            # Here's the magic: Build the new person entry
-            dst_entry['uid'] = [src_uid]
-            dst_entry['cn'] = service_attributes.get('name', ['n/a'])
-            dst_entry['sn'] = service_attributes.get('family_name', ['n/a'])
-            dst_entry['mail'] = service_attributes.get('email', [])
-            dst_entry['homeDirectory'] = ['/home/{}'.format(src_uid.encode('unicode-escape').decode('ascii'))]
-            dst_entry['sshPublicKey'] = service_attributes.get('ssh_key', None) or ['n/a']
-            eppn = f"{src_user['id']}@{co['short_name']}.scz.net"
-            dst_entry['eduPersonScopedAffiliation'] = [eppn]
-            #dst_entry['eduPersonTargetedID'] = [eppn]
-
-            ldif = dst.store(dst_dn, dst_entry)
-            print(f"      - store: {ldif}")
-
+            # handle groups
             print("    - Groups")
             roles = src_detail['roles']
 
             for grp_id, grp_name in roles.items():
+
                 print("      - grp: {}/{}".format(grp_id, grp_name))
                 vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(src_uid)
                 vc[service][co_identifier].setdefault('groups', []).append(grp_name)
@@ -151,25 +200,32 @@ for service, cos in collaborations.items():
                 grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
                                     f"(&(objectClass=sczGroup)(cn={grp_name}))")
 
-                #ipdb.set_trace()
-                grp_entry = {'objectClass': ['extensibleObject', 'posixGroup', 'sczGroup']}
+                # ipdb.set_trace()
+                gidNumber: Optional[int] = None
 
+                # TODO: I don't undestand this.  Are people never removed from groups?
                 if len(grp_dns) == 1:
                     old_dn, old_entry = list(grp_dns.items())[0]
-                    grp_entry = copy.deepcopy(old_entry)
+                    gidNumber = old_entry.get('gidNumber', [None])[0]
                     sczMembers = old_entry.get('sczMember', [])
                     if dst_dn not in sczMembers:
-                        grp_entry.setdefault('sczMember', []).append(dst_dn)
+                        sczMembers.append(dst_dn)
                 elif len(grp_dns) == 0:
-                    gid = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
-                    grp_entry['gidNumber'] = [gid]
-                    grp_entry['sczMember'] = [dst_dn]
+                    sczMembers = [dst_dn]
                 else:
-                    print("Too many dn's, this shouldn't happen")
+                    raise Exception("Too many dn's, this shouldn't happen")
+
+                if not gidNumber:
+                    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
 
                 # Here's the magic: Build the new group entry
-                grp_entry['cn'] = [grp_name]
-                grp_entry['description'] = [grp_id]
+                grp_entry = {
+                    'objectClass': ['extensibleObject', 'posixGroup', 'sczGroup', 'labeledURIObject'],
+                    'cn': [grp_name],
+                    'labeledUri': [grp_id],
+                    'gidNumber': [gidNumber],
+                    'sczMember': sczMembers
+                }
 
                 ldif = dst.store(grp_dn, grp_entry)
                 print("      - store: {}".format(ldif))
@@ -185,7 +241,7 @@ for service_dn, s in service_dns.items():
     print(f"service: {service}")
     if vc.get(service, None) is None:
         print(f"- {service} not found in our services, deleting")
-        #service_dn = f"dc={service},{dst.basedn}"
+        # service_dn = f"dc={service},{dst.basedn}"
         dst.rdelete(service_dn)
 
     organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
@@ -196,7 +252,7 @@ for service_dn, s in service_dns.items():
 
             if fqdn not in co_fqdn and False:
                 print("skipping {}".format(co_fqdn))
-                #continue
+                # continue
 
             o_rdns = util.dn2rdns(o_dn)
             co = o_rdns['o'][0]
@@ -207,8 +263,8 @@ for service_dn, s in service_dns.items():
             dst_dns = dst.rfind("ou=People,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
             for dst_dn, dst_entry in dst_dns.items():
                 print("    - dstdn: {}".format(dst_dn))
-                if dst_entry.get('uid', None):
-                    dst_uid = dst_entry['uid'][0]
+                if dst_entry.get('eduPersonUniqueId', None):
+                    dst_uid = dst_entry['eduPersonUniqueId'][0]
                     if dst_uid not in src_members:
                         print("      dst_uid not found in src_members, deleting {}".format(dst_dn))
                         dst.delete(dst_dn)
@@ -225,7 +281,7 @@ for service_dn, s in service_dns.items():
                     dst_members = new_entry.get('sczMember', [])
                     src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(int(src_id), [])
                     removed = False
-                    #ipdb.set_trace()
+                    # ipdb.set_trace()
                     for dst_member in dst_members:
                         dst_uid = util.dn2rdns(dst_member)['uid'][0]
                         print("      - dst_member: {}".format(dst_uid))
