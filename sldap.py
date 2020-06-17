@@ -1,5 +1,6 @@
 import ldap
 import ldap.modlist
+from pprint import pprint
 
 
 class sLDAP(object):
@@ -81,6 +82,7 @@ class sLDAP(object):
             self.__c.add_s(dn, addlist)
         except Exception as e:
             print(f"Exception on add of {dn}: {e}")
+            pprint(entry)
             raise e
         return addlist
 
@@ -90,6 +92,7 @@ class sLDAP(object):
             self.__c.modify_s(dn, modlist)
         except Exception as e:
             print(f"Exception on modify of {dn}: {e}")
+            pprint(modlist)
             raise e
         return modlist
 
