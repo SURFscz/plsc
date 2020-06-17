@@ -193,7 +193,7 @@ for service, cos in collaborations.items():
             for grp_id, grp_name in roles.items():
 
                 print("      - grp: {}/{}".format(grp_id, grp_name))
-                vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(src_uid)
+                vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)
                 vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
                 grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -203,7 +203,6 @@ for service, cos in collaborations.items():
                 # ipdb.set_trace()
                 gidNumber: Optional[int] = None
 
-                # TODO: I don't undestand this.  Are people never removed from groups?
                 if len(grp_dns) == 1:
                     old_dn, old_entry = list(grp_dns.items())[0]
                     gidNumber = old_entry.get('gidNumber', [None])[0]
@@ -274,8 +273,12 @@ for service_dn, s in service_dns.items():
             for dst_dn, dst_entry in dst_dns.items():
                 grp_name = dst_entry['cn'][0]
                 print("    - dstdn: {}".format(dst_dn))
-                src_id = dst_entry.get('description', None)
-                if src_id is not None:
+                # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
+                src_id = dst_entry.get('labeledURI')
+                if src_id is None:
+                    print("        sbs identifier not found, deleting {}".format(dst_dn))
+                    dst.delete(dst_dn)
+                else:
                     new_entry = copy.deepcopy(dst_entry)
                     src_id = src_id[0]
                     dst_members = new_entry.get('sczMember', [])
@@ -283,10 +286,10 @@ for service_dn, s in service_dns.items():
                     removed = False
                     # ipdb.set_trace()
                     for dst_member in dst_members:
-                        dst_uid = util.dn2rdns(dst_member)['uid'][0]
-                        print("      - dst_member: {}".format(dst_uid))
-                        if dst_uid not in src_members:
-                            print("        dst_member not found, deleting {}".format(dst_uid))
+                        dst_rdn = util.dn2rdns(dst_member)["uid"][0]
+                        print("      - dst_member: {}".format(dst_rdn))
+                        if dst_member not in src_members:
+                            print("        dst_member not found, deleting {}".format(dst_rdn))
                             dst_members.remove(dst_member)
                             removed = True
                     if removed:
