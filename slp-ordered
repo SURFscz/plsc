@@ -115,8 +115,9 @@ for service, cos in collaborations.items():
 
     # iterate over all COs that are connected to this service
     for co_id, co in cos.items():
-        co_identifier = co['identifier']
-        short_name = co['short_name']
+        co_identifier = co.get('short_name')
+        if co_identifier is None:
+            raise Exception(f"Encountered CO without shortname: {co}")
 
         print("- co: {}/{}".format(co_id, co_identifier))
         vc[service][co_identifier] = {}
