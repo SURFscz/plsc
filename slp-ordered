@@ -143,8 +143,8 @@ for service, cos in collaborations.items():
         co_entry = {
             'objectClass': ['top', 'organization', 'extensibleObject'],
             'o': [co_identifier],
-            'displayName': [co.get('name')],
-            'description': [co.get('description')],
+            'displayName': [co.get('name', co_identifier)],
+            'description': [co.get('description', 'n/a')],
             'host': [fqdn]
         }
         co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
