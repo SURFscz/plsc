@@ -136,8 +136,13 @@ for service, cos in collaborations.items():
 
         # Create CO if necessary
         co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-        co_entry = {'objectClass': ['top', 'organization', 'extensibleObject'],
-                    'o': [co_identifier], 'description': [short_name], 'host': [fqdn]}
+        co_entry = {
+            'objectClass': ['top', 'organization', 'extensibleObject'],
+            'o': [co_identifier],
+            'displayName': [co.get('name')],
+            'description': [co.get('description')],
+            'host': [fqdn]
+        }
         co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
         if len(co_dns) == 0:
             dst.add(co_dn, co_entry)
@@ -145,6 +150,11 @@ for service, cos in collaborations.items():
                 ou_dn = 'ou=' + ou + ',' + co_dn
                 ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
                 dst.add(ou_dn, ou_entry)
+        elif len(co_dns)==1:
+            current_entry = list(co_dns.values())[0]
+            dst.modify(co_dn, current_entry, co_entry)
+        else:
+            raise Exception(f"Found multiple COs for o={co_identifier}")
 
         print("  - People")
         users = src.users(co_id)
