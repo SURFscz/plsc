@@ -39,7 +39,8 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     # principal name
     record['voPersonExternalID'] = [sbs_user.get('eduperson_principal_name')]
-    record['eduPersonPrincipalName'] = ['bla']
+    # TODO: expose this in SBS
+    #record['eduPersonPrincipalName'] = ['bla']
 
     # posixAccount
     username = sbs_user.get('username')
