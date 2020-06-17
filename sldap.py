@@ -80,7 +80,7 @@ class sLDAP(object):
         try:
             self.__c.add_s(dn, addlist)
         except Exception as e:
-            print("  {}: {}".format(e, dn))
+            print(f"Exception on add of {dn}: {e}")
             raise e
         return addlist
 
@@ -89,7 +89,7 @@ class sLDAP(object):
         try:
             self.__c.modify_s(dn, modlist)
         except Exception as e:
-            print("  {}: {}".format(e, dn))
+            print(f"Exception on modify of {dn}: {e}")
             raise e
         return modlist
 
@@ -119,7 +119,7 @@ class sLDAP(object):
                 self.rdelete(child_dn)
         self.delete(dn)
 
-    def get_sequence(self, dn):
+    def get_sequence(self, dn) -> int:
         seq = 1000
         r = self.__c.search_s(dn, ldap.SCOPE_BASE)
         for dn, old_entry in r:

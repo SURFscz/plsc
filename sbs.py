@@ -4,6 +4,10 @@ import requests.auth
 import urllib3
 
 
+class SBSException(Exception):
+    pass
+
+
 class SBS(object):
     host = None
     user = None
@@ -19,12 +23,12 @@ class SBS(object):
             urllib3.disable_warnings()
 
     @staticmethod
-    def __get_json(string, title=None):
+    def __get_json(string):
         data = json.loads(string)
         return data
 
     @staticmethod
-    def __put_json(data, title=None):
+    def __put_json(data):
         return json.dumps(data)
 
     def api(self, request, method='GET', headers=None, data=None):
@@ -71,25 +75,27 @@ class SBS(object):
     def group(self, c_id, g_id):
         return self.api(f"api/groups/{g_id}/{c_id}")
 
-    def service_attributes(self, entity_id, uid):
-        t = {
-            'urn:mace:dir:attribute-def:cn': 'name',
-            'urn:mace:dir:attribute-def:displayName': 'nick_name',
-            'urn:mace:dir:attribute-def:eduPersonAffiliation': 'affiliation',
-            'urn:mace:dir:attribute-def:givenName': 'given_name',
-            'urn:mace:dir:attribute-def:isMemberOf': 'roles',
-            'urn:mace:dir:attribute-def:mail': 'email',
-            'urn:mace:dir:attribute-def:shortName': 'username',
-            'urn:mace:dir:attribute-def:sn': 'family_name',
-            'urn:mace:dir:attribute-def:uid': 'uid',
-            'urn:mace:terena.org:attribute-def:schacHomeOrganization': 'schac_home_organisation',
-            'urn:oid:1.3.6.1.4.1.24552.1.1.1.13': 'ssh_key',
-        }
-        a = self.api(f"api/users/attributes?service_entity_id={entity_id}&uid={uid}")
-        r = {}
-        for k,v in a.items():
-            r[t.get(k,'other')] = v
-        return r
+    def service_attributes(self, uid):
+        # t = {
+        #     'urn:mace:dir:attribute-def:cn': 'name',
+        #     'urn:mace:dir:attribute-def:displayName': 'nick_name',
+        #     'urn:mace:dir:attribute-def:eduPersonAffiliation': 'affiliation',
+        #     'urn:mace:dir:attribute-def:givenName': 'given_name',
+        #     'urn:mace:dir:attribute-def:isMemberOf': 'roles',
+        #     'urn:mace:dir:attribute-def:mail': 'email',
+        #     'urn:mace:dir:attribute-def:shortName': 'username',
+        #     'urn:mace:dir:attribute-def:sn': 'family_name',
+        #     'urn:mace:dir:attribute-def:uid': 'uid',
+        #     'urn:mace:terena.org:attribute-def:schacHomeOrganization': 'schac_home_organisation',
+        #     'urn:oid:1.3.6.1.4.1.24552.1.1.1.13': 'ssh_key',
+        # }
+        # a = self.api(f"api/users/attributes?service_entity_id={entity_id}&uid={uid}")
+        # r = {}
+        # for k,v in a.items():
+        #     r[t.get(k,'other')] = v
+        # return r
+        a = self.api(f"api/users/user?uid={uid}")
+        return a
 
     def service_collaborations(self):
         services = {}
@@ -109,16 +115,18 @@ class SBS(object):
     def users(self, c_id):
         users = {}
         co = self.collaboration(c_id)
+        if not co.get('short_name'):
+            raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
         for u in co['collaboration_memberships']:
             users[u['user_id']] = {
                 'user': u['user'],
-                'roles': { 0: f"co_{co['name']}" }
+                'roles': {0: co['short_name']}
             }
         for group in co['groups']:
             g_id = group['id']
             g = self.group(c_id, g_id)
             for m in g['collaboration_memberships']:
-                users[m['user_id']]['roles'][g_id] = f"group_{g['name']}"
+                users[m['user_id']]['roles'][g_id] = f"{co['short_name']}:{g['short_name']}"
         return users
 
     def collaboration_users(self, c_id):

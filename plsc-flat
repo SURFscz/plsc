@@ -41,7 +41,7 @@ for service, cos in collaborations.items():
 
         co_dn = f"dc=flat,dc={service},{dst.basedn}"
 
-        # Flat dn
+        # create Flat dn it is doesn't exist
         flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
         if len(flat_dns) == 0:
             flat_dn = f"dc=flat,dc={service},{dst.basedn}"
