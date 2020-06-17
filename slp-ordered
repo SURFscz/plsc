@@ -92,16 +92,20 @@ for service, cos in collaborations.items():
     if len(service_dns) == 0:  # no existing service found
         service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
         dst.add(service_dn, service_entry)
+
         admin_dn = 'cn=admin,' + service_dn
         admin_entry = {'objectClass': ['organizationalRole', 'simpleSecurityObject'], 'cn': ['admin'],
                        'userPassword': [config['pwd']]}
         dst.add(admin_dn, admin_entry)
+
         seq_dn = 'ou=Sequence,' + service_dn
         seq_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': ['Sequence']}
         dst.add(seq_dn, seq_entry)
+
         uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + service_dn
         uid_entry = {'objectClass': ['top', 'device'], 'serialNumber': [config['uid']]}
         dst.add(uid_dn, uid_entry)
+
         gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + service_dn
         gid_entry = {'objectClass': ['top', 'device'], 'serialNumber': [config['gid']]}
         dst.add(gid_dn, gid_entry)
