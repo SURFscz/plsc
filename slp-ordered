@@ -140,13 +140,16 @@ for service, cos in collaborations.items():
 
         # Create CO if necessary
         co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+        description = co.get('description')
         co_entry = {
             'objectClass': ['top', 'organization', 'extensibleObject'],
             'o': [co_identifier],
             'displayName': [co.get('name', co_identifier)],
-            'description': [co.get('description', 'n/a')],
             'host': [fqdn]
         }
+        if description:
+            co_entry['description'] = description
+
         co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
         if len(co_dns) == 0:
             dst.add(co_dn, co_entry)
