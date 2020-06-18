@@ -25,7 +25,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record['eduPersonUniqueId'] = [sbs_uid]
 
     record['displayName'] = [sbs_user.get('name')]
-    record['givenName'] = [sbs_user.get('givenName')]
+    record['givenName'] = [sbs_user.get('given_name')]
     record['sn'] = [sbs_user.get('family_name')]
     # cn is required in the posixAccount schema, otherwise we wouldn't use it
     record['cn'] = record['displayName']
