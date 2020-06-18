@@ -267,8 +267,7 @@ for service_dn, s in service_dns.items():
 
     organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
     for o_dn, o_entry in organizations.items():
-        if o_entry.get('description', None):
-            co_name = o_entry['description'][0]
+        if o_entry.get('o'):
             co_fqdn = o_entry.get('host', [])
 
             if fqdn not in co_fqdn and False:
@@ -322,7 +321,7 @@ for service_dn, s in service_dns.items():
 
             print("  - CO")
             print(f"    - dstdn: {o_dn}")
-            if vc[service].get(co, None) is None:
+            if vc[service].get(co) is None:
                 print(f"   - {co} not found in our services, deleting")
                 dst.rdelete(o_dn)
 
