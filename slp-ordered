@@ -144,7 +144,7 @@ for service, cos in collaborations.items():
             'objectClass': ['top', 'organization', 'extensibleObject','labeledURIObject'],
             'o': [co_identifier],
             'host': [fqdn],
-            'labeledURI': [co_id],
+            'documentIdentifier': [co_id],
         }
         if co.get('description'):
             co_entry['description'] = [co.get('description')]
@@ -241,7 +241,7 @@ for service, cos in collaborations.items():
                 grp_entry = {
                     'objectClass': ['extensibleObject', 'posixGroup', 'sczGroup', 'labeledURIObject'],
                     'cn': [grp_name],
-                    'labeledUri': [grp_id],
+                    'documentIdentifier': [grp_id],
                     'gidNumber': [gidNumber],
                     'sczMember': sczMembers
                 }
@@ -293,7 +293,7 @@ for service_dn, s in service_dns.items():
                 grp_name = dst_entry['cn'][0]
                 print("    - dstdn: {}".format(dst_dn))
                 # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
-                src_id = dst_entry.get('labeledURI')
+                src_id = dst_entry.get('documentIdentifier')
                 if src_id is None:
                     print("        sbs identifier not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
