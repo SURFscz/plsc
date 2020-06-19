@@ -146,12 +146,10 @@ for service, cos in collaborations.items():
             'host': [fqdn],
             'labeledURI': [co_id],
         }
-        description = co.get('description')
-        if description is not None and len(description) > 0:
-            co_entry['description'] = [description]
-        displayName = co.get('name')
-        if displayName is not None and len(displayName) > 0:
-            co_entry['displayName'] = [displayName]
+        if co.get('description'):
+            co_entry['description'] = [co.get('description')]
+        if co.get('name'):
+            co_entry['displayName'] = [co.get('name')]
 
         co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
         if len(co_dns) == 0:
