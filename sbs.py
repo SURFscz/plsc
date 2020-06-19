@@ -120,13 +120,13 @@ class SBS(object):
         for u in co['collaboration_memberships']:
             users[u['user_id']] = {
                 'user': u['user'],
-                'roles': {0: co['short_name']}
+                'groups': []
             }
         for group in co['groups']:
             g_id = group['id']
             g = self.group(c_id, g_id)
             for m in g['collaboration_memberships']:
-                users[m['user_id']]['roles'][g_id] = f"{co['short_name']}:{g['short_name']}"
+                users[m['user_id']]['groups'].append(group)
         return users
 
     def collaboration_users(self, c_id):
