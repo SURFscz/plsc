@@ -104,6 +104,9 @@ class SBS(object):
         for c in cs:
             c_id = c['id']
             detail = self.collaboration(c_id)
+            # temporary hack because global_urn is not always defined yet
+            if not detail.get('global_urn'):
+                detail['global_urn'] = "{}:{}".format(detail['organisation']['short_name'], detail['short_name'])
             #print(f"detail: {detail}")
             for s in detail['services']:
                 #print(f"s: {s}")
