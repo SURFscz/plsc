@@ -17,7 +17,7 @@ class SBS(object):
         self.host = config.get('host', 'localhost')
         self.user = config.get('user', 'sysread')
         self.password = config.get('passwd', 'changethispassword')
-        self.verify_ssl = config.get('verify_ssl', 'true')
+        self.verify_ssl = config.get('verify_ssl', True)
 
         if not self.verify_ssl:
             urllib3.disable_warnings()
