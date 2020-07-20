@@ -1,6 +1,7 @@
 from unittest import TestCase
 from json_server.handlers import Handler
 from gera2ld.pyserve import run_forever, start_server_aiohttp
+from plsc.sldap import sLDAP
 
 import threading
 import asyncio
@@ -12,7 +13,15 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 class BaseTest(TestCase):
+    dst_conf = {
+        'uri': 'ldap://localhost:8389',
+        'basedn': 'dc=sram,dc=tld',
+        'binddn': 'cn=admin,dc=sram,dc=tld',
+        'passwd': 'secret'
+    }
+
     @classmethod
     def setUpClass(cls):
         def start_server(loop):
@@ -40,8 +49,9 @@ class BaseTest(TestCase):
         cls.loop.call_soon_threadsafe(cls.loop.stop)
         cls.x.join()
 
-    #def setUp(self):
-        #logger.debug("BaseTest setUp")
+    def setUp(self):
+        logger.debug("BaseTest setUp")
+        self.dst = sLDAP(self.dst_conf)
 
     #def tearDown(self):
         #logger.debug("BaseTest tearDown")

@@ -3,16 +3,9 @@ import pytest
 import requests
 import ldap
 from plsc.test.base_test import BaseTest
-from plsc.sldap import sLDAP
 
 logger = logging.getLogger(__name__)
 
-dst_conf = {
-    'uri': 'ldap://localhost:8389',
-    'basedn': 'dc=sram,dc=tld',
-    'binddn': 'cn=admin,dc=sram,dc=tld',
-    'passwd': 'secret'
-}
 
 class TestFoobar(BaseTest):
 
@@ -26,7 +19,6 @@ class TestFoobar(BaseTest):
     def test_ldap_server(self):
         # There must be exactly one dn for the search
         # basedn, SCOPE_BASE
-        dst = sLDAP(dst_conf)
-        base = dst.find(dst_conf['basedn'], scope=ldap.SCOPE_BASE)
+        base = self.dst.find(self.dst_conf['basedn'], scope=ldap.SCOPE_BASE)
         logger.debug(f"base: {base}")
         assert len(base) == 1
