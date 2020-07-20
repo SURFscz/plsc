@@ -5,6 +5,7 @@ from gera2ld.pyserve import run_forever, start_server_aiohttp
 import threading
 import asyncio
 import socket
+import time
 
 import logging
 
@@ -24,7 +25,8 @@ class BaseTest(TestCase):
             logger.debug("BaseTest check_server")
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
-            sock.connect_ex(('127.0.0.1',3000))
+            while sock.connect_ex(('127.0.0.1', 3000)) == 111:
+                time.sleep(0.1)
 
         logger.debug("BaseTest setUpClass")
         cls.loop = asyncio.new_event_loop()
@@ -32,15 +34,15 @@ class BaseTest(TestCase):
         cls.x.start()
         check_server()
 
-    #def setUp(self):
-        #logger.debug("BaseTest setUp")
-
-    #def tearDown(self):
-        #logger.debug("BaseTest tearDown")
-
     @classmethod
     def tearDownClass(cls):
         logger.debug("BaseTest tearDownClass")
         cls.loop.call_soon_threadsafe(cls.loop.stop)
         cls.x.join()
+
+    #def setUp(self):
+        #logger.debug("BaseTest setUp")
+
+    #def tearDown(self):
+        #logger.debug("BaseTest tearDown")
 

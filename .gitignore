@@ -10,3 +10,5 @@ pyvenv.cfg
 *.swp
 config.d/
 .idea/
+*.mdb
+slapd.pid

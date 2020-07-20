@@ -1,0 +1,6 @@
+# Create the base dc
+dn: dc=sram,dc=tld
+dc: sram
+objectClass: dcObject
+objectclass: organization
+o: SRAM
