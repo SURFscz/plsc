@@ -38,16 +38,16 @@ class BaseTest(TestCase):
                 time.sleep(0.1)
 
         logger.debug("BaseTest setUpClass")
-        cls.loop = asyncio.new_event_loop()
-        cls.x = threading.Thread(target=start_server, args=(cls.loop,), )
-        cls.x.start()
+        #cls.loop = asyncio.new_event_loop()
+        #cls.x = threading.Thread(target=start_server, args=(cls.loop,), )
+        #cls.x.start()
         check_server()
 
     @classmethod
     def tearDownClass(cls):
         logger.debug("BaseTest tearDownClass")
-        cls.loop.call_soon_threadsafe(cls.loop.stop)
-        cls.x.join()
+        #cls.loop.call_soon_threadsafe(cls.loop.stop)
+        #cls.x.join()
 
     def setUp(self):
         logger.debug("BaseTest setUp")

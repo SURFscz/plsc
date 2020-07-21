@@ -16,8 +16,10 @@ PID=$!
 echo $PID > slapd.pid
 echo "PID: $PID"
 
-# Add schemas
+# Wait for slapd
 while ! nc -z localhost 8389 ; do sleep 0.1 ; done
+
+# Add schemas
 ldapadd -H ldap://localhost:8389 -D cn=admin,cn=config -w config -f eduPerson.ldif
 ldapadd -H ldap://localhost:8389 -D cn=admin,cn=config -w config -f voPerson.ldif
 ldapadd -H ldap://localhost:8389 -D cn=admin,cn=config -w config -f sczGroup.ldif

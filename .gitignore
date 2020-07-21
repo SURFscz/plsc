@@ -11,4 +11,4 @@ pyvenv.cfg
 config.d/
 .idea/
 *.mdb
-slapd.pid
+*.pid
