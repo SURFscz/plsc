@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class TestAll(BaseTest):
 
     def test_api_server(self):
-        logger.debug("test_foobar")
+        # Test if the SBS API server is running
         url = 'http://localhost:3000/version'
         r = requests.get(url).json()
         logger.debug(f"json: {r}")
@@ -23,11 +23,15 @@ class TestAll(BaseTest):
         assert len(base) == 1
 
     def test_ldap_ordered_coffee(self):
+        # There must be exactly one dn for the search
+        # cn=Coffee...,dc=ordered..., SCOPE: BASE
         coffee = self.dst.find('cn=Coffee,ou=Groups,o=SURF:first,dc=ordered,dc=http://flop.nl,dc=sram,dc=tld', scope=ldap.SCOPE_BASE)
         logger.debug(f"coffee: {coffee}")
         assert len(coffee) == 1
 
     def test_ldap_flat_coffee(self):
+        # There must be exactly one dn for the search
+        # cn=Coffee...,dc=flat..., SCOPE: BASE
         coffee = self.dst.find('cn=Coffee,ou=Groups,dc=flat,dc=http://flop.nl,dc=sram,dc=tld', scope=ldap.SCOPE_BASE)
         logger.debug(f"coffee: {coffee}")
         assert len(coffee) == 1
