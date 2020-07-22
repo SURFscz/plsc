@@ -21,3 +21,13 @@ class TestAll(BaseTest):
         base = self.dst.find(self.dst_conf['basedn'], scope=ldap.SCOPE_BASE)
         logger.debug(f"base: {base}")
         assert len(base) == 1
+
+    def test_ldap_ordered_coffee(self):
+        coffee = self.dst.find('cn=Coffee,ou=Groups,o=SURF:first,dc=ordered,dc=http://flop.nl,dc=sram,dc=tld', scope=ldap.SCOPE_BASE)
+        logger.debug(f"coffee: {coffee}")
+        assert len(coffee) == 1
+
+    def test_ldap_flat_coffee(self):
+        coffee = self.dst.find('cn=Coffee,ou=Groups,dc=flat,dc=http://flop.nl,dc=sram,dc=tld', scope=ldap.SCOPE_BASE)
+        logger.debug(f"coffee: {coffee}")
+        assert len(coffee) == 1
