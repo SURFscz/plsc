@@ -1,8 +1,10 @@
 {
-  "version": "1.0",
-  "api": {
-    "collaborations": {
-      "all": [
+"version": "1.0",
+"api": {
+
+"collaborations": {
+
+"all": [
   {
     "accepted_user_policy": "",
     "access_type": "open",
@@ -442,9 +444,9 @@
   "status": "active",
   "updated_by": "martin@surfnet.nl"
 }
+},
 
-    },
-    "groups": {
+"groups": {
 "30": {
   "46": {
   "auto_provision_members": false,
@@ -1167,6 +1169,7 @@
   "updated_by": "martin@surfnet.nl"
   }
 }
-    }
-  }
+
+}
+}
 }
