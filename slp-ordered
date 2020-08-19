@@ -47,7 +47,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     # posixAccount
     username = sbs_user.get('username')
 
-    #record['uid'] = [username]
+    record['uid'] = [username]
     #record['homeDirectory'] = [f'/home/{username}']
     if sbs_user.get('ssh_key'):
         record['sshPublicKey'] = [sbs_user.get('ssh_key')]
