@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+# -*- coding: future_fstrings -*-
+
+import sys
+import yaml
+import time
+import copy
+import ldap
+
+from sldap import sLDAP
+
+if len(sys.argv) < 2:
+    sys.exit(sys.argv[0] + "  <conf.yml>")
+    exit()
+
+with open(sys.argv[1]) as f:
+  config = yaml.safe_load(f)
+
+ldap1 = sLDAP(config['ldap1'])
+ldap2 = sLDAP(config['ldap2'])
+
+timestamp = str(time.time())
+admin_dn = f"cn=admin,{ldap1.basedn}"
+
+admin1 = ldap1.find(ldap1.basedn, "(cn=admin)", scope=ldap.SCOPE_ONELEVEL)
+print(f"ldap1 admin old: {admin1}")
+
+admin1_old = admin1[admin_dn]
+admin1_new = copy.deepcopy(admin1_old)
+admin1_new['description'] = [timestamp]
+ldap1.modify(admin_dn, admin1_old, admin1_new)
+
+admin1 = ldap1.find(ldap1.basedn, "(cn=admin)", scope=ldap.SCOPE_ONELEVEL)
+print(f"ldap1 admin new: {admin1}")
+
+# First check modify on ldap1
+ts_ldap1 = admin1[admin_dn]['description'][0]
+
+if ts_ldap1 == timestamp:
+    print(f"{ts_ldap1} == {timestamp} (Good)")
+else:
+    print(f"{ts_ldap1} != {timestamp} (Bad)")
+    exit(1)
+
+# Wait maximum syncrepl timeout
+time.sleep(30)
+
+admin2 = ldap2.find(ldap2.basedn, "(cn=admin)", scope=ldap.SCOPE_ONELEVEL)
+print(f"ldap2 admin new: {admin2}")
+
+# Then check syncrepl on ldap2
+ts_ldap2 = admin2[admin_dn]['description'][0]
+
+if ts_ldap1 == ts_ldap2:
+    print(f"{ts_ldap1} == {ts_ldap2} (Good)")
+else:
+    print(f"{ts_ldap1} != {ts_ldap2} (Bad)")
+    exit(1)
+
+time.sleep(30)
+
+# Then recheck on ldap1
+admin1 = ldap1.find(ldap1.basedn, "(cn=admin)", scope=ldap.SCOPE_ONELEVEL)
+print(f"ldap1 admin new: {admin1}")
+ts_ldap1 = admin1[admin_dn]['description'][0]
+
+if ts_ldap1 == timestamp:
+    print(f"{ts_ldap1} == {timestamp} (Good)")
+else:
+    print(f"{ts_ldap1} != {timestamp} (Bad)")
+    exit(1)
+

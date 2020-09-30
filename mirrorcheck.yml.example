@@ -1,0 +1,12 @@
+---
+ldap1:
+    uri: ldaps://ldap1.vm.scz-vm.net
+    basedn: dc=services,dc=vnet
+    binddn: cn=admin,dc=services,dc=vnet
+    passwd: changethispassword
+ldap2:
+    uri: ldaps://ldap2.vm.scz-vm.net
+    basedn: dc=services,dc=vnet
+    binddn: cn=admin,dc=services,dc=vnet
+    passwd: changethispassword
+
