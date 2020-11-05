@@ -199,8 +199,8 @@ for service, cos in collaborations.items():
             grp_entry = {
                 'objectClass': ['extensibleObject', 'groupOfMembers'],
                 'cn': [grp_name],
-                'documentIdentifier': [grp_id],
-                'labeledURI': [co['identifier']],
+                'documentIdentifier': [co['identifier']],
+                #'labeledURI': [grp_urn],
                 #'gidNumber': [gidNumber],
                 'member': members,
                 'description': ['All CO members'],
