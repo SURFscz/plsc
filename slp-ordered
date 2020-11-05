@@ -247,6 +247,8 @@ for service, cos in collaborations.items():
             if group.get('name'):
                 grp_entry['displayName'] = [group.get('name')]
 
+            # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
+            # if grp_entry != old_entry:
             ldif = dst.store(grp_dn, grp_entry)
             print("      - store: {}".format(ldif))
 
@@ -338,6 +340,8 @@ for service, cos in collaborations.items():
                 if group.get('name'):
                     grp_entry['displayName'] = [group.get('name')]
 
+                # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
+                # if grp_entry != old_entry:
                 ldif = dst.store(grp_dn, grp_entry)
                 print("      - store: {}".format(ldif))
 
