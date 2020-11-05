@@ -15,7 +15,6 @@ from typing import Tuple, List, Dict, Optional, Union
 SBSPerson = Dict[str, str]
 LDAPEntry = Dict[str, List[Union[str, int]]]
 
-
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record: LDAPEntry = dict(
@@ -223,7 +222,7 @@ for service, cos in collaborations.items():
 
             grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
             grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
-                                    f"(&(objectClass=groupOfNames)(cn={grp_name}))")
+                                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
             if len(grp_dns) == 1:
                 old_dn, old_entry = list(grp_dns.items())[0]
                 #gidNumber = old_entry.get('gidNumber', [None])[0]
@@ -307,7 +306,7 @@ for service, cos in collaborations.items():
 
                 grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
                 grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
-                                    f"(&(objectClass=groupOfNames)(cn={grp_name}))")
+                                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
 
                 # ipdb.set_trace()
                 gidNumber: Optional[int] = None
@@ -315,7 +314,7 @@ for service, cos in collaborations.items():
                     old_dn, old_entry = list(grp_dns.items())[0]
                     #gidNumber = old_entry.get('gidNumber', [None])[0]
                     members = old_entry.get('member', [])
-                    if dst_dn not in sczMembers:
+                    if dst_dn not in members:
                         members.append(dst_dn)
                 elif len(grp_dns) == 0:
                     members = [dst_dn]
