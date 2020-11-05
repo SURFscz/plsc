@@ -200,7 +200,7 @@ for service, cos in collaborations.items():
                 'objectClass': ['extensibleObject', 'groupOfMembers'],
                 'cn': [grp_name],
                 'documentIdentifier': [grp_id],
-                #'labeledURI': [grp_urn],
+                'labeledURI': [co['identifier']],
                 #'gidNumber': [gidNumber],
                 'member': members,
                 'description': ['All CO members'],
@@ -252,7 +252,7 @@ for service, cos in collaborations.items():
             print("      - store: {}".format(ldif))
 
         print("  - People")
-        
+
         for src_id, src_detail in users.items():
             # print(f"user: {src_detail}")
             src_user = src_detail['user']
