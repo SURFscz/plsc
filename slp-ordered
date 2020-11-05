@@ -170,10 +170,90 @@ for service, cos in collaborations.items():
         else:
             raise Exception(f"Found multiple COs for o={co_identifier}")
 
-        print("  - People")
         users = src.users(co_id)
         # print(f"users: {users}")
 
+        print("  - Group all")
+        if True:
+            # global_urn isn't always filled, so fall back to generating it ourselves
+            grp_name = f"~all"
+            grp_id = 'all'
+
+            print("      - grp: {}".format(grp_name))
+            vc[service][co_identifier].setdefault('groups', []).append(grp_name)
+
+            grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+
+            members = []
+            for src_id, src_detail in users.items():
+                src_user = src_detail['user']
+                src_uid = util.uid(src_user)
+                dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
+                dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                members.append(dst_dn)
+                vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)
+
+            #if not gidNumber:
+            #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+
+            # Here's the magic: Build the new group entry
+            grp_entry = {
+                'objectClass': ['extensibleObject', 'groupOfMembers'],
+                'cn': [grp_name],
+                'documentIdentifier': [grp_id],
+                #'labeledURI': [grp_urn],
+                #'gidNumber': [gidNumber],
+                'member': members,
+                'description': ['All CO members'],
+                'displayName': ['All Members']
+            }
+            ldif = dst.store(grp_dn, grp_entry)
+            print("      - store: {}".format(ldif))
+
+        print("  - All groups")
+        groups = src.groups(co_id)
+        #print(f"groups: {groups}")
+        for gid, group in groups.items():
+            grp_id = group['identifier']
+            grp_name = group['short_name']
+            # global_urn isn't always filled, so fall back to generating it ourselves
+            grp_urn = group.get('global_urn') or f"{co_identifier}:{grp_name}"
+
+            print("      - grp: {}/{}".format(group['id'], grp_urn))
+            vc[service][co_identifier].setdefault('groups', []).append(grp_name)
+
+            grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+            grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                                    f"(&(objectClass=groupOfNames)(cn={grp_name}))")
+            if len(grp_dns) == 1:
+                old_dn, old_entry = list(grp_dns.items())[0]
+                #gidNumber = old_entry.get('gidNumber', [None])[0]
+                members = old_entry.get('member', [])
+            elif len(grp_dns) == 0:
+                members = []
+
+            #if not gidNumber:
+            #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+
+            # Here's the magic: Build the new group entry
+            grp_entry = {
+                'objectClass': ['extensibleObject', 'groupOfMembers'],
+                'cn': [grp_name],
+                'documentIdentifier': [grp_id],
+                #'labeledURI': [grp_urn],
+                #'gidNumber': [gidNumber],
+                'member': members
+            }
+            if group.get('description'):
+                grp_entry['description'] = [group.get('description')]
+            if group.get('name'):
+                grp_entry['displayName'] = [group.get('name')]
+
+            ldif = dst.store(grp_dn, grp_entry)
+            print("      - store: {}".format(ldif))
+
+        print("  - People")
+        
         for src_id, src_detail in users.items():
             # print(f"user: {src_detail}")
             src_user = src_detail['user']
@@ -182,6 +262,7 @@ for service, cos in collaborations.items():
 
             # convert the BS data to an ldap record
             dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
+            dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
             # add the uidNumber and gidNumber
             #uidNumber = None
@@ -199,8 +280,6 @@ for service, cos in collaborations.items():
 
             #dst_entry['uidNumber'] = [uidNumber]
             #dst_entry['gidNumber'] = [gidNumber]
-
-            dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
             print(f"      - store {dst_dn}: ", end='')
             try:
@@ -224,7 +303,8 @@ for service, cos in collaborations.items():
 
                 # TODO: what does this do, exactly?  Can't we simplify this?
                 vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)
-                vc[service][co_identifier].setdefault('groups', []).append(grp_urn)
+                #vc[service][co_identifier].setdefault('groups', []).append(grp_urn)
+                vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
                 grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
                 grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
@@ -235,11 +315,11 @@ for service, cos in collaborations.items():
                 if len(grp_dns) == 1:
                     old_dn, old_entry = list(grp_dns.items())[0]
                     #gidNumber = old_entry.get('gidNumber', [None])[0]
-                    sczMembers = old_entry.get('member', [])
+                    members = old_entry.get('member', [])
                     if dst_dn not in sczMembers:
-                        sczMembers.append(dst_dn)
+                        members.append(dst_dn)
                 elif len(grp_dns) == 0:
-                    sczMembers = [dst_dn]
+                    members = [dst_dn]
                 else:
                     raise Exception("Too many dn's, this shouldn't happen")
 
@@ -248,12 +328,12 @@ for service, cos in collaborations.items():
 
                 # Here's the magic: Build the new group entry
                 grp_entry = {
-                    'objectClass': ['extensibleObject', 'groupOfNames'],
+                    'objectClass': ['extensibleObject', 'groupOfMembers'],
                     'cn': [grp_name],
                     'documentIdentifier': [grp_id],
                     #'labeledURI': [grp_urn],
                     #'gidNumber': [gidNumber],
-                    'member': sczMembers
+                    'member': members
                 }
                 if group.get('description'):
                     grp_entry['description'] = [group.get('description')]
@@ -265,7 +345,7 @@ for service, cos in collaborations.items():
 
     print()
 
-print("vc: {}".format(vc))
+print("vc: {}\n".format(vc))
 # Cleanup phase
 print("-- Cleanup ---")
 service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
@@ -302,10 +382,10 @@ for service_dn, s in service_dns.items():
                         dst.delete(dst_dn)
 
             print("  - Groups")
-            dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service), '(objectClass=sczGroup)')
+            dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service), '(objectClass=groupOfMembers)')
             for dst_dn, dst_entry in dst_dns.items():
                 grp_name = dst_entry['cn'][0]
-                grp_urn = dst_entry['labeledURI'][0]
+                #grp_urn = dst_entry['labeledURI'][0]
                 print("    - dstdn: {}".format(dst_dn))
                 # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
                 src_id = dst_entry.get('documentIdentifier')
@@ -315,12 +395,14 @@ for service_dn, s in service_dns.items():
                 else:
                     new_entry = copy.deepcopy(dst_entry)
                     src_id = src_id[0]
-                    dst_members = new_entry.get('sczMember', [])
-                    src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(int(src_id), [])
+                    dst_members = new_entry.get('member', [])
+                    #src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(int(src_id), [])
+                    src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(src_id, [])
                     removed = False  # TODO: rename this to is_modified
                     # ipdb.set_trace()
                     for dst_member in dst_members:
-                        dst_rdn = util.dn2rdns(dst_member)["uid"][0]
+                        #dst_rdn = util.dn2rdns(dst_member)["uid"][0]
+                        dst_rdn = util.dn2rdns(dst_member)['cn'][0]
                         print("      - dst_member: {}".format(dst_rdn))
                         if dst_member not in src_members:
                             print("        dst_member not found, deleting {}".format(dst_rdn))
@@ -328,7 +410,7 @@ for service_dn, s in service_dns.items():
                             removed = True
                     if removed:
                         dst.modify(dst_dn, dst_entry, new_entry)
-                    if grp_urn not in vc.get(dc, {}).get(co, {}).get('groups', []):
+                    if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
                         print(f"        {grp_name} not found, deleting {dst_dn}")
                         dst.delete(dst_dn)
 

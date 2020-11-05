@@ -132,6 +132,17 @@ class SBS(object):
                 users[m['user_id']]['groups'].append(group)
         return users
 
+    def groups(self, c_id):
+        groups = {}
+        co = self.collaboration(c_id)
+        if not co.get('short_name'):
+            raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
+        for group in co['groups']:
+            g_id = group['id']
+            g = self.group(c_id, g_id)
+            groups[g_id] = g
+        return groups
+
     def collaboration_users(self, c_id):
         # Warning, this function returns a dict of all CO groups
         # and one for their membership per user

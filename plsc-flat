@@ -64,6 +64,7 @@ for service, cos in collaborations.items():
             dst_dn = f"cn={src_uid},ou=People,{co_dn}"
             dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
                                 "(&(ObjectClass=person)(cn={}))".format(src_uid))
+
             # We can't just store People, we need to merge attributes
             if len(dst_dns) == 1:
                 old_dn, old_entry = list(dst_dns.items())[0]
@@ -74,14 +75,14 @@ for service, cos in collaborations.items():
             print("    - store: {}".format(ldif))
 
         print("  - Groups")
-        grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfNames)')
+        grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
 
         for grp_dn, grp_entry in grp_dns.items():
             print("  - group_dn: {}".format(grp_dn))
 
             grp_rdns = util.dn2rdns(grp_dn)
-            grp_cn = grp_rdns['cn'][0]
-            #print(f"cn: {grp_cn}")
+            grp_cn = f"{co_id}:{grp_rdns['cn'][0]}"
+            print(f"cn: {grp_cn}")
 
             vc['groups'].add(grp_cn)
 
@@ -104,13 +105,14 @@ for service, cos in collaborations.items():
                 members.append(member_dn)
                 #print(f"uid: {member_dn}")
 
-            old_entry = copy.deepcopy(grp_entry)
-            grp_entry['member'] = members
+            new_entry = copy.deepcopy(grp_entry)
+            new_entry['cn'] = [grp_cn]
+            new_entry['member'] = members
 
             dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
-            dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", f"(&(ObjectClass=groupOfNames)(cn={grp_cn}))")
+            dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", f"(&(ObjectClass=groupOfMembers)(cn={grp_cn}))")
 
-            ldif = dst.store(dst_dn, grp_entry)
+            ldif = dst.store(dst_dn, new_entry)
             print("    - store: {}".format(ldif))
 
         print()
@@ -141,14 +143,14 @@ for service, cos in collaborations.items():
                 dst.delete(dst_dn)
 
     print("  - Groups")
-    dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", "(objectClass=groupOfNames)")
+    dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", "(objectClass=groupOfMembers)")
     for dst_dn, dst_entry in dst_dns.items():
         #print("  - dstdn: {}".format(dst_dn))
         #print("    entry: {}".format(dst_entry))
 
         if dst_entry.get('cn', None):
-            src_cn = dst_entry['cn'][0]
-            src_dns = src.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=groupOfNames)(cn={src_cn}))")
+            src_cn = dst_entry['cn'][0].split(':')[-1]
+            src_dns = src.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
             if len(src_dns):
                 for src_dn, src_entry in src_dns.items():
                     pass
