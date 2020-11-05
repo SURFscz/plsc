@@ -176,7 +176,7 @@ for service, cos in collaborations.items():
         if True:
             # global_urn isn't always filled, so fall back to generating it ourselves
             grp_name = f"~all"
-            grp_id = 'all'
+            grp_id = co['identifier']
 
             print("      - grp: {}".format(grp_name))
             vc[service][co_identifier].setdefault('groups', []).append(grp_name)
@@ -199,7 +199,7 @@ for service, cos in collaborations.items():
             grp_entry = {
                 'objectClass': ['extensibleObject', 'groupOfMembers'],
                 'cn': [grp_name],
-                'documentIdentifier': [co['identifier']],
+                'documentIdentifier': [grp_id],
                 #'labeledURI': [grp_urn],
                 #'gidNumber': [gidNumber],
                 'member': members,
