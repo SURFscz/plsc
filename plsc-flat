@@ -47,7 +47,7 @@ for service, cos in collaborations.items():
         flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
         if len(flat_dns) == 0:
             flat_dn = f"dc=flat,dc={service},{dst.basedn}"
-            flat_entry = {'objectClass': ['dcObject', 'organization'], 'dc': ['flat'], 'o': [service]}
+            flat_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['flat'], 'ou': ['flat']}
             dst.add(flat_dn, flat_entry)
             for ou in ['Groups', 'People']:
                 ou_dn = 'ou=' + ou + ',' + flat_dn

@@ -117,8 +117,8 @@ for service, cos in collaborations.items():
     ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
     if len(ordered_dns) == 0:
         ordered_dn = f"dc=ordered,dc={service},{dst.basedn}"
-        ordered_entry = {'objectClass': ['dcObject', 'organization'], 'dc': ['ordered'], 'o': [service]}
-        dst.add(ordered_dn, ordered_entry)
+        ordered_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['ordered'], 'ou': ['ordered']}
+        dst.store(ordered_dn, ordered_entry)
 
     # iterate over all COs that are connected to this service
     for co_id, co in cos.items():
