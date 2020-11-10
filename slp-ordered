@@ -173,43 +173,6 @@ for service, cos in collaborations.items():
         users = src.users(co_id)
         # print(f"users: {users}")
 
-        print("  - Group all")
-        if True:
-            # global_urn isn't always filled, so fall back to generating it ourselves
-            grp_name = "~all"
-            grp_id = co['identifier']
-
-            print("      - grp: {}".format(grp_name))
-            vc[service][co_identifier].setdefault('groups', []).append(grp_name)
-
-            grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-
-            members = []
-            for src_id, src_detail in users.items():
-                src_user = src_detail['user']
-                src_uid = util.uid(src_user)
-                dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
-                dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-                members.append(dst_dn)
-                vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)
-
-            #if not gidNumber:
-            #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
-
-            # Here's the magic: Build the new group entry
-            grp_entry = {
-                'objectClass': ['extensibleObject', 'groupOfMembers'],
-                'cn': [grp_name],
-                'documentIdentifier': [grp_id],
-                #'labeledURI': [grp_urn],
-                #'gidNumber': [gidNumber],
-                'member': members,
-                'description': ['All CO members'],
-                'displayName': ['All Members']
-            }
-            ldif = dst.store(grp_dn, grp_entry)
-            print("      - store: {}".format(ldif))
-
         print("  - All groups")
         groups = src.groups(co_id)
         #print(f"groups: {groups}")
@@ -346,6 +309,46 @@ for service, cos in collaborations.items():
                 # if grp_entry != old_entry:
                 ldif = dst.store(grp_dn, grp_entry)
                 print("      - store: {}".format(ldif))
+
+        if True:
+            print("  - Group all")
+            # global_urn isn't always filled, so fall back to generating it ourselves
+            grp_name = "~all"
+            grp_id = co['identifier']
+
+            print("      - grp: {}".format(grp_name))
+            vc[service][co_identifier].setdefault('groups', []).append(grp_name)
+
+            grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+
+            members = []
+            for src_id, src_detail in users.items():
+                src_user = src_detail['user']
+                src_uid = util.uid(src_user)
+                dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
+                dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                members.append(dst_dn)
+                vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)
+
+            #if not gidNumber:
+            #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+
+            # Here's the magic: Build the new group entry
+            grp_entry = {
+                'objectClass': ['extensibleObject', 'groupOfMembers'],
+                'cn': [grp_name],
+                'documentIdentifier': [grp_id],
+                #'labeledURI': [grp_urn],
+                #'gidNumber': [gidNumber],
+                'member': members,
+                'description': ['All CO members'],
+                'displayName': ['All Members']
+            }
+            ldif = dst.store(grp_dn, grp_entry)
+            print("      - store: {}".format(ldif))
+
+
+
 
     print()
 
