@@ -79,6 +79,8 @@ collaborations = src.service_collaborations()
 # we have not seen in the Cleanup phase
 vc = {}
 
+print("=== slp-ordered ====")
+
 # Create phase
 print("--- Create ---")
 for service, cos in collaborations.items():
@@ -174,7 +176,7 @@ for service, cos in collaborations.items():
         print("  - Group all")
         if True:
             # global_urn isn't always filled, so fall back to generating it ourselves
-            grp_name = f"~all"
+            grp_name = "~all"
             grp_id = co['identifier']
 
             print("      - grp: {}".format(grp_name))
@@ -222,7 +224,7 @@ for service, cos in collaborations.items():
 
             grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
             grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
-                                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
+                                f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
             if len(grp_dns) == 1:
                 old_dn, old_entry = list(grp_dns.items())[0]
                 #gidNumber = old_entry.get('gidNumber', [None])[0]

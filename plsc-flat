@@ -32,6 +32,8 @@ vc = {
     'groups': set(),
 }
 
+print("=== plsc-flat ====")
+
 # Create phase
 print("--- Create ---")
 for service, cos in collaborations.items():
