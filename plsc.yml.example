@@ -15,6 +15,6 @@ sbs:
     host: https://sbs.example.net
     user: sysread
     passwd: changethispassword
-pwd: changethispassword
+pwd: '{CRYPT}!'
 uid: 1000
 gid: 1000
