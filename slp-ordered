@@ -131,6 +131,7 @@ for service, cos in collaborations.items():
         vc[service][co_identifier] = {}
         vc[service][co_identifier]['roles'] = {}
         vc[service][co_identifier]['members'] = []
+        vc[service][co_identifier]['name'] = co.get('name', co_identifier)
 
         # Skip unknown CO's
         organizations = dst.rfind(f"dc=ordered,dc={service}",
@@ -346,7 +347,7 @@ for service, cos in collaborations.items():
                 #'gidNumber': [gidNumber],
                 'member': members,
                 'description': ['All CO members'],
-                'displayName': ['All Members']
+                'displayName': [f'All Members of {vc[service][co_identifier]["name"]}']
             }
             ldif = dst.store(grp_dn, grp_entry)
             print("      - store: {}".format(ldif))
