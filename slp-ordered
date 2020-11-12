@@ -412,8 +412,8 @@ for service_dn, s in service_dns.items():
                     removed = False  # TODO: rename this to is_modified
                     # ipdb.set_trace()
                     for dst_member in dst_members:
-                        #dst_rdn = util.dn2rdns(dst_member)["uid"][0]
-                        dst_rdn = util.dn2rdns(dst_member)['cn'][0]
+                        dst_rdn = util.dn2rdns(dst_member)["uid"][0]
+                        #dst_rdn = util.dn2rdns(dst_member)['cn'][0]
                         print("      - dst_member: {}".format(dst_rdn))
                         if dst_member not in src_members:
                             print("        dst_member not found, deleting {}".format(dst_rdn))
