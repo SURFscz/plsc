@@ -55,8 +55,8 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     for key, val in record.items():
         record[key] = list(filter(None, record[key]))
 
-    #rdn = f"uid={username}"
-    rdn = f"cn={sbs_uid}"
+    rdn = f"uid={username}"
+    #rdn = f"cn={sbs_uid}"
 
     return rdn, record
 
@@ -125,7 +125,7 @@ for service, cos in collaborations.items():
         if 'short_name' not in co or 'short_name' not in co['organisation']:
             raise Exception(f"Encountered CO without short_name: {co}")
         # TODO: rename this to co_urn
-        co_identifier = "{}:{}".format(co['organisation']['short_name'], co['short_name'])
+        co_identifier = "{}.{}".format(co['organisation']['short_name'], co['short_name'])
 
         print("- co: {}/{}".format(co_id, co_identifier))
         vc[service][co_identifier] = {}
@@ -181,6 +181,8 @@ for service, cos in collaborations.items():
             grp_name = group['short_name']
             # global_urn isn't always filled, so fall back to generating it ourselves
             grp_urn = group.get('global_urn') or f"{co_identifier}:{grp_name}"
+            # use . instead of : to make the group names safe to use in *nix
+            grp_urn.replace(':', '.')
 
             print("      - grp: {}/{}".format(group['id'], grp_urn))
             vc[service][co_identifier].setdefault('groups', []).append(grp_name)
@@ -263,6 +265,8 @@ for service, cos in collaborations.items():
                 grp_name = group['short_name']
                 # global_urn isn't always filled, so fall back to generating it ourselves
                 grp_urn = group.get('global_urn') or f"{co_identifier}:{grp_name}"
+                # use . instead of : to make the group names safe to use in *nix
+                grp_urn.replace(':', '.')
 
                 print("      - grp: {}/{}".format(group['id'], grp_urn))
 
@@ -313,7 +317,7 @@ for service, cos in collaborations.items():
         if True:
             print("  - Group all")
             # global_urn isn't always filled, so fall back to generating it ourselves
-            grp_name = "~all"
+            grp_name = "@all"
             grp_id = co['identifier']
 
             print("      - grp: {}".format(grp_name))
