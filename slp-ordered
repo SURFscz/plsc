@@ -148,8 +148,8 @@ for service, cos in collaborations.items():
             'objectClass': ['top', 'organization', 'extensibleObject'],
             'o': [co_identifier],
             'host': [fqdn],
-            #'documentIdentifier': [co_id],
-            'documentIdentifier': [co['identifier']],
+            #'uniqueIdentifier': [co_id],
+            'uniqueIdentifier': [co['identifier']],
             #'labeledURI': [co_identifier]
         }
         if co.get('description'):
@@ -204,7 +204,7 @@ for service, cos in collaborations.items():
             grp_entry = {
                 'objectClass': ['extensibleObject', 'groupOfMembers'],
                 'cn': [grp_name],
-                'documentIdentifier': [grp_id],
+                'uniqueIdentifier': [grp_id],
                 #'labeledURI': [grp_urn],
                 #'gidNumber': [gidNumber],
                 'member': members
@@ -299,7 +299,7 @@ for service, cos in collaborations.items():
                 grp_entry = {
                     'objectClass': ['extensibleObject', 'groupOfMembers'],
                     'cn': [grp_name],
-                    'documentIdentifier': [grp_id],
+                    'uniqueIdentifier': [grp_id],
                     #'labeledURI': [grp_urn],
                     #'gidNumber': [gidNumber],
                     'member': members
@@ -341,7 +341,7 @@ for service, cos in collaborations.items():
             grp_entry = {
                 'objectClass': ['extensibleObject', 'groupOfMembers'],
                 'cn': [grp_name],
-                'documentIdentifier': [grp_id],
+                'uniqueIdentifier': [grp_id],
                 #'labeledURI': [grp_urn],
                 #'gidNumber': [gidNumber],
                 'member': members,
@@ -399,7 +399,7 @@ for service_dn, s in service_dns.items():
                 #grp_urn = dst_entry['labeledURI'][0]
                 print("    - dstdn: {}".format(dst_dn))
                 # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
-                src_id = dst_entry.get('documentIdentifier')
+                src_id = dst_entry.get('uniqueIdentifier')
                 if src_id is None:
                     print("        sbs identifier not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
