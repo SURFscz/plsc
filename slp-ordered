@@ -171,11 +171,11 @@ for service, cos in collaborations.items():
         else:
             raise Exception(f"Found multiple COs for o={co_identifier}")
 
-        users = src.users(co_id)
+        users = src.users(co)
         # print(f"users: {users}")
 
         print("  - All groups")
-        groups = src.groups(co_id)
+        groups = src.groups(co)
         #print(f"groups: {groups}")
         for gid, group in groups.items():
             grp_id = group['identifier']

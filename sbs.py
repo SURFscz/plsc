@@ -115,9 +115,10 @@ class SBS(object):
 
         return services
 
-    def users(self, c_id):
+    def users(self, co):
         users = {}
-        co = self.collaboration(c_id)
+        groups = self.groups(co)
+        #co = self.collaboration(c_id)
         if not co.get('short_name'):
             raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
         for u in co['collaboration_memberships']:
@@ -127,20 +128,20 @@ class SBS(object):
             }
         for group in co['groups']:
             g_id = group['id']
-            g = self.group(c_id, g_id)
-            for m in g['collaboration_memberships']:
+            #g = self.group(c_id, g_id)
+            for m in group['collaboration_memberships']:
                 users[m['user_id']]['groups'].append(group)
         return users
 
-    def groups(self, c_id):
+    def groups(self, co):
         groups = {}
-        co = self.collaboration(c_id)
+        #co = self.collaboration(c_id)
         if not co.get('short_name'):
             raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
         for group in co['groups']:
             g_id = group['id']
-            g = self.group(c_id, g_id)
-            groups[g_id] = g
+            #g = self.group(c_id, g_id)
+            groups[g_id] = group
         return groups
 
     def collaboration_users(self, c_id):
