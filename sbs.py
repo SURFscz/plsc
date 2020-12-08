@@ -56,12 +56,18 @@ class SBS(object):
         return self.api('api/organisations/all')
 
     def organisation(self, org_id):
-        organisations = self.organisations()
-        for o in organisations:
-            if o['id'] == org_id:
-                return o
+        return self.api(f"api/organisations/{org_id}")
 
-        raise Exception(f"Organisation {id} not found !")
+    #def organisation(self, org_id):
+        #organisations = self.organisations()
+        #for o in organisations:
+            #if o['id'] == org_id:
+                #return o
+
+        #raise Exception(f"Organisation {id} not found !")
+
+    def services(self):
+        return self.api(f"api/services/all")
 
     def service(self, s_id):
         return self.api(f"api/services/{s_id}")
