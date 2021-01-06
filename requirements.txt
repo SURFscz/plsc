@@ -9,3 +9,5 @@ future-fstrings
 ipdb
 requests
 pytest
+pytest-dotenv
+json-server.py

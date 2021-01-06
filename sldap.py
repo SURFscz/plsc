@@ -2,6 +2,10 @@ import ldap
 import ldap.modlist
 from pprint import pprint
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class sLDAP(object):
 
@@ -20,6 +24,7 @@ class sLDAP(object):
         binddn = config['binddn']
         passwd = config['passwd']
 
+        logger.debug("Initializing ldap: {}".format(uri))
         self.__c = ldap.initialize(uri)
 
         if binddn == 'external':
@@ -48,6 +53,8 @@ class sLDAP(object):
         return r
 
     def __search(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
+        logger.debug("Search: {}".format(basedn))
+
         if attrs is None:
             attrs = []
         if not basedn:
