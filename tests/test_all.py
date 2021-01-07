@@ -4,7 +4,7 @@ import requests
 import ldap
 import os
 
-from tests.base_test import BaseTest
+from plsc.tests.base_test import BaseTest
 
 logger = logging.getLogger(__name__)
 

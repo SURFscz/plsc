@@ -1,4 +1,5 @@
 __pycache__/
+.pytest_cache
 bin/
 include/
 lib/
@@ -12,3 +13,6 @@ config.d/
 .idea/
 *.mdb
 *.pid
+.venv
+.pytest_cache
+
