@@ -19,6 +19,9 @@ jobs:
           LDAP_ADMIN_PASSWORD: secret
           LDAP_ROOT: dc=sram,dc=tld
           LDAP_PORT_NUMBER: 1389
+          LDAP_CUSTOM_LDIF_DIR: /etc/ldir
+        volumes:
+          - ./etc/ldif:/etc/ldif
 
     steps:
     - uses: actions/checkout@v2
