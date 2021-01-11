@@ -14,6 +14,8 @@ jobs:
     services:
       ldap:
         image: bitnami/openldap
+        ports:
+          - 1389:1389
         env:
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: secret
@@ -86,7 +88,7 @@ jobs:
         gid: 1000
         EOF
       env:
-        LDAP_URL: ldap://ldap:1389
+        LDAP_URL: ldap://localhost:1389
         LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
@@ -98,18 +100,15 @@ jobs:
       run: cat /tmp/plsc-test.yml
 
     - name: Run slp ordered...
-      uses: docker://bitnami/openldap
       run: python slp-ordered.py /tmp/plsc-test.yml
 
     - name: Run slp flat...
-      uses: docker://bitnami/openldap
       run: python slp-ordered.py /tmp/plsc-test.yml
 
     - name: Run pytest
-      uses: docker://bitnami/openldap
       run: python pytest tests
       env:
-        LDAP_URL: ldap://ldap:1389
+        LDAP_URL: ldap://localhost:1389
         LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
