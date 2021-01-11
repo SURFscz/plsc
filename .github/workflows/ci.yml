@@ -61,8 +61,6 @@ jobs:
         entrypoint: /bin/bash
         args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
 
-    - name: create plsc yaml file
-
     - name: Prepare plsc.yml file
       run: |
         cat <<EOF >/tmp/plsc-test.yml
