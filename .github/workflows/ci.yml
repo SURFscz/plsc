@@ -94,6 +94,9 @@ jobs:
         SBS_PORT: 3080
         SBS_PASSWORD: secret
 
+    - name: Check plsc.yml file...
+      run: cat /tmp/plsc-test.yml
+
     - name: Run slp ordered...
       run: python slp-ordered.py /tmp/plsc-test.yml
 
@@ -110,5 +113,11 @@ jobs:
         SBS_HOST: localhost
         SBS_PORT: 3080
         SBS_PASSWORD: secret
+
+    - name: Search ldap - show results !
+      uses: docker://bitnami/openldap
+      with:
+        entrypoint: /bin/bash
+        args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
 
 
