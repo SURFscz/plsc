@@ -98,12 +98,15 @@ jobs:
       run: cat /tmp/plsc-test.yml
 
     - name: Run slp ordered...
+      uses: docker://bitnami/openldap
       run: python slp-ordered.py /tmp/plsc-test.yml
 
     - name: Run slp flat...
+      uses: docker://bitnami/openldap
       run: python slp-ordered.py /tmp/plsc-test.yml
 
     - name: Run pytest
+      uses: docker://bitnami/openldap
       run: python pytest tests
       env:
         LDAP_URL: ldap://ldap:1389
