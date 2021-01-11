@@ -14,13 +14,11 @@ jobs:
     services:
       ldap:
         image: bitnami/openldap
-        ports:
-          - 3389:3389
         env:
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: adminpassword
           LDAP_ROOT: dc=example,dc=com
-          LDAP_PORT_NUMBER: 3389
+          LDAP_PORT_NUMBER: 1389
 
     steps:
     - uses: actions/checkout@v2
@@ -43,13 +41,13 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -h localhost:3389 -D cn=admin,dc=example,dc=com -w adminpassword||sleep 5)
+        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -H ldap:://ldap:1389 -D cn=admin,dc=example,dc=com -w adminpassword||sleep 5)
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -h ldap:3389 -D cn=admin,dc=example,dc=com -w adminpassword -f etc/ldif/sram.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w adminpassword -f etc/ldif/sram.ldif)"
 
     - name: Test with pytest
       run: |
