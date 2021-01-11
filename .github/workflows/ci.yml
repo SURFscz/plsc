@@ -47,19 +47,19 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/eduPerson.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/eduPerson.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/voPerson.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/voPerson.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/sczGroup.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/sczGroup.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
