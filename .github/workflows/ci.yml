@@ -53,7 +53,7 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "for f in eduPerson sczGroup voPerson sram sram_services; do /opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/$f.ldif; done"
+        args: -c "for f in eduPerson sczGroup voPerson sram sram_services; do /opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/$f.ldif; done"
 
     - name: Load ldap - check structure
       uses: docker://bitnami/openldap
