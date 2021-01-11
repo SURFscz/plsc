@@ -25,7 +25,7 @@ sbs:
   src:
     host: http://${SBS_HOST}:${SBS_PORT}
     user: sysread
-    passwd: ${LDAP_ADMIN_PASSWORD}
+    passwd: ${SBS_PASSWORD}
 pwd: changethispassword
 uid: 1000
 gid: 1000
