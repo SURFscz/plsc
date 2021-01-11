@@ -41,37 +41,37 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w secret||sleep 5)
+        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w secret -f etc/ldif/eduPerson.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/eduPerson.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w secret -f etc/ldif/voPerson.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/voPerson.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w secret -f etc/ldif/sczGroup.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/sczGroup.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w secret -f etc/ldif/sram.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/sram.ldif)"
 
     - name: Load ldap - ldif
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=example,dc=com -w secret -f etc/ldif/sram_services.ldif)"
+        args: -c "(/opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/sram_services.ldif)"
 
     - name: Test with pytest
       run: |
