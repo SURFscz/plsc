@@ -47,7 +47,7 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "/opt/bitnami/openldap/bin/ldapdelete -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret ou=users,dc=sram,dc=tld"
+        args: -c "/opt/bitnami/openldap/bin/ldapdelete -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -r ou=users,dc=sram,dc=tld"
 
     - name: Load ldap - load ldif
       uses: docker://bitnami/openldap
