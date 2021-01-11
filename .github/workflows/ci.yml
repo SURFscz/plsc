@@ -19,8 +19,6 @@ jobs:
           LDAP_ADMIN_PASSWORD: secret
           LDAP_ROOT: dc=sram,dc=tld
           LDAP_PORT_NUMBER: 1389
-          LDAP_CUSTOM_LDIF_DIR: /etc/ldif
-        options: -v /github/workspace/etc/ldif:/etc/ldif
 
     steps:
     - uses: actions/checkout@v2
@@ -43,13 +41,25 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)
+        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)"
+
+    - name: Load ldap - cleanup ldap
+      uses: docker://bitnami/openldap
+      with:
+        entrypoint: /bin/bash
+        args: -c "/opt/bitnami/openldap/bin/ldapdelete -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret ou=users,dc=sram,dc=tld"
+
+    - name: Load ldap - load ldif
+      uses: docker://bitnami/openldap
+      with:
+        entrypoint: /bin/bash
+        args: -c "for f in eduPerson sczGroup voPerson sram sram_services; do /opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/$f.ldif; done"
 
     - name: Load ldap - check structure
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret)"
+        args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
 
     - name: Test with pytest
       run: |
