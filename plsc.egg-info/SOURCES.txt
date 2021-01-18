@@ -1,4 +1,5 @@
 README.md
+setup.py
 plsc.egg-info/PKG-INFO
 plsc.egg-info/SOURCES.txt
 plsc.egg-info/dependency_links.txt

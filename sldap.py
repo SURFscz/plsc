@@ -1,6 +1,5 @@
 import ldap
 import ldap.modlist
-from pprint import pprint
 
 import logging
 
@@ -69,10 +68,10 @@ class sLDAP(object):
                 dns[dn] = self.__decode(entry)
         except ldap.NO_SUCH_OBJECT as e:
             # nothing found, just return an empty result
-            #print(f"find: {e} on filter '{filter}'")
+            #logger.error(f"find: {e} on filter '{filter}'")
             return {}
         except ldap.NO_RESULTS_RETURNED as e:
-            print(f"find: {e} on filter '{filter}'")
+            logger.error(f"find: {e} on filter '{filter}'")
             raise e
         return dns
 
@@ -88,8 +87,8 @@ class sLDAP(object):
         try:
             self.__c.add_s(dn, addlist)
         except Exception as e:
-            print(f"Exception on add of {dn}: {e}")
-            pprint(entry)
+            logger.error(f"Exception on add of {dn}: {e}")
+            logger.error(f"entry: {entry}")
             raise e
         return addlist
 
@@ -98,13 +97,15 @@ class sLDAP(object):
         try:
             self.__c.modify_s(dn, modlist)
         except Exception as e:
-            print(f"Exception on modify of {dn}: {e}")
-            pprint(modlist)
+            logger.error(f"Exception on modify of {dn}: {e}")
+            logger.error(modlist)
             raise e
         return modlist
 
     # store tries to add, then modifies if exists.
     def store(self, dn, new_entry):
+        logger.debug("Storing ldap: {}".format(new_entry))
+
         dst_dns = self.find(dn, scope=ldap.SCOPE_BASE)
         if len(dst_dns) == 1:
             dn, entry = list(dst_dns.items())[0]
@@ -115,11 +116,11 @@ class sLDAP(object):
             return "Too many dn's This shouldn't happen"
 
     def delete(self, dn):
-        print(f"Deleting dn='{dn}'")
+        logger.error(f"Deleting dn='{dn}'")
         try:
             self.__c.delete_s(dn)
         except Exception as e:
-            print("{}\n  {}".format(dn, e))
+            logger.error("{}\n  {}".format(dn, e))
             raise e
 
     def rdelete(self, dn):

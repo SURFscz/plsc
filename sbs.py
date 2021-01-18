@@ -1,8 +1,13 @@
 import json
+import logging
 import requests
 import requests.auth
 import urllib3
 
+import socket
+
+def ipv4_only():
+    return socket.AF_INET
 
 class SBSException(Exception):
     pass
@@ -18,6 +23,11 @@ class SBS(object):
         self.user = config.get('user', 'sysread')
         self.password = config.get('passwd', 'changethispassword')
         self.verify_ssl = config.get('verify_ssl', True)
+
+        if config.get("ipv4_only", False):
+            import urllib3.util.connection as urllib3_connection
+
+            urllib3_connection.allowed_gai_family = ipv4_only
 
         if not self.verify_ssl:
             urllib3.disable_warnings()
@@ -72,9 +82,6 @@ class SBS(object):
     def collaboration(self, c_id):
         return self.api(f"api/collaborations/{c_id}")
 
-    def group(self, c_id, g_id):
-        return self.api(f"api/groups/{g_id}/{c_id}")
-
     def service_attributes(self, uid):
         # t = {
         #     'urn:mace:dir:attribute-def:cn': 'name',
@@ -126,11 +133,22 @@ class SBS(object):
                 'groups': []
             }
         for group in co['groups']:
-            g_id = group['id']
-            g = self.group(c_id, g_id)
-            for m in g['collaboration_memberships']:
+            for m in group['collaboration_memberships']:
                 users[m['user_id']]['groups'].append(group)
+
         return users
+
+    def groups(self, c_id):
+        groups = {}
+        co = self.collaboration(c_id)
+        if not co.get('short_name'):
+            raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
+        for group in co['groups']:
+            g_id = group['id']
+            groups[g_id] = group
+
+        logging.debug(f"GROUPS {c_id} : {groups}")
+        return groups
 
     def collaboration_users(self, c_id):
         # Warning, this function returns a dict of all CO groups
@@ -151,10 +169,11 @@ class SBS(object):
             }
         for group in co['groups']:
             g_id = group['id']
-            g = self.group(c_id, g_id)
-            users['groups'][g_id] = f"group_{g['name']}"
+            users['groups'][g_id] = f"group_{group['name']}"
             for m in g['collaboration_memberships']:
                 users['users'][m['user_id']]['groups'].append(g_id)
+
+        logging.debug(f"USERS {c_id} : {users}")
         return users
 
     def collaboration_groups(self, c_id):
@@ -185,5 +204,7 @@ class SBS(object):
                 groups['groups'][g_id]['members'].append(m['user_id'])
                 groups['groups'][g_id]['name'] = f"group_{g['name']}"
                 groups['users'][m['user_id']] = m['user']
+
+        logging.debug(f"COLLABORATION GROUPS {c_id} : {groups}")
         return groups
 

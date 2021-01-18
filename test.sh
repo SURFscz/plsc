@@ -3,7 +3,7 @@
 source .env
 
 # Setup LDAP server
-etc/ldap_start.sh
+# etc/ldap_start.sh
 
 # Setup json API server
 etc/api_start.sh
@@ -23,12 +23,10 @@ ldap:
     passwd: ${LDAP_ADMIN_PASSWORD}
 sbs:
   src:
-    host: http://${SBS_HOST}:${SBS_PORT}
+    host: ${SBS_URL}
     user: sysread
     passwd: ${SBS_PASSWORD}
-pwd: changethispassword
-uid: 1000
-gid: 1000
+    ipv4_only: True
 EOF
 
 # slp-ordered testrun
@@ -41,7 +39,7 @@ EOF
 /usr/bin/env pytest tests
 
 # Stop API server
-etc/api_stop.sh
+# etc/api_stop.sh
 
 # Stop LDAP serveruser
 etc/ldap_stop.sh

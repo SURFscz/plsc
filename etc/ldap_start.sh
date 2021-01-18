@@ -12,10 +12,12 @@ docker run \
   --env LDAP_ADMIN_PASSWORD="${LDAP_ADMIN_PASSWORD:-changeme}" \
   --env LDAP_CONFIG_PASSWORD="${LDAP_CONFIG_PASSWORD:-changeme}" \
   --env LDAP_TLS=true \
-  --network host \
+  --publish 389:389 \
   --rm \
   --detach \
   osixia/openldap:latest --loglevel debug --copy-service
+
+#  --network host \
 
 docker cp etc/ldif my-ldap:/tmp
 
@@ -25,10 +27,8 @@ sleep 5
 docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w "${LDAP_CONFIG_PASSWORD:-changeme}" -f /tmp/ldif/eduPerson.ldif
 docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w  "${LDAP_CONFIG_PASSWORD:-changeme}" -f /tmp/ldif/voPerson.ldif
 docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w  "${LDAP_CONFIG_PASSWORD:-changeme}" -f /tmp/ldif/sczGroup.ldif
+docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w  "${LDAP_CONFIG_PASSWORD:-changeme}" -f /tmp/ldif/groupOfMembers.ldif
 
 # Add basedn
 docker exec my-ldap ldapadd -H ldap://localhost -D "${LDAP_BIND_DN:-cn=admin,dc=example,dc=org}" -w  "${LDAP_ADMIN_PASSWORD:-changeme}" -f /tmp/ldif/sram.ldif
 docker exec my-ldap ldapadd -H ldap://localhost -D "${LDAP_BIND_DN:-cn=admin,dc=example,dc=org}" -w  "${LDAP_ADMIN_PASSWORD:-changeme}" -f /tmp/ldif/sram_services.ldif
-
-# Display result...
-docker exec my-ldap ldapsearch -H ldap://localhost -b "${LDAP_BASE_DN:-dc=example,dc=org}" -D "${LDAP_BIND_DN:-cn=admin,dc=example,dc=org}" -w "${LDAP_ADMIN_PASSWORD:-changeme}"

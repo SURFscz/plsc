@@ -64,3 +64,12 @@ And for groups:
             dst_entry['cn'] = [dst_cn]
             dst_entry['description'] = [src_cn]
 ```
+
+# Testing
+
+Run tests with this command:
+
+```
+tests.sh
+```
+
