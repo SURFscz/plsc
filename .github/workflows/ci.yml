@@ -67,7 +67,7 @@ jobs:
       env:
         LDAP_URL: ldap://localhost:389
         LDAP_ADMIN_PASSWORD: secret
-        LDAP_BASE_DN: dc=services,dc=sram,dc=tld
+        LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
         
     - name: Dump ldap...
