@@ -56,7 +56,7 @@ jobs:
       uses: docker://bitnami/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "for f in eduPerson voPerson groupOfMembers sram sram_services; do /opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -f etc/ldif/$f.ldif; done"
+        args: -c "for f in eduPerson voPerson groupOfMembers sram sram_services; do /opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/$f.ldif; done"
 
     - name: Load ldap - check structure
       uses: docker://bitnami/openldap
@@ -65,18 +65,19 @@ jobs:
         args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
     
     # Setup tmate session
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    #- name: Setup tmate session
+    #  uses: mxschmitt/action-tmate@v3
 
     - name: Run pytest
-      run: pytest
+      run: 
+        export PYTHONPATH="."
+        pytest
       env:
         LDAP_URL: ldap://localhost:1389
         LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
-        PYTHONPATH: .
-
+        
     - name: Search ldap - show results !
       uses: docker://bitnami/openldap
       with:
