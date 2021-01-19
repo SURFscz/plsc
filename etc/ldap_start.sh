@@ -28,6 +28,5 @@ docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w "${LDAP
 docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w  "${LDAP_CONFIG_PASSWORD:-changeme}" -f /tmp/ldif/voPerson.ldif
 docker exec my-ldap ldapadd -H ldap://localhost -D cn=admin,cn=config -w  "${LDAP_CONFIG_PASSWORD:-changeme}" -f /tmp/ldif/groupOfMembers.ldif
 
-# Add basedn
-docker exec my-ldap ldapadd -H ldap://localhost -D "${LDAP_BIND_DN:-cn=admin,dc=example,dc=org}" -w  "${LDAP_ADMIN_PASSWORD:-changeme}" -f /tmp/ldif/sram.ldif
+# Add services basedn
 docker exec my-ldap ldapadd -H ldap://localhost -D "${LDAP_BIND_DN:-cn=admin,dc=example,dc=org}" -w  "${LDAP_ADMIN_PASSWORD:-changeme}" -f /tmp/ldif/sram_services.ldif
