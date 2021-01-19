@@ -61,7 +61,7 @@ jobs:
     #  uses: mxschmitt/action-tmate@v3
 
     - name: Run pytest...
-      run: 
+      run: |
         export PYTHONPATH="."
         pytest
       env:
