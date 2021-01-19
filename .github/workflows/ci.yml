@@ -65,18 +65,16 @@ jobs:
         args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
     
     # Setup tmate session
-    #- name: Setup tmate session
-    #  uses: mxschmitt/action-tmate@v3
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Run pytest
-      run: python3 pytest tests
+      run: pytest
       env:
         LDAP_URL: ldap://localhost:1389
         LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
-        SBS_HOST: http://localhost:3080
-        SBS_PASSWORD: secret
 
     - name: Search ldap - show results !
       uses: docker://bitnami/openldap

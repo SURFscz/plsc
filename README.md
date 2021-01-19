@@ -24,9 +24,11 @@ ldap:
     basedn: dc=clients,dc=vnet
     binddn: cn=admin,dc=clients,dc=vnet
     passwd: changethispassword
-pwd: changethispassword
-uid: 1000
-gid: 1000
+    sbs:
+src:
+  host: https://sbs.example.net
+  user: sysread
+  passwd: changethispassword
 ```
 
 ### Local development
