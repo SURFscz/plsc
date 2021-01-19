@@ -44,7 +44,7 @@ jobs:
 
     - name: ldap - Initialization...
       run: |
-        sleep 5
+        sleep 5;
         ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD}  
         for f in eduPerson voPerson groupOfMembers; do ldapadd -H ldap://ldap:389 -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done
         for f in sram sram_services; do ldapadd -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD} -f etc/ldif/$f.ldif; done
