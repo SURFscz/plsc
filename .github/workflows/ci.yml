@@ -33,7 +33,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python }}
-        architecture: amd
 
     - name: Install dependencies
       run: |
@@ -64,6 +63,10 @@ jobs:
       with:
         entrypoint: /bin/bash
         args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
+    
+    # Setup tmate session
+    #- name: Setup tmate session
+    #  uses: mxschmitt/action-tmate@v3
 
     - name: Run pytest
       run: python3 pytest tests
