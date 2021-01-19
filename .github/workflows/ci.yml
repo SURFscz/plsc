@@ -14,12 +14,14 @@ jobs:
 
     services:
       ldap:
-        image: bitnami/openldap
+        image: osixia/openldap:latest
         ports:
           - 1389:1389
         env:
+          LDAP_DOMAIN: sram.tld 
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: secret
+          LDAP_CONFIG_PASSWORD: secret
           LDAP_ROOT: dc=sram,dc=tld
           LDAP_PORT_NUMBER: 1389
 
