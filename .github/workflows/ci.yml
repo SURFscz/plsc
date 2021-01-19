@@ -16,14 +16,12 @@ jobs:
       ldap:
         image: osixia/openldap:latest
         ports:
-          - 1389:1389
+          - 1389:389
         env:
           LDAP_DOMAIN: sram.tld 
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: secret
           LDAP_CONFIG_PASSWORD: secret
-          LDAP_ROOT: dc=sram,dc=tld
-          LDAP_PORT_NUMBER: 1389
 
     steps:
     - uses: actions/checkout@v2
@@ -43,28 +41,28 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Load ldap - check connection
-      uses: docker://bitnami/openldap
+      uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(/opt/bitnami/openldap/bin/ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)"
+        args: -c "(ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)"
 
     - name: Load ldap - cleanup ldap
-      uses: docker://bitnami/openldap
+      uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "/opt/bitnami/openldap/bin/ldapdelete -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -r ou=users,dc=sram,dc=tld"
+        args: -c "ldapdelete -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -r ou=users,dc=sram,dc=tld"
 
     - name: Load ldap - load ldif
-      uses: docker://bitnami/openldap
+      uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "for f in eduPerson voPerson groupOfMembers sram sram_services; do /opt/bitnami/openldap/bin/ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/$f.ldif; done"
+        args: -c "for f in eduPerson voPerson groupOfMembers sram sram_services; do ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/$f.ldif; done"
 
     - name: Load ldap - check structure
-      uses: docker://bitnami/openldap
+      uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
+        args: -c "ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
     
     # Setup tmate session
     #- name: Setup tmate session
@@ -81,9 +79,9 @@ jobs:
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
         
     - name: Search ldap - show results !
-      uses: docker://bitnami/openldap
+      uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
+        args: -c "ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
 
 
