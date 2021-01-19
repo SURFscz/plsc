@@ -1,28 +1,56 @@
 from unittest import TestCase
 
-from json_server.handlers import Handler
+from aiohttp import web
+
 from gera2ld.pyserve import run_forever, start_server_aiohttp
 
-from plsc.sldap import sLDAP
-from plsc.sbs import SBS
+from sldap import sLDAP
+from sbs import SBS
 
+import logging
+import os
 import plsc_ordered
 import plsc_flat
 import threading
 import asyncio
 import socket
 import time
-
-import logging
-import os
+import json
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-DEFAULT_LOCAL_PORT = 3080
+class API_Handler:
+    def __init__(self):
+        logger.debug("Initializng API HANDLER !")
+
+    async def __call__(self, request):
+        method = getattr(self, f'do_{request.method}', None)
+        if method is None:
+            raise web.HTTPNotImplemented()
+            
+        result = method(request)
+        if asyncio.iscoroutine(result):
+            result = await result
+        return result
+
+    def do_GET(self, request):
+        try:
+            with open(f".{request.path}/data.json", 'r') as f:
+                data = f.read()
+                return web.json_response(json.loads(data))
+
+            raise Exception(f"No data found for request: {request.path}")
+        except Exception as e:
+            logger.error("Exception: {str(e)}")
+            return web.json_response({}, status=404)
+        
+
+DEFAULT_LOCAL_PORT = 3333
 class BaseTest(TestCase):
 
     src_conf = {
+#       'recorder': True, # Activate this config item if you want to collect fresh api result data...
         'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT) ),
         'user': os.environ.get("SBS_USER","sysread"),
         'passwd': os.environ.get("SBS_PASS","secret"),
@@ -40,7 +68,7 @@ class BaseTest(TestCase):
     def setUpClass(cls):
         def start_server(loop):
             logger.debug("BaseTest start_server")
-            handle = Handler('test/sbs.json')
+            handle = API_Handler()
             asyncio.set_event_loop(loop)
             run_forever(start_server_aiohttp(handle, ':{}'.format(DEFAULT_LOCAL_PORT)))
 
@@ -88,5 +116,5 @@ class BaseTest(TestCase):
         plsc_flat.cleanup(self.dst, self.dst)
 
     def tearDown(self):
-        logger.debug("BaseTest tearDown")
+        logger.info("BaseTest tearDown")
 

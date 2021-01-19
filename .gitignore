@@ -14,5 +14,6 @@ config.d/
 *.mdb
 *.pid
 .venv
+.env
 .pytest_cache
 

@@ -27,16 +27,13 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install dependencies
-      run: apt-get update && apt-get install -y libsasl2-dev libldap2-dev python3 python3-pip
+      run: apt-get update && apt-get install -y libsasl2-dev libldap2-dev
 
-#   - name: Set up Python ${{ matrix.python }}
-#     uses: actions/setup-python@v2
-#     with:
-#       python-version: ${{ matrix.python }}
-#       architecture: amd
-
-    - name: Display Python version
-      run: python3 -c "import sys; print(sys.version)"
+    - name: Set up Python ${{ matrix.python }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+        architecture: amd
 
     - name: Install dependencies
       run: |
@@ -68,48 +65,6 @@ jobs:
         entrypoint: /bin/bash
         args: -c "/opt/bitnami/openldap/bin/ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
 
-    - name: Prepare plsc.yml file
-      run: |
-        cat <<EOF >/tmp/plsc-test.yml
-        ---
-        ldap:
-          src:
-            uri: ${LDAP_URL}
-            basedn: ${LDAP_BASE_DN}
-            binddn: ${LDAP_BIND_DN}
-            passwd: ${LDAP_ADMIN_PASSWORD}
-          dst:
-            uri: ${LDAP_URL}
-            basedn: dc=services,${LDAP_BASE_DN}
-            binddn: ${LDAP_BIND_DN}
-            passwd: ${LDAP_ADMIN_PASSWORD}
-        sbs:
-          src:
-            host: http://${SBS_HOST}:${SBS_PORT}
-            user: sysread
-            passwd: ${SBS_PASSWORD}
-        pwd: changethispassword
-        uid: 1000
-        gid: 1000
-        EOF
-      env:
-        LDAP_URL: ldap://localhost:1389
-        LDAP_ADMIN_PASSWORD: secret
-        LDAP_BASE_DN: dc=sram,dc=tld
-        LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
-        SBS_HOST: localhost
-        SBS_PORT: 3080
-        SBS_PASSWORD: secret
-
-    - name: Check plsc.yml file...
-      run: cat /tmp/plsc-test.yml
-
-    - name: Run slp ordered...
-      run: python3 slp-ordered.py /tmp/plsc-test.yml
-
-    - name: Run slp flat...
-      run: python3 slp-ordered.py /tmp/plsc-test.yml
-
     - name: Run pytest
       run: python3 pytest tests
       env:
@@ -117,8 +72,7 @@ jobs:
         LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
-        SBS_HOST: localhost
-        SBS_PORT: 3080
+        SBS_HOST: http://localhost:3080
         SBS_PASSWORD: secret
 
     - name: Search ldap - show results !

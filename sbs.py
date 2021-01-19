@@ -4,6 +4,7 @@ import requests
 import requests.auth
 import urllib3
 
+import os
 import socket
 
 def ipv4_only():
@@ -23,6 +24,7 @@ class SBS(object):
         self.user = config.get('user', 'sysread')
         self.password = config.get('passwd', 'changethispassword')
         self.verify_ssl = config.get('verify_ssl', True)
+        self.recording_requested = config.get('recorder', False)
 
         if config.get("ipv4_only", False):
             import urllib3.util.connection as urllib3_connection
@@ -42,6 +44,8 @@ class SBS(object):
         return json.dumps(data)
 
     def api(self, request, method='GET', headers=None, data=None):
+        logging.debug(f"API: {request}...")
+
         r = requests.request(method, url=f"{self.host}/{request}",
                              headers=headers,
                              auth=requests.auth.HTTPBasicAuth(self.user, self.password),
@@ -50,9 +54,19 @@ class SBS(object):
         #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
 
         if r.status_code == 200:
+            if self.recording_requested:
+                try:
+                    os.makedirs(request)
+                except:
+                    # Ignore errors, directory might already exist
+                    pass
+
+                with open(f"./{request}/data.json", 'w') as f:
+                    f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))
+
             return self.__get_json(r.text)
         else:
-            print(f"API: {request} returns: {r.status_code}")
+            logging.error(f"API: {request} returns: {r.status_code}")
 
         return None
 
