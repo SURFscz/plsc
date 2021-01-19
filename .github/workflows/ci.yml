@@ -12,6 +12,7 @@ jobs:
         python:
           - '3.8'
 
+          
     services:
       ldap:
         image: osixia/openldap:latest
@@ -55,7 +56,7 @@ jobs:
         LDAP_CONFIG_PASSWORD: config
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
-        
+
     # Setup tmate session
     #- name: Setup tmate session
     #  uses: mxschmitt/action-tmate@v3
