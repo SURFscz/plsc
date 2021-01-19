@@ -10,9 +10,8 @@ jobs:
     strategy:
       matrix:
         python:
-          - '3.8'
+          - '3.6'
 
-          
     services:
       ldap:
         image: osixia/openldap:latest
