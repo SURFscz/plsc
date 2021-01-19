@@ -15,8 +15,6 @@ jobs:
     services:
       ldap:
         image: osixia/openldap:latest
-        ports:
-          - 389:389
         env:
           LDAP_DOMAIN: sram.tld 
           LDAP_ADMIN_USERNAME: admin
