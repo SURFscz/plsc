@@ -16,7 +16,7 @@ jobs:
       ldap:
         image: osixia/openldap:latest
         ports:
-          - 1389:389
+          - 389:389
         env:
           LDAP_DOMAIN: sram.tld 
           LDAP_ADMIN_USERNAME: admin
@@ -44,25 +44,25 @@ jobs:
       uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "(ldapwhoami -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)"
+        args: -c "(ldapwhoami -H ldap://localhost -D cn=admin,dc=sram,dc=tld -w secret||sleep 5)"
 
     - name: Load ldap - cleanup ldap
       uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "ldapdelete -H ldap://ldap:1389 -D cn=admin,dc=sram,dc=tld -w secret -r ou=users,dc=sram,dc=tld"
+        args: -c "ldapdelete -H ldap://localhost -D cn=admin,dc=sram,dc=tld -w secret -r ou=users,dc=sram,dc=tld"
 
     - name: Load ldap - load ldif
       uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "for f in eduPerson voPerson groupOfMembers sram sram_services; do ldapadd -H ldap://ldap:1389 -D cn=admin,cn=config -w secret -f etc/ldif/$f.ldif; done"
+        args: -c "for f in eduPerson voPerson groupOfMembers sram sram_services; do ldapadd -H ldap://localhost -D cn=admin,cn=config -w secret -f etc/ldif/$f.ldif; done"
 
     - name: Load ldap - check structure
       uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
+        args: -c "ldapsearch -H ldap://localhost -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
     
     # Setup tmate session
     #- name: Setup tmate session
@@ -73,7 +73,7 @@ jobs:
         export PYTHONPATH="."
         pytest
       env:
-        LDAP_URL: ldap://localhost:1389
+        LDAP_URL: ldap://localhost
         LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
         LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
@@ -82,6 +82,6 @@ jobs:
       uses: docker://osixia/openldap
       with:
         entrypoint: /bin/bash
-        args: -c "ldapsearch -H ldap://ldap:1389 -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
+        args: -c "ldapsearch -H ldap://localhost -b dc=sram,dc=tld -D cn=admin,dc=sram,dc=tld -w secret"
 
 
