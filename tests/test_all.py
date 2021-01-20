@@ -26,3 +26,5 @@ class TestAll(BaseTest):
             logger.info(f"service: {service}")
 
         # assert len(base) == 1
+
+        # TO BE COMPLETED !!!, [ but this is relatively trivial to complete, the hard work is done :-) ]

@@ -56,12 +56,12 @@ class SBS(object):
         if r.status_code == 200:
             if self.recording_requested:
                 try:
-                    os.makedirs(request)
+                    os.makedirs('/'.join(request.split('/')[:-1]))
                 except:
                     # Ignore errors, directory might already exist
                     pass
 
-                with open(f"./{request}/data.json", 'w') as f:
+                with open(f"./{request}", 'w') as f:
                     f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))
 
             return self.__get_json(r.text)

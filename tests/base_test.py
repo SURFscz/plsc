@@ -36,7 +36,7 @@ class API_Handler:
 
     def do_GET(self, request):
         try:
-            with open(f".{request.path}/data.json", 'r') as f:
+            with open(f".{request.path}", 'r') as f:
                 data = f.read()
                 return web.json_response(json.loads(data))
 
@@ -50,7 +50,7 @@ DEFAULT_LOCAL_PORT = 3333
 class BaseTest(TestCase):
 
     src_conf = {
-#       'recorder': True, # Activate this config item if you want to collect fresh api result data...
+        'recorder': (os.environ.get("SBS_API_RECORDING", "NO").upper() == "YES"),
         'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT) ),
         'user': os.environ.get("SBS_USER","sysread"),
         'passwd': os.environ.get("SBS_PASS","secret"),
