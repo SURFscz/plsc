@@ -17,8 +17,7 @@ docker run \
   --detach \
   osixia/openldap:latest --loglevel debug --copy-service
 
-#  --network host \
-
+# copy LDIF files into running container...
 docker cp etc/ldif my-ldap:/tmp
 
 sleep 5

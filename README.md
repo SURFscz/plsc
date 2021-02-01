@@ -70,13 +70,15 @@ And for groups:
 # Testing
 
 For local testing, you need a local LDAP to be started before running tests.
-When you have docker installed on your local machinm, you can simple run:
+When you have docker installed on your local machine, you can simple run:
 
 ```
 etc/ldap_start.sh
 ```
 
-If you do not have docker installed or wish to use an existing running LDAP server, then please make sure that the config files listed in **et/ldif** are properly installed.
+This script will take care of pulling the proper LDAP image, start the docker container and initialize it properly with all required objectclasses.
+
+If you do not have docker installed or wish to use an existing running LDAP server, then please make sure that the config files listed in **etc/ldif** are properly installed.
 
 You can specify LDAP connection and access constants in a local **.env** file, for exanple:
 
@@ -94,10 +96,10 @@ SBS_PASS=secret
 SBS_API_RECORDING=Yes
 ```
 
-You have the option to run against an operational instance of SBS, then specify the **SBS_URL** and **SBS_USER** /**SBS_PASS** constants as shown above. If you do nog want to access an SBS instance, just leave these constant out.
-In that case the SBS API's are immitated by the results listed in the **api** directory.
+You have the option to run against an operational instance of SBS by specifing the **SBS_URL** and **SBS_USER** /**SBS_PASS** constants as shown above. If you do not want to access an SBS instance, just leave these constant out.
+In that case the SBS API's are immitated by the results listed in the local **api** directory of this repository.
 
-In case you are testing against an operational SBS instance, you have the option to record the API results for later mockup testing, just set the environment variable **SBS_API_RECORDING** to "Yes". Now the API requests results will be stored in the local directory under **./api/...**
+In case you are testing against an operational SBS instance, you have the option to record the API results for later use during mockup testing, just set the environment variable **SBS_API_RECORDING** to "Yes". Now the API requests results will be stored in the local directory under **./api/...**
 
 When you omit the **SBS_URL** variable, the tests will run API requests agains the contents off this local **./api/...** directory
 
@@ -107,7 +109,7 @@ When all these preperations are completed, you can now run the tests:
 pytest -v
 ```
 
-After each Test cycle the contents of the LDAP can be inspected, for that run this command;
+After each Test cycle the contents of the LDAP can be inspected, for that run this command:
 
 ```
 etc/ldap_show.sh
