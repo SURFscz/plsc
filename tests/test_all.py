@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class TestAll(BaseTest):
 
-    def test_ldap_server(self):
+    def test_ldap_services(self):
         """ this test will traverse the SBS structure and verify
         that all relevant components are registered as expected in LDAP
         """
@@ -40,6 +40,10 @@ class TestAll(BaseTest):
             for u in people:
                 user_object = check_object(f"uid={u['user']['username']},{rdn}")
                 
+                # Specify as much of tests to see that all LDAP entries are correct
+
+                # Example: verify that ssh Public key and objectClass is present
+                # when SBS user profile has ssh_key...
                 if u['user'].get('ssh_key', None):
                     assert('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
                     assert('sshPublicKey' in user_object[list(user_object)[0]].keys())

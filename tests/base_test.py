@@ -99,7 +99,7 @@ class BaseTest(TestCase):
         """ Run a complete PLSC cycle, 1st ordered structure, 2nd flat structure...
         """
 
-        logger.debug("BaseTest setUp")
+        logger.info("BaseTest setUp")
 
         logger.debug(self.src_conf)
         logger.debug(self.dst_conf)
@@ -107,11 +107,11 @@ class BaseTest(TestCase):
         self.src = SBS(self.src_conf)
         self.dst = sLDAP(self.dst_conf)
 
-        logger.debug("- Ordered structure...")
+        logger.info("Creating: Ordered structure...")
         plsc_ordered.create(self.src, self.dst)
         plsc_ordered.cleanup(self.dst)
 
-        logger.debug("- Flat structure...")
+        logger.debug("Creating: Flat structure...")
         plsc_flat.create(self.dst, self.dst)
         plsc_flat.cleanup(self.dst, self.dst)
 

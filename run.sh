@@ -12,5 +12,5 @@ elif [ ! -f "$1" ]; then
   exit 1
 fi
 
-/usr/bin/env python slp-ordered.py "$1"
-/usr/bin/env python plsc-flat.py "$1"
+/usr/bin/env python plsc_ordered.py "$1"
+/usr/bin/env python plsc_flat.py "$1"
