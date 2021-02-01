@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 set -e
 
 export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
@@ -11,6 +12,5 @@ elif [ ! -f "$1" ]; then
   exit 1
 fi
 
-#bin/python ./plsc "$1"
-bin/python ./slp-ordered "$1"
-bin/python ./plsc-flat "$1"
+/usr/bin/env python slp-ordered.py "$1"
+/usr/bin/env python plsc-flat.py "$1"
