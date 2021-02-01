@@ -44,7 +44,7 @@ class SBS(object):
         return json.dumps(data)
 
     def api(self, request, method='GET', headers=None, data=None):
-        logging.debug(f"API: {request}...")
+        logging.info(f"API: {request}...")
 
         r = requests.request(method, url=f"{self.host}/{request}",
                              headers=headers,
@@ -55,11 +55,7 @@ class SBS(object):
 
         if r.status_code == 200:
             if self.recording_requested:
-                try:
-                    os.makedirs('/'.join(request.split('/')[:-1]))
-                except:
-                    # Ignore errors, directory might already exist
-                    pass
+                os.makedirs('/'.join(request.split('/')[:-1]), exist_ok = True)
 
                 with open(f"./{request}", 'w') as f:
                     f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))

@@ -111,7 +111,7 @@ class BaseTest(TestCase):
         plsc_ordered.create(self.src, self.dst)
         plsc_ordered.cleanup(self.dst)
 
-        logger.debug("Creating: Flat structure...")
+        logger.info("Creating: Flat structure...")
         plsc_flat.create(self.dst, self.dst)
         plsc_flat.cleanup(self.dst, self.dst)
 
