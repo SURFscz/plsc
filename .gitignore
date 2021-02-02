@@ -1,4 +1,6 @@
 __pycache__/
+.pytest_cache
+plsc.egg-info
 bin/
 include/
 lib/
@@ -11,3 +13,9 @@ pyvenv.cfg
 *.swp
 config.d/
 .idea/
+*.mdb
+*.pid
+.venv
+.env
+.pytest_cache
+
