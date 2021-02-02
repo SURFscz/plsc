@@ -132,10 +132,9 @@ class SBS(object):
 
         return services
 
-    def users(self, co):
+    def users(self, c_id):
         users = {}
-        groups = self.groups(co)
-        #co = self.collaboration(c_id)
+        co = self.collaboration(c_id)
         if not co.get('short_name'):
             raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
         for u in co['collaboration_memberships']:
