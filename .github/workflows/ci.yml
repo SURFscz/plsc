@@ -46,7 +46,7 @@ jobs:
       run: |
         sleep 5;
         ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};  
-        for f in eduPerson voPerson groupOfMembers; do ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done;
+        for f in access eduPerson voPerson groupOfMembers; do ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done;
         for f in sram_services; do ldapadd -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD} -f etc/ldif/$f.ldif; done;
         ldapsearch -H ${LDAP_URL} -b ${LDAP_BASE_DN} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
       env:
@@ -72,12 +72,10 @@ jobs:
         
     - name: Dump ldap...
       run:
-        ldapsearch -H ${LDAP_URL} -b ${LDAP_BASE_DN} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD}
+        ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub
       env:
         LDAP_URL: ldap://localhost:389
-        LDAP_ADMIN_PASSWORD: secret
         LDAP_BASE_DN: dc=sram,dc=tld
-        LDAP_BIND_DN: cn=admin,dc=sram,dc=tld
     
 
 
