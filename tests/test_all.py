@@ -14,11 +14,12 @@ class TestAll(BaseTest):
 
         def check_object(rdn, expected_count = None):
             """ Check for LDAP rdn entry
+            return object if found, raise assertion if not
             """
 
             logger.info(f"*** Checking LDAP: {rdn}")
 
-            r = r = self.dst.find(rdn)
+            r = self.dst.find(rdn)
             
             if expected_count:
                 assert(len(r) == expected_count)

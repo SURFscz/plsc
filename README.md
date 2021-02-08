@@ -83,7 +83,7 @@ If you do not have docker installed or wish to use an existing running LDAP serv
 You can specify LDAP connection and access constants in a local **.env** file, for exanple:
 
 ```
-DAP_URL="ldap://localhost:389"
+LDAP_URL="ldap://localhost:389"
 LDAP_ADMIN_PASSWORD="secret"
 LDAP_CONFIG_PASSWORD="config"
 LDAP_DOMAIN="sram.tld"
