@@ -116,7 +116,7 @@ class sLDAP(object):
             return "Too many dn's This shouldn't happen"
 
     def delete(self, dn):
-        logger.error(f"Deleting dn='{dn}'")
+        logger.info(f"Deleting dn='{dn}'")
         try:
             self.__c.delete_s(dn)
         except Exception as e:

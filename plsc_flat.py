@@ -120,7 +120,7 @@ def cleanup(src, dst):
     collaborations = util.find_ordered_collaborations(src, services)
 
     logging.debug("--- Cleanup ---")
-    for service, cos in collaborations.items():
+    for service, _ in collaborations.items():
         logging.debug("service: {}".format(service))
 
         logging.debug("  - People")
@@ -129,7 +129,7 @@ def cleanup(src, dst):
             #logging.debug("  - dstdn: {}".format(dst_dn))
             #logging.debug("    entry: {}".format(dst_entry))
 
-            if dst_entry.get('cn', None):
+            if dst_entry.get('uid', None):
                 src_uid = dst_entry['uid'][0]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(uid={src_uid})")
                 if len(src_dns):

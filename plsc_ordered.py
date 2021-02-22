@@ -68,9 +68,14 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
 import uuid
 
+registered_users = []
+
 # Create phase
 def create(src, dst):
     global vc
+    global registered_users
+
+    registered_users = []
 
     # Find all CO's in SBS
     collaborations = src.service_collaborations()
@@ -222,11 +227,14 @@ def create(src, dst):
                 src_user = src_detail['user']
                 logging.debug("    - src_id: {}/{}".format(src_id, src_user['uid']))
                 src_uid = util.uid(src_user)
+                logging.debug("    - src_uid: {}/{}".format(src_id, src_uid))
 
                 # convert the BS data to an ldap record
                 dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
                 dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
+                registered_users.append(dst_dn)
+                
                 # add the uidNumber and gidNumber
                 #uidNumber = None
                 #gidNumber = None
@@ -355,6 +363,7 @@ def create(src, dst):
 # Cleanup phase
 def cleanup(dst):
     global vc
+    global registered_users
 
     logging.debug("-- Cleanup ---")
     service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
@@ -381,7 +390,7 @@ def cleanup(dst):
 
                 logging.debug("  - People")
                 src_members = vc.get(dc, {}).get(co, {}).get('members', [])
-                dst_dns = dst.rfind("ou=People,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
+                dst_dns = dst.rfind("ou=people,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
                 for dst_dn, dst_entry in dst_dns.items():
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     if dst_entry.get('eduPersonUniqueId', None):
@@ -389,6 +398,10 @@ def cleanup(dst):
                         if dst_uid not in src_members:
                             logging.debug("      dst_uid not found in src_members, deleting {}".format(dst_dn))
                             dst.delete(dst_dn)
+                        else:
+                            # verify that rdn uid is indeed (stil) valid registered user, if not delete entry
+                            if dst_dn not in registered_users:
+                                dst.delete(dst_dn)
 
                 logging.debug("  - Groups")
                 dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service), '(objectClass=groupOfMembers)')
