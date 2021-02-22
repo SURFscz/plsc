@@ -108,7 +108,7 @@ class SBS(object):
             if not detail.get('global_urn'):
                 detail['global_urn'] = "{}:{}".format(detail['organisation']['short_name'], detail['short_name'])
             #print(f"detail: {detail}")
-            for s in detail['services']:
+            for s in detail['services'] + detail['organisation']['services']:
                 #print(f"s: {s}")
                 entity_id = s['entity_id']
                 services.setdefault(entity_id, {})[c_id] = detail
