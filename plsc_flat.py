@@ -172,4 +172,5 @@ if __name__ == "__main__":
     dst = sLDAP(config['ldap']['dst'])
 
     create(src, dst)
-    cleanup(src)
+    cleanup(src, dst)
+    
