@@ -16,5 +16,3 @@ sbs:
     user: sysread
     passwd: changethispassword
 pwd: '{CRYPT}!'
-uid: 1000
-gid: 1000
