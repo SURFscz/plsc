@@ -170,7 +170,7 @@ class SBS(object):
             g_id = group['id']
             groups[g_id] = group
 
-        logging.debug(f"GROUPS {co['id]']} : {groups}")
+        logging.debug(f"GROUPS {co['short_name]']} : {groups}")
         return groups
 
     def collaboration_users(self, c_id):
