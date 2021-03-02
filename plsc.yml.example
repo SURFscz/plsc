@@ -15,3 +15,4 @@ sbs:
     host: https://sbs.example.net
     user: sysread
     passwd: changethispassword
+pwd: '{CRYPT}!'

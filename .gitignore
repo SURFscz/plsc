@@ -4,6 +4,7 @@ bin/
 include/
 lib/
 plsc.yml
+mirrorcheck.yml
 sbs.yml
 share/
 lib64
