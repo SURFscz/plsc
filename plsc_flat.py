@@ -19,6 +19,8 @@ vc = {
     'groups': set(),
 }
 
+print("=== plsc-flat ====")
+
 # Create phase
 def create(src, dst):
     global vc
@@ -115,7 +117,7 @@ def create(src, dst):
 # Cleanup phase
 def cleanup(src, dst):
     global vc
-    
+
     services = util.find_ordered_services(src)
     collaborations = util.find_ordered_collaborations(src, services)
 

@@ -36,13 +36,13 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record['givenName'] = [sbs_user.get('given_name') or 'n/a']
     record['sn'] = [sbs_user.get('family_name') or 'n/a']
     # cn is required in the posixAccount schema, otherwise we wouldn't use it
-    record['cn'] = record['displayName']
+    record['cn'] = [sbs_uid]
 
     record['mail'] = [sbs_user.get('email')]
 
     # affiliation
     record['voPersonExternalAffiliation'] = [sbs_user.get('scoped_affiliation')]
-    # TODO: fix this hack. ePSA is not stored in SBS, but as it is always fixes, we can hardcode it here
+    # TODO: fix this hack. ePSA is not stored in SBS, but as it is always fixed, we can hardcode it here
     record['eduPersonScopedAffiliation'] = ['member@sram.surf.nl']
 
     # principal name
@@ -75,6 +75,8 @@ def create(src, dst):
     global vc
     global registered_users
 
+    logging.debug("=== slp-ordered ====")
+
     registered_users = []
 
     # Find all CO's in SBS
@@ -83,7 +85,7 @@ def create(src, dst):
     logging.debug("--- Create ---")
     for service, cos in collaborations.items():
         vc[service] = {}
-        
+
         logging.debug("service: {}".format(service))
 
         # check if service exists and create it if necessary
@@ -170,11 +172,11 @@ def create(src, dst):
             else:
                 raise Exception(f"Found multiple COs for o={co_identifier}")
 
-            users = src.users(co_id)
+            users = src.users(co)
             # logging.debug(f"users: {users}")
 
             logging.debug("  - All groups")
-            groups = src.groups(co_id)
+            groups = src.groups(co)
             #logging.debug(f"groups: {groups}")
             for gid, group in groups.items():
                 grp_id = group['identifier']
@@ -216,9 +218,8 @@ def create(src, dst):
 
                 # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
                 # if grp_entry != old_entry:
-                if (len(members) > 0):
-                    ldif = dst.store(grp_dn, grp_entry)
-                    logging.debug("      - store: {}".format(ldif))
+                ldif = dst.store(grp_dn, grp_entry)
+                logging.debug("      - store: {}".format(ldif))
 
             logging.debug("  - People")
 
@@ -234,7 +235,7 @@ def create(src, dst):
                 dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
                 registered_users.append(dst_dn)
-                
+
                 # add the uidNumber and gidNumber
                 #uidNumber = None
                 #gidNumber = None
@@ -252,14 +253,14 @@ def create(src, dst):
                 #dst_entry['uidNumber'] = [uidNumber]
                 #dst_entry['gidNumber'] = [gidNumber]
 
-                
+
                 try:
                     ldif = dst.store(dst_dn, dst_entry)
                     logging.debug(f"      - store {dst_dn}: {ldif}")
                 except ldap.OBJECT_CLASS_VIOLATION as e:
                     logging.error(f"Error creating LDIF: {str(e)} for {dst_dn}")
                     continue
-  
+
                 # record user as CO member
                 vc[service][co_identifier]['members'].append(src_uid)
 
@@ -316,9 +317,8 @@ def create(src, dst):
 
                     # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
                     # if grp_entry != old_entry:
-                    if len(members) > 0:
-                        ldif = dst.store(grp_dn, grp_entry)
-                        logging.debug("      - store: {}".format(ldif))
+                    ldif = dst.store(grp_dn, grp_entry)
+                    logging.debug("      - store: {}".format(ldif))
 
             if True:
                 logging.debug("  - Group all")
@@ -355,9 +355,8 @@ def create(src, dst):
                     'displayName': [f'All Members of {vc[service][co_identifier]["name"]}']
                 }
 
-                if len(members) > 0:
-                    ldif = dst.store(grp_dn, grp_entry)
-                    logging.debug("      - store: {}".format(ldif))
+                ldif = dst.store(grp_dn, grp_entry)
+                logging.debug("      - store: {}".format(ldif))
 
 
 # Cleanup phase

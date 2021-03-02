@@ -125,18 +125,19 @@ class SBS(object):
             if not detail.get('global_urn'):
                 detail['global_urn'] = "{}:{}".format(detail['organisation']['short_name'], detail['short_name'])
             #print(f"detail: {detail}")
-            for s in detail['services']:
+            for s in detail['services'] + detail['organisation']['services']:
                 #print(f"s: {s}")
                 entity_id = s['entity_id']
                 services.setdefault(entity_id, {})[c_id] = detail
 
         return services
 
-    def users(self, c_id):
+    def users(self, co):
         users = {}
-        co = self.collaboration(c_id)
+        groups = self.groups(co)
+        #co = self.collaboration(c_id)
         if not co.get('short_name'):
-            raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
+            raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
         for u in co['collaboration_memberships']:
             users[u['user_id']] = {
                 'user': u['user'],
@@ -148,16 +149,16 @@ class SBS(object):
 
         return users
 
-    def groups(self, c_id):
+    def groups(self, co):
         groups = {}
-        co = self.collaboration(c_id)
+        #co = self.collaboration(c_id)
         if not co.get('short_name'):
-            raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
+            raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
         for group in co['groups']:
             g_id = group['id']
             groups[g_id] = group
 
-        logging.debug(f"GROUPS {c_id} : {groups}")
+        logging.debug(f"GROUPS {co['id]']} : {groups}")
         return groups
 
     def collaboration_users(self, c_id):
