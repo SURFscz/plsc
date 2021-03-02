@@ -144,7 +144,6 @@ class SBS(object):
                 'groups': []
             }
         for group in co['groups']:
-            for m in group['collaboration_memberships']:
             #g = self.group(c_id, g_id)
             for m in group['collaboration_memberships']:
                 users[m['user_id']]['groups'].append(group)
