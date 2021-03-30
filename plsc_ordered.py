@@ -17,9 +17,6 @@ from typing import Tuple, List, Dict, Optional, Union
 SBSPerson = Dict[str, str]
 LDAPEntry = Dict[str, List[Union[str, int]]]
 
-fqdn = socket.getfqdn() + ':slp'
-logging.debug(f"fqdn: {fqdn}")
-
 # vc keeps track of visited CO's so we can delete what
 # we have not seen in the Cleanup phase
 vc = {}
@@ -139,17 +136,12 @@ def create(src, dst):
                                       f"(&(objectClass=organization)(objectClass=extensibleObject)(o={co_identifier}))")
             if len(organizations):
                 o_dn, o_entry = list(organizations.items())[0]
-                co_fqdn = o_entry.get('host', [])
-                if fqdn not in co_fqdn and False:
-                    logging.debug("skipping {}".format(co_fqdn))
-                    # continue
 
             # Create CO if necessary
             co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
             co_entry = {
                 'objectClass': ['top', 'organization', 'extensibleObject'],
                 'o': [co_identifier],
-                'host': [fqdn],
                 #'uniqueIdentifier': [co_id],
                 'uniqueIdentifier': [co['identifier']],
                 #'labeledURI': [co_identifier]
@@ -377,12 +369,6 @@ def cleanup(dst):
         organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
         for o_dn, o_entry in organizations.items():
             if o_entry.get('o'):
-                co_fqdn = o_entry.get('host', [])
-
-                if fqdn not in co_fqdn and False:
-                    logging.debug("skipping {}".format(co_fqdn))
-                    # continue
-
                 o_rdns = util.dn2rdns(o_dn)
                 co = o_rdns['o'][0]
                 dc = o_rdns['dc'][1]

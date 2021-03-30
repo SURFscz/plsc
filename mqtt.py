@@ -20,7 +20,6 @@ with open(sys.argv[1]) as f:
 
 src = SBS(config['sbs']['src'])
 dst = sLDAP(config['ldap']['dst'])
-fqdn = socket.getfqdn() + ':slp'
 mqtt_topic = config['mqtt']['topic']
 
 
