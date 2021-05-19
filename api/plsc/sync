@@ -1,0 +1,131 @@
+{
+    "organisations": [
+        {
+            "collaborations": [
+                {
+                    "collaboration_memberships": [
+                        {
+                            "collaboration_id": 200,
+                            "id": 427,
+                            "role": "admin",
+                            "user_id": 621
+                        },
+                        {
+                            "collaboration_id": 200,
+                            "id": 428,
+                            "role": "member",
+                            "user_id": 620
+                        }
+                    ],
+                    "global_urn": "testorg:testco",
+                    "groups": [
+                        {
+                            "collaboration_id": 200,
+                            "collaboration_memberships": [
+                                {
+                                    "collaboration_membership_id": 427,
+                                    "group_id": 117,
+                                    "user_id": 621
+                                },
+                                {
+                                    "collaboration_membership_id": 428,
+                                    "group_id": 117,
+                                    "user_id": 620
+                                }
+                            ],
+                            "description": "LOL",
+                            "global_urn": "testorg:testco:harry_is_great",
+                            "id": 117,
+                            "identifier": "2aefccfe-2733-40a7-ada8-9afe651b69bc",
+                            "name": "harry_is_great",
+                            "short_name": "harry_is_great"
+                        },
+                        {
+                            "collaboration_id": 200,
+                            "collaboration_memberships": [],
+                            "description": "",
+                            "global_urn": "testorg:testco:test",
+                            "id": 118,
+                            "identifier": "86c6efb2-55d5-4144-97ab-b1da3bc875c1",
+                            "name": "test group",
+                            "short_name": "test"
+                        }
+                    ],
+                    "id": 200,
+                    "identifier": "f6525b84-5098-4083-9b2f-1fdaa0444c68",
+                    "name": "TEST CO",
+                    "organisation_id": 100,
+                    "services": [],
+                    "short_name": "testco"
+                }
+            ],
+            "id": 100,
+            "identifier": "2631a1b5-aa91-4f12-aecb-707e5917cd79",
+            "name": "TEST ORG",
+            "organisation_memberships": [
+                {
+                    "organisation_id": 100,
+                    "role": "manager",
+                    "user_id": 621
+                }
+            ],
+            "schac_home_organisations": [],
+            "services": [
+                243
+            ],
+            "short_name": "testorg"
+        }
+    ],
+    "services": [
+        {
+            "contact_email": "john.doe@example.com",
+            "entity_id": "testservice",
+            "id": 242,
+            "name": "TEST SERVICE"
+        },
+        {
+            "contact_email": "john.doe@example.com",
+            "entity_id": "testservice2",
+            "id": 243,
+            "name": "TEST SERVICE 2"
+        }
+    ],
+    "users": [
+        {
+            "eduperson_principal_name": "j.doe@example.com",
+            "email": "j.doe@example.com",
+            "family_name": "Doe",
+            "given_name": "John admin",
+            "id": 619,
+            "name": "John admin Doe",
+            "scoped_affiliation": "affiliate@university-example.org",
+            "ssh_key": null,
+            "uid": "900613f87a9c8539b15729264ccc50af20c865ba@acc.sram.eduteams.org",
+            "username": "jdoe"
+        },
+        {
+            "eduperson_principal_name": "harry@surfnet.nl",
+            "email": "harry.kodden@surf.nl",
+            "family_name": "Kodden",
+            "given_name": "Harry",
+            "id": 620,
+            "name": "Harry Kodden",
+            "scoped_affiliation": "affiliate@surfnet.nl",
+            "ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfCxx8zNkFdGldM1+czM7JDO7VYOi74i+duO/IL2B+CSxdeFPHfTfUB3OGJyXKEdJ9wMiDKjybvQLqEFo1uqK404vfTGG7nrtUltMFwpAEpMy9JXLIH0FuDWH9aIzXXoATd2C8VzanDEMuvi/f3nFjszCegtsae0YmogUIlgyvhJ78LzGz/p9eC1yaxHCjE3Q56MlqEIMPaTBUgJGzv+ZnhqUU0e+jZ1YHFdZVUaX4AEl2QHVTetixrTw9nkEjcS55rZ88qwNiQn8eqIyx1wcqaUzxNWsLc7NXFrUpUe1uEh0iWD2gysYZ9ZfVSlnIUoXcDLqPBZLhcIpOL0QxqtYJ harryk@M0417005\n",
+            "uid": "72e8fabfeca6a933d2eb97dc96053f10dc49fd8d@acc.sram.eduteams.org",
+            "username": "hkodden"
+        },
+        {
+            "eduperson_principal_name": "3c7796d5-143d-4f6a-8534-7fcdc635ed5a@eduid.nl",
+            "email": "harry+335@kodden.nl",
+            "family_name": "Kodden",
+            "given_name": "Harry",
+            "id": 621,
+            "name": "Harry Kodden",
+            "scoped_affiliation": null,
+            "ssh_key": null,
+            "uid": "6ea1b5d3e95069bc08f2ba436498c60d469852d5@acc.sram.eduteams.org",
+            "username": "hkodden2"
+        }
+    ]
+}

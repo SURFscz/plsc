@@ -112,7 +112,7 @@ class SBS(object):
         a = self.api(f"api/users/user?uid={uid}")
         return a
 
-    def service_collaborations(self):
+    def old_service_collaborations(self):
         services = {}
         cs = self.collaborations()
         #print(f"cs: {cs}")
@@ -129,6 +129,39 @@ class SBS(object):
                 services.setdefault(entity_id, {})[c_id] = detail
 
         return services
+
+    def service_collaborations(self):
+
+        result = {}
+        data = self.api("api/plsc/sync")
+
+        services = {}
+        for s in data.get('services', []):
+            services[s['id']] = s 
+
+        users = {}
+        for u in data.get('users', []):
+            users[u['id']] = u
+
+        for o in data.get('organisations', []):
+
+            for c in o.get('collaborations', []):
+                if not c.get('global_urn', None):
+                    c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
+                
+                for m in c.get('collaboration_memberships', []):
+                    m['user'] = users[m['user_id']]
+
+                for g in c.get('groups', []):
+                    for m in g.get('collaboration_memberships', []):
+                        m['user'] = users[m['user_id']]
+    
+                c.setdefault('organisation', {})['short_name'] = o['short_name']                
+
+                for s in (o.pop('services', []) + c.pop('services', [])):
+                    result.setdefault(services[s]['entity_id'], {})[c['id']] = c
+
+        return result
 
     def users(self, co):
         users = {}
