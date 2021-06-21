@@ -73,19 +73,19 @@ class SBS(object):
         return self.api('api/users/me')
 
     def organisations(self):
-        return self.api('api/organisations/all')
+        return self.api('api/organisations/all') or []
 
     def organisation(self, org_id):
         return self.api(f"api/organisations/{org_id}")
 
     def services(self):
-        return self.api(f"api/services/all")
+        return self.api(f"api/services/all") or []
 
     def service(self, s_id):
         return self.api(f"api/services/{s_id}")
 
     def collaborations(self):
-        return self.api('api/collaborations/all')
+        return self.api('api/collaborations/all') or []
 
     def collaboration(self, c_id):
         return self.api(f"api/collaborations/{c_id}")
