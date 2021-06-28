@@ -303,7 +303,7 @@ def create_service_user(src, dst, config, cid, uid, service):
     dst_entry['sn'] = service_attributes.get('family_name', ['n/a'])
     dst_entry['mail'] = service_attributes.get('email', [])
     dst_entry['homeDirectory'] = ['/home/{}'.format(uid.encode('unicode-escape').decode('ascii'))]
-    dst_entry['sshPublicKey'] = service_attributes.get('ssh_key', None) or ['n/a']
+    dst_entry['sshPublicKey'] = service_attributes.get('ssh_keys', None) or ['n/a']
     eppn = f"{user['user']['id']}@{co['short_name']}.scz.net"
     dst_entry['eduPersonScopedAffiliation'] = [eppn]
 

@@ -99,7 +99,7 @@
             "id": 619,
             "name": "John admin Doe",
             "scoped_affiliation": "affiliate@university-example.org",
-            "ssh_key": null,
+            "ssh_keys": [],
             "uid": "900613f87a9c8539b15729264ccc50af20c865ba@acc.sram.eduteams.org",
             "username": "jdoe"
         },
@@ -111,7 +111,7 @@
             "id": 620,
             "name": "Harry Kodden",
             "scoped_affiliation": "affiliate@surfnet.nl",
-            "ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfCxx8zNkFdGldM1+czM7JDO7VYOi74i+duO/IL2B+CSxdeFPHfTfUB3OGJyXKEdJ9wMiDKjybvQLqEFo1uqK404vfTGG7nrtUltMFwpAEpMy9JXLIH0FuDWH9aIzXXoATd2C8VzanDEMuvi/f3nFjszCegtsae0YmogUIlgyvhJ78LzGz/p9eC1yaxHCjE3Q56MlqEIMPaTBUgJGzv+ZnhqUU0e+jZ1YHFdZVUaX4AEl2QHVTetixrTw9nkEjcS55rZ88qwNiQn8eqIyx1wcqaUzxNWsLc7NXFrUpUe1uEh0iWD2gysYZ9ZfVSlnIUoXcDLqPBZLhcIpOL0QxqtYJ harryk@M0417005\n",
+            "ssh_keys": ["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfCxx8zNkFdGldM1+czM7JDO7VYOi74i+duO/IL2B+CSxdeFPHfTfUB3OGJyXKEdJ9wMiDKjybvQLqEFo1uqK404vfTGG7nrtUltMFwpAEpMy9JXLIH0FuDWH9aIzXXoATd2C8VzanDEMuvi/f3nFjszCegtsae0YmogUIlgyvhJ78LzGz/p9eC1yaxHCjE3Q56MlqEIMPaTBUgJGzv+ZnhqUU0e+jZ1YHFdZVUaX4AEl2QHVTetixrTw9nkEjcS55rZ88qwNiQn8eqIyx1wcqaUzxNWsLc7NXFrUpUe1uEh0iWD2gysYZ9ZfVSlnIUoXcDLqPBZLhcIpOL0QxqtYJ harryk@M0417005\n"],
             "uid": "72e8fabfeca6a933d2eb97dc96053f10dc49fd8d@acc.sram.eduteams.org",
             "username": "hkodden"
         },
@@ -123,7 +123,7 @@
             "id": 621,
             "name": "Harry Kodden",
             "scoped_affiliation": null,
-            "ssh_key": null,
+            "ssh_keys": [],
             "uid": "6ea1b5d3e95069bc08f2ba436498c60d469852d5@acc.sram.eduteams.org",
             "username": "hkodden2"
         }

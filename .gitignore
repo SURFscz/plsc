@@ -17,4 +17,4 @@ config.d/
 .venv
 .env
 .pytest_cache
-
+tests/api/

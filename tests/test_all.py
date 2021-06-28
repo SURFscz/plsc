@@ -20,16 +20,16 @@ class TestAll(BaseTest):
             logger.info(f"*** Checking LDAP: {rdn}")
 
             r = self.dst.find(rdn)
-            
+
             if expected_count:
                 assert(len(r) == expected_count)
-                
+
             if not r:
                 logger.info("No results for: {}".format(rdn))
 
             logger.debug("Result: {}".format(r))
 
-            self.assertTrue(r) 
+            self.assertTrue(r)
             return r
 
 
@@ -40,12 +40,12 @@ class TestAll(BaseTest):
 
             for u in people:
                 user_object = check_object(f"uid={u['user']['username']},{rdn}")
-                
+
                 # Specify as much of tests to see that all LDAP entries are correct
 
                 # Example: verify that ssh Public key and objectClass is present
-                # when SBS user profile has ssh_key...
-                if u['user'].get('ssh_key', None):
+                # when SBS user profile has ssh_keys...
+                if u['user'].get('ssh_keys', None):
                     assert('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
                     assert('sshPublicKey' in user_object[list(user_object)[0]].keys())
 
@@ -69,8 +69,8 @@ class TestAll(BaseTest):
                 found_members = [ m.split(',')[0].split('=')[1] for m in member_element ]
                 required_members = [ m['user']['username'] for m in members ]
 
-                assert(found_members == required_members)
-            
+                assert(sorted(found_members) == sorted(required_members))
+
 
         def check_ldap(rdn, people, groups, group_name_function):
             """ check for ordered object entry and check both people and object subtrees
@@ -86,13 +86,13 @@ class TestAll(BaseTest):
 
         for c in self.src.collaborations():
                 logger.info(f"* Checking collanboration: {c['name']}")
-                
+
                 detail = self.src.collaboration(c['id'])
                 for s in detail['services']:
 
                     def group_name_ordered(g):
                         return g
-                    
+
                     def group_name_flat(g):
                         return f"{c['organisation']['short_name']}.{c['short_name']}.{g}"
 
