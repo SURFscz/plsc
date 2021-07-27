@@ -3,7 +3,6 @@ import ldap.modlist
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 class sLDAP(object):
@@ -94,12 +93,13 @@ class sLDAP(object):
 
     def modify(self, dn, old_entry, new_entry):
         modlist = ldap.modlist.modifyModlist(self.__encode(old_entry), self.__encode(new_entry))
-        try:
-            self.__c.modify_s(dn, modlist)
-        except Exception as e:
-            logger.error(f"Exception on modify of {dn}: {e}")
-            logger.error(modlist)
-            raise e
+        if modlist:
+            try:
+                self.__c.modify_s(dn, modlist)
+            except Exception as e:
+                logger.error(f"Exception on modify of {dn}: {e}")
+                logger.error(modlist)
+                raise e
         return modlist
 
     # store tries to add, then modifies if exists.
