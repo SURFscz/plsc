@@ -59,7 +59,7 @@ class BaseTest(TestCase):
 
     dst_conf = {
         'uri': os.environ["LDAP_URL"],
-        'basedn': "dc=services,{}".format(os.environ["LDAP_BASE_DN"]),
+        'basedn': os.environ["LDAP_BASE_DN"],
         'binddn': os.environ["LDAP_BIND_DN"],
         'passwd': os.environ["LDAP_ADMIN_PASSWORD"]
     }

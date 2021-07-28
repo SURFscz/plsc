@@ -158,7 +158,7 @@ class SBS(object):
     
                 c.setdefault('organisation', {})['short_name'] = o['short_name']                
 
-                for s in (o.pop('services', []) + c.pop('services', [])):
+                for s in (o.get('services', []) + c.get('services', [])):
                     result.setdefault(services[s]['entity_id'], {})[c['id']] = c
 
         return result

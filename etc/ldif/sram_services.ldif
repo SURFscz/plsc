@@ -1,6 +1,0 @@
-# Create the services dc
-dn: dc=services,dc=sram,dc=tld
-dc: services
-objectClass: dcObject
-objectclass: organization
-o: Services
