@@ -3,16 +3,18 @@
 from typing import List
 
 import logging
-
 import sys
 import yaml
 import copy
-
+import os
 import util
+
 from sldap import sLDAP
 
 #import ipdb
 #ipdb.set_trace()
+
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 vc = {
     'users': set(),  # only unique values

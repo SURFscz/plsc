@@ -1,10 +1,6 @@
 import ldap
 import ldap.modlist
-
 import logging
-
-logger = logging.getLogger(__name__)
-
 class sLDAP(object):
 
     # LDAP connection, private
@@ -22,7 +18,7 @@ class sLDAP(object):
         binddn = config['binddn']
         passwd = config['passwd']
 
-        logger.debug("Initializing ldap: {}".format(uri))
+        logging.debug("Initializing ldap: {}".format(uri))
         self.__c = ldap.initialize(uri)
 
         if binddn == 'external':
@@ -51,7 +47,7 @@ class sLDAP(object):
         return r
 
     def __search(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
-        logger.debug("Search: {}".format(basedn))
+        logging.debug("Search: {}".format(basedn))
 
         if attrs is None:
             attrs = []
@@ -67,10 +63,10 @@ class sLDAP(object):
                 dns[dn] = self.__decode(entry)
         except ldap.NO_SUCH_OBJECT as e:
             # nothing found, just return an empty result
-            #logger.error(f"find: {e} on filter '{filter}'")
+            #logging.error(f"find: {e} on filter '{filter}'")
             return {}
         except ldap.NO_RESULTS_RETURNED as e:
-            logger.error(f"find: {e} on filter '{filter}'")
+            logging.error(f"find: {e} on filter '{filter}'")
             raise e
         return dns
 
@@ -84,10 +80,11 @@ class sLDAP(object):
     def add(self, dn, entry):
         addlist = ldap.modlist.addModlist(self.__encode(entry))
         try:
+            logging.info("[LDAP] Create: {}".format(dn))
             self.__c.add_s(dn, addlist)
         except Exception as e:
-            logger.error(f"Exception on add of {dn}: {e}")
-            logger.error(f"entry: {entry}")
+            logging.error(f"Exception on add of {dn}: {e}")
+            logging.error(f"entry: {entry}")
             raise e
         return addlist
 
@@ -95,16 +92,17 @@ class sLDAP(object):
         modlist = ldap.modlist.modifyModlist(self.__encode(old_entry), self.__encode(new_entry))
         if modlist:
             try:
+                logging.info("[LDAP] Update: {}".format(dn))
                 self.__c.modify_s(dn, modlist)
             except Exception as e:
-                logger.error(f"Exception on modify of {dn}: {e}")
-                logger.error(modlist)
+                logging.error(f"Exception on modify of {dn}: {e}")
+                logging.error(modlist)
                 raise e
         return modlist
 
     # store tries to add, then modifies if exists.
     def store(self, dn, new_entry):
-        logger.debug("Storing ldap: {}".format(new_entry))
+        logging.debug("Storing ldap: {}".format(new_entry))
 
         dst_dns = self.find(dn, scope=ldap.SCOPE_BASE)
         if len(dst_dns) == 1:
@@ -116,11 +114,12 @@ class sLDAP(object):
             return "Too many dn's This shouldn't happen"
 
     def delete(self, dn):
-        logger.info(f"Deleting dn='{dn}'")
+        logging.info(f"Deleting dn='{dn}'")
         try:
+            logging.info("[LDAP] Delete: {}".format(dn))
             self.__c.delete_s(dn)
         except Exception as e:
-            logger.error("{}\n  {}".format(dn, e))
+            logging.error("{}\n  {}".format(dn, e))
             raise e
 
     def rdelete(self, dn):
