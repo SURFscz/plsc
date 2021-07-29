@@ -21,8 +21,6 @@ vc = {
     'groups': set(),
 }
 
-print("=== plsc-flat ====")
-
 # Create phase
 def create(src, dst):
     global vc
