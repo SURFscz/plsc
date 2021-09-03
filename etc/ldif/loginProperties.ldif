@@ -1,0 +1,17 @@
+dn: cn=loginProperties, cn=schema, cn=config
+objectClass: olcSchemaConfig
+cn: loginProperties
+olcAttributeTypes: ( 2.16.840.1.113719.1.1.4.1.40 
+ NAME 'LoginDisabled' 
+ SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 )
+olcAttributeTypes: ( 2.16.840.1.113719.1.1.4.1.50
+ NAME 'loginTime' 
+ SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
+olcAttributeTypes: ( 2.16.840.1.113719.1.1.4.1.41
+ NAME 'loginExpirationTime' 
+ SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
+olcObjectClasses: ( 2.16.840.1.113719.1.1.6.1.33
+ NAME 'loginProperties' 
+ AUXILIARY 
+ MAY ( loginDisabled $ loginTime $ loginExpirationTime ) 
+ )
