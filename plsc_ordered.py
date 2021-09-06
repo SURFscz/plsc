@@ -24,7 +24,7 @@ vc = {}
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record: LDAPEntry = dict(
-        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson']
+        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson', 'loginProperties']
     )
 
     record['eduPersonUniqueId'] = [sbs_uid]
@@ -80,7 +80,11 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     logging.debug("LAST LOGIN RESULT: {}".format(last_login_date.strftime("%Y-%m-%d")))
 
     record['loginTime'] = [ last_login_date.strftime("%Y%m%d0000Z") ]
-    record['objectClass'].append('loginProperties')
+
+    if sbs_user.get('status', 'active') == 'expired':
+        record['loginDisabled'] = ['TRUE']
+    else:
+        record['loginDisabled'] = ['FALSE']
     
     # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
     for key, val in record.items():

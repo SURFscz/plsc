@@ -2,7 +2,7 @@ dn: cn=loginProperties, cn=schema, cn=config
 objectClass: olcSchemaConfig
 cn: loginProperties
 olcAttributeTypes: ( 2.16.840.1.113719.1.1.4.1.40 
- NAME 'LoginDisabled' 
+ NAME 'loginDisabled' 
  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 )
 olcAttributeTypes: ( 2.16.840.1.113719.1.1.4.1.50
  NAME 'loginTime' 
