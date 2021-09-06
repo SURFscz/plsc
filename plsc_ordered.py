@@ -58,7 +58,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     # Implement loginTime info. For privacy reasons the last login time is aggregated to a date
     # as in below formula. (see Pivotal https://www.pivotaltracker.com/n/projects/2230595/stories/178707465)
 
-    last_login_date = datetime.datetime.fromisoformat(sbs_user.get('last_login_date'))
+    last_login_date = datetime.datetime.strptime(sbs_user.get('last_login_date'), "%Y-%m-%d %H:%M:%S")
     delta = datetime.datetime.now() - last_login_date
 
     logging.debug("LAST LOGIN: {}, DELTA: {} days".format(
