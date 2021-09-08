@@ -44,7 +44,7 @@ class SBS(object):
         return json.dumps(data)
 
     def api(self, request, method='GET', headers=None, data=None):
-        logging.info(f"API: {request}...")
+        logging.debug(f"API: {request}...")
 
         r = requests.request(method, url=f"{self.host}/{request}",
                              headers=headers,
