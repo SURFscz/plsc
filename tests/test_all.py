@@ -93,9 +93,9 @@ class TestAll(BaseTest):
 
                 logger.info(f"** Checking Service: {s['entity_id']}")
 
+                org_dn = f"{c['organisation']['short_name']}.{c['short_name']}"
                 check_ldap(
-                    f"o={c['organisation']['short_name']}.{c['short_name']},"
-                    "dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                    f"o={org_dn},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
                     detail['collaboration_memberships'],
                     detail['groups'],
                     group_name_ordered
