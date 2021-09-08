@@ -14,6 +14,7 @@ from sldap import sLDAP
 #import ipdb
 #ipdb.set_trace()
 
+print("=== plsc-flat ====")
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 vc = {
@@ -23,17 +24,20 @@ vc = {
 
 # Create phase
 def create(src, dst):
-    global vc
-
     services = util.find_ordered_services(src)
     logging.debug(f"s: {services}")
 
     collaborations = util.find_ordered_collaborations(src, services)
     logging.debug(f"c: {collaborations}")
 
+    loginDisabled_effective = {}
+
     logging.debug("--- Create ---")
     for service, cos in collaborations.items():
         logging.debug("service: {}".format(service))
+
+        loginDisabled_effective[service] = {}
+
         for co_id in cos:
             logging.debug(f"- co: {co_id}")
 
@@ -57,20 +61,32 @@ def create(src, dst):
                 logging.debug("  - srcdn: {}".format(src_dn))
                 src_uid = src_entry['uid'][0]
 
-                vc['users'].add(src_uid)
+                loginDisabled_effective[service].setdefault(src_uid, ['TRUE'])
+
+                if src_entry['loginDisabled'] == ['TRUE']:
+                    src_entry['loginDisabled'] = loginDisabled_effective[service][src_uid]
+                else:
+                    loginDisabled_effective[service][src_uid] = src_entry['loginDisabled']                
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
                 dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                    "(&(ObjectClass=person)(cn={}))".format(src_uid))
+                                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
 
                 # We can't just store People, we need to merge attributes
                 if len(dst_dns) == 1:
-                    old_dn, old_entry = list(dst_dns.items())[0]
+                    _, old_entry = list(dst_dns.items())[0]
+
                     for k, v in old_entry.items():
                         src_entry.setdefault(k, []).extend(v)
                         src_entry[k] = list(set(src_entry[k]))
-                ldif = dst.store(dst_dn, src_entry)
-                logging.debug("    - store: {}".format(ldif))
+                    
+                    ldif = dst.modify(dst_dn, old_entry, src_entry)
+                    logging.debug("    - modify: {}".format(src_entry))
+                else:
+                    ldif = dst.store(dst_dn, src_entry)
+                    logging.debug("    - store: {}".format(src_entry))
+
+                logging.debug('[LDIF]: {}'.format(ldif))
 
             logging.debug("  - Groups")
             grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
@@ -81,8 +97,6 @@ def create(src, dst):
                 grp_rdns = util.dn2rdns(grp_dn)
                 grp_cn = f"{co_id}.{grp_rdns['cn'][0]}"
                 logging.debug(f"cn: {grp_cn}")
-
-                vc['groups'].add(grp_cn)
 
                 members: List[str] = []
                 scz_members = grp_entry.get('member', [])
@@ -116,8 +130,6 @@ def create(src, dst):
 
 # Cleanup phase
 def cleanup(src, dst):
-    global vc
-
     services = util.find_ordered_services(src)
     collaborations = util.find_ordered_collaborations(src, services)
 
@@ -135,9 +147,7 @@ def cleanup(src, dst):
                 src_uid = dst_entry['uid'][0]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(uid={src_uid})")
                 if len(src_dns):
-                    for src_dn, src_entry in src_dns.items():
-                        pass
-                        #logging.debug("   - srcdn: {}".format(src_dn))
+                    pass
                 else:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
@@ -153,9 +163,7 @@ def cleanup(src, dst):
                 src_cn = dst_entry['cn'][0].split('.')[-1]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
                 if len(src_dns):
-                    for src_dn, src_entry in src_dns.items():
-                        pass
-                        #logging.debug("   - srcdn: {}".format(src_dn))
+                    pass
                 else:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))

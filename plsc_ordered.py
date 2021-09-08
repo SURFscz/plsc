@@ -5,6 +5,7 @@ import yaml
 import socket
 import copy
 import ldap
+import datetime
 import os
 import util
 import logging
@@ -26,7 +27,7 @@ vc = {}
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record: LDAPEntry = dict(
-        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson']
+        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson', 'loginProperties']
     )
 
     record['eduPersonUniqueId'] = [sbs_uid]
@@ -57,6 +58,37 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
         record['sshPublicKey'] = [sbs_user.get('ssh_key')] if 'ssh_key' in sbs_user else sbs_user.get('ssh_keys')
         record['objectClass'].append('ldapPublicKey')
 
+    # Implement loginTime info. For privacy reasons the last login time is aggregated to a date
+    # as in below formula. (see Pivotal https://www.pivotaltracker.com/n/projects/2230595/stories/178707465)
+
+    last_login_date = datetime.datetime.strptime(sbs_user.get('last_login_date'), "%Y-%m-%d %H:%M:%S")
+    delta = datetime.datetime.now() - last_login_date
+
+    logging.debug("LAST LOGIN: {}, DELTA: {} days".format(
+            last_login_date.strftime("%Y-%m-%d"), delta.days
+        )
+    )
+
+    if delta.days <= 2:
+        last_login_date = datetime.datetime.today()
+    elif delta.days <= 7:
+        last_login_date = datetime.datetime.today() - datetime.timedelta(days=1)
+    elif delta.days <= 30:
+        last_login_date = datetime.datetime.today() - datetime.timedelta(days=7)   
+    elif delta.days <= 90:
+        last_login_date = datetime.datetime.today() - datetime.timedelta(days=30)   
+    else:
+        last_login_date.replace(day=1)
+    
+    logging.debug("LAST LOGIN RESULT: {}".format(last_login_date.strftime("%Y-%m-%d")))
+
+    record['loginTime'] = [ last_login_date.strftime("%Y%m%d0000Z") ]
+
+    if sbs_user.get('status', 'active') == 'expired':
+        record['loginDisabled'] = ['TRUE']
+    else:
+        record['loginDisabled'] = ['FALSE']
+    
     # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
     for key, val in record.items():
         record[key] = list(filter(None, record[key]))

@@ -46,8 +46,8 @@ jobs:
     - name: ldap - Initialization...
       run: |
         sleep 5;
-        ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
-        for f in access eduPerson voPerson groupOfMembers; do ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done;
+        ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};  
+        for f in access eduPerson voPerson groupOfMembers loginProperties; do ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done;
       env:
         LDAP_URL: ldap://localhost:389
         LDAP_ADMIN_PASSWORD: secret
