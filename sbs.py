@@ -80,7 +80,7 @@ class SBS(object):
         return self.api(f"api/organisations/{org_id}")
 
     def services(self):
-        return self.api(f"api/services/all")
+        return self.api("api/services/all") or []
 
     def service(self, s_id):
         return self.api(f"api/services/{s_id}")
