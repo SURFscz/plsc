@@ -6,6 +6,7 @@ import socket
 import copy
 import ldap
 import datetime
+import os
 import util
 import logging
 
@@ -13,6 +14,8 @@ from sldap import sLDAP
 from sbs import SBS
 
 from typing import Tuple, List, Dict, Optional, Union
+
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 SBSPerson = Dict[str, str]
 LDAPEntry = Dict[str, List[Union[str, int]]]
