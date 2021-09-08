@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip install flake8 pytest
+          pip install flake8 --max-line-length=120 --ignore=E265 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Check syntax

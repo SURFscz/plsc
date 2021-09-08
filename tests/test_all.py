@@ -11,7 +11,7 @@ class TestAll(BaseTest):
         that all relevant components are registered as expected in LDAP
         """
 
-        def check_object(rdn, expected_count = None):
+        def check_object(rdn, expected_count=None):
             """ Check for LDAP rdn entry
             return object if found, raise assertion if not
             """
@@ -94,7 +94,8 @@ class TestAll(BaseTest):
                 logger.info(f"** Checking Service: {s['entity_id']}")
 
                 check_ldap(
-                    f"o={c['organisation']['short_name']}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                    f"o={c['organisation']['short_name']}.{c['short_name']},"
+                    "dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
                     detail['collaboration_memberships'],
                     detail['groups'],
                     group_name_ordered

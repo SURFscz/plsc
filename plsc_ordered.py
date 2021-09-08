@@ -399,7 +399,8 @@ def cleanup(dst):
             # service_dn = f"dc={service},{dst.basedn}"
             dst.rdelete(service_dn)
 
-        organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
+        organizations = dst.rfind(f"dc=ordered,dc={service}",
+                                  '(&(objectClass=organization)(objectClass=extensibleObject))')
         for o_dn, o_entry in organizations.items():
             if o_entry.get('o'):
                 o_rdns = util.dn2rdns(o_dn)
@@ -422,7 +423,7 @@ def cleanup(dst):
                                 dst.delete(dst_dn)
 
                 logging.debug("  - Groups")
-                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service), '(objectClass=groupOfMembers)')
+                dst_dns = dst.rfind(f"ou=Groups,o={co},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
                 for dst_dn, dst_entry in dst_dns.items():
                     grp_name = dst_entry['cn'][0]
                     #grp_urn = dst_entry['labeledURI'][0]
