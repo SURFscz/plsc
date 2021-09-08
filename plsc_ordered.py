@@ -2,18 +2,18 @@
 
 import sys
 import yaml
-import socket
 import copy
 import ldap
 import datetime
 import os
 import util
 import logging
+import uuid
 
 from sldap import sLDAP
 from sbs import SBS
 
-from typing import Tuple, List, Dict, Optional, Union
+from typing import Tuple, List, Dict, Union
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
@@ -23,6 +23,7 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 # vc keeps track of visited CO's so we can delete what
 # we have not seen in the Cleanup phase
 vc = {}
+
 
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
@@ -64,31 +65,28 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     last_login_date = datetime.datetime.strptime(sbs_user.get('last_login_date'), "%Y-%m-%d %H:%M:%S")
     delta = datetime.datetime.now() - last_login_date
 
-    logging.debug("LAST LOGIN: {}, DELTA: {} days".format(
-            last_login_date.strftime("%Y-%m-%d"), delta.days
-        )
-    )
+    logging.debug(f"LAST LOGIN: {last_login_date.strftime('%Y-%m-%d')}, DELTA: {delta.days} days")
 
     if delta.days <= 2:
         last_login_date = datetime.datetime.today()
     elif delta.days <= 7:
         last_login_date = datetime.datetime.today() - datetime.timedelta(days=1)
     elif delta.days <= 30:
-        last_login_date = datetime.datetime.today() - datetime.timedelta(days=7)   
+        last_login_date = datetime.datetime.today() - datetime.timedelta(days=7)
     elif delta.days <= 90:
-        last_login_date = datetime.datetime.today() - datetime.timedelta(days=30)   
+        last_login_date = datetime.datetime.today() - datetime.timedelta(days=30)
     else:
         last_login_date.replace(day=1)
-    
+
     logging.debug("LAST LOGIN RESULT: {}".format(last_login_date.strftime("%Y-%m-%d")))
 
-    record['loginTime'] = [ last_login_date.strftime("%Y%m%d0000Z") ]
+    record['loginTime'] = [last_login_date.strftime("%Y%m%d0000Z")]
 
     if sbs_user.get('status', 'active') == 'expired':
         record['loginDisabled'] = ['TRUE']
     else:
         record['loginDisabled'] = ['FALSE']
-    
+
     # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
     for key, val in record.items():
         record[key] = list(filter(None, record[key]))
@@ -97,9 +95,9 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     return rdn, record
 
-import uuid
 
 registered_users = []
+
 
 # Create phase
 def create(src, dst):
@@ -129,8 +127,11 @@ def create(src, dst):
             dst.add(service_dn, service_entry)
 
             admin_dn = 'cn=admin,' + service_dn
-            admin_entry = {'objectClass': ['organizationalRole', 'simpleSecurityObject'], 'cn': ['admin'],
-                           'userPassword': [str(uuid.uuid4())] }
+            admin_entry = {
+                'objectClass': ['organizationalRole', 'simpleSecurityObject'],
+                'cn': ['admin'],
+                'userPassword': [str(uuid.uuid4())]
+            }
             dst.add(admin_dn, admin_entry)
 
             #seq_dn = 'ou=Sequence,' + service_dn
@@ -279,7 +280,6 @@ def create(src, dst):
                 #dst_entry['uidNumber'] = [uidNumber]
                 #dst_entry['gidNumber'] = [gidNumber]
 
-
                 try:
                     ldif = dst.store(dst_dn, dst_entry)
                     logging.debug(f"      - store {dst_dn}: {ldif}")
@@ -312,7 +312,6 @@ def create(src, dst):
                                         f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
 
                     # ipdb.set_trace()
-                    gidNumber: Optional[int] = None
                     if len(grp_dns) == 1:
                         old_dn, old_entry = list(grp_dns.items())[0]
                         #gidNumber = old_entry.get('gidNumber', [None])[0]
@@ -391,7 +390,7 @@ def cleanup(dst):
     global registered_users
 
     logging.debug("-- Cleanup ---")
-    service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
+    service_dns = dst.find(f"{dst.basedn}", "(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
     for service_dn, s in service_dns.items():
         service = s['dc'][0]
         logging.debug(f"service: {service}")

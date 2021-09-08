@@ -20,6 +20,7 @@ import json
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 class API_Handler:
     def __init__(self):
         logger.debug("Initializng API HANDLER !")
@@ -28,7 +29,7 @@ class API_Handler:
         method = getattr(self, f'do_{request.method}', None)
         if method is None:
             raise web.HTTPNotImplemented()
-            
+
         result = method(request)
         if asyncio.iscoroutine(result):
             result = await result
@@ -41,19 +42,21 @@ class API_Handler:
                 return web.json_response(json.loads(data))
 
             raise Exception(f"No data found for request: {request.path}")
-        except Exception as e:
+        except Exception:
             logger.error("Exception: {str(e)}")
             return web.json_response({}, status=404)
-        
+
 
 DEFAULT_LOCAL_PORT = 3333
+
+
 class BaseTest(TestCase):
 
     src_conf = {
         'recorder': (os.environ.get("SBS_API_RECORDING", "NO").upper() == "YES"),
-        'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT) ),
-        'user': os.environ.get("SBS_USER","sysread"),
-        'passwd': os.environ.get("SBS_PASS","secret"),
+        'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT)),
+        'user': os.environ.get("SBS_USER", "sysread"),
+        'passwd': os.environ.get("SBS_PASS", "secret"),
         'ipv4_only': True
     }
 
@@ -87,7 +90,7 @@ class BaseTest(TestCase):
             check_server()
         else:
             cls.loop = None
-      
+
     @classmethod
     def tearDownClass(cls):
         if cls.loop:
@@ -117,4 +120,3 @@ class BaseTest(TestCase):
 
     def tearDown(self):
         logger.info("BaseTest tearDown")
-

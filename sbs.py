@@ -7,8 +7,10 @@ import urllib3
 import os
 import socket
 
+
 def ipv4_only():
     return socket.AF_INET
+
 
 class SBSException(Exception):
     pass
@@ -87,7 +89,7 @@ class SBS(object):
 
         services = {}
         for s in data.get('services', []):
-            services[s['id']] = s 
+            services[s['id']] = s
 
         users = {}
         for u in data.get('users', []):
@@ -98,15 +100,15 @@ class SBS(object):
             for c in o.get('collaborations', []):
                 if not c.get('global_urn', None):
                     c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
-                
+
                 for m in c.get('collaboration_memberships', []):
-                    m['user'] = { **users[m['user_id']], **{'status': m['status']}}
+                    m['user'] = {**users[m['user_id']], **{'status': m['status']}}
 
                 for g in c.get('groups', []):
                     for m in g.get('collaboration_memberships', []):
                         m['user'] = users[m['user_id']]
-    
-                c.setdefault('organisation', {})['short_name'] = o['short_name']                
+
+                c.setdefault('organisation', {})['short_name'] = o['short_name']
 
                 for s in (o.get('services', []) + c.get('services', [])):
                     result.setdefault(services[s]['entity_id'], {})[c['id']] = c
@@ -116,7 +118,7 @@ class SBS(object):
 
     def users(self, co):
         users = {}
-        
+
         if not co.get('short_name'):
             raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
 

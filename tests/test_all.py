@@ -1,9 +1,8 @@
 import logging
-import ldap
-
 from tests.base_test import BaseTest
 
 logger = logging.getLogger(__name__)
+
 
 class TestAll(BaseTest):
 
@@ -32,7 +31,6 @@ class TestAll(BaseTest):
             self.assertTrue(r)
             return r
 
-
         def check_people(rdn, people):
             """ Check that people object exists and that users exists
             """
@@ -48,7 +46,6 @@ class TestAll(BaseTest):
                 if u['user'].get('ssh_keys', None):
                     assert('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
                     assert('sshPublicKey' in user_object[list(user_object)[0]].keys())
-
 
         def check_group(rdn, group, members):
             """ Check that group object exists and members are defined
@@ -66,11 +63,10 @@ class TestAll(BaseTest):
                 for m in member_element:
                     logger.debug(f"Found member: {m}")
 
-                found_members = [ m.split(',')[0].split('=')[1] for m in member_element ]
-                required_members = [ m['user']['username'] for m in members ]
+                found_members = [m.split(',')[0].split('=')[1] for m in member_element]
+                required_members = [m['user']['username'] for m in members]
 
                 assert(sorted(found_members) == sorted(required_members))
-
 
         def check_ldap(rdn, people, groups, group_name_function):
             """ check for ordered object entry and check both people and object subtrees
@@ -83,32 +79,30 @@ class TestAll(BaseTest):
             for g in groups:
                 check_group(f"ou=groups,{rdn}", group_name_function(g['short_name']), g['collaboration_memberships'])
 
-
         for c in self.src.collaborations():
-                logger.info(f"* Checking collanboration: {c['name']}")
+            logger.info(f"* Checking collanboration: {c['name']}")
 
-                detail = self.src.collaboration(c['id'])
-                for s in detail['services']:
+            detail = self.src.collaboration(c['id'])
+            for s in detail['services']:
 
-                    def group_name_ordered(g):
-                        return g
+                def group_name_ordered(g):
+                    return g
 
-                    def group_name_flat(g):
-                        return f"{c['organisation']['short_name']}.{c['short_name']}.{g}"
+                def group_name_flat(g):
+                    return f"{c['organisation']['short_name']}.{c['short_name']}.{g}"
 
-                    logger.info(f"** Checking Service: {s['entity_id']}")
+                logger.info(f"** Checking Service: {s['entity_id']}")
 
-                    check_ldap(
-                        "o={}.{},dc=ordered,dc={},{}".format(c['organisation']['short_name'],c['short_name'], s['entity_id'], self.dst_conf['basedn']),
-                        detail['collaboration_memberships'],
-                        detail['groups'],
-                        group_name_ordered
-                    )
+                check_ldap(
+                    f"o={c['organisation']['short_name']}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                    detail['collaboration_memberships'],
+                    detail['groups'],
+                    group_name_ordered
+                )
 
-                    check_ldap(
-                        "dc=flat,dc={},{}".format(s['entity_id'], self.dst_conf['basedn']),
-                        detail['collaboration_memberships'],
-                        detail['groups'],
-                        group_name_flat
-                    )
-
+                check_ldap(
+                    f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                    detail['collaboration_memberships'],
+                    detail['groups'],
+                    group_name_flat
+                )

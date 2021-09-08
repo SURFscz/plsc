@@ -1,3 +1,4 @@
+---
 name: CI
 
 on: [push]
@@ -27,54 +28,60 @@ jobs:
           LDAP_TLS: true
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y libsasl2-dev libldap2-dev ldap-utils
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libsasl2-dev libldap2-dev ldap-utils
 
-    - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python }}
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
 
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            - name: Run flake8
 
-    - name: ldap - Initialization...
-      run: |
-        sleep 5;
-        ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};  
-        for f in access eduPerson voPerson groupOfMembers loginProperties; do ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done;
-      env:
-        LDAP_URL: ldap://localhost:389
-        LDAP_ADMIN_PASSWORD: secret
-        LDAP_CONFIG_PASSWORD: config
-        LDAP_BASE_DN: dc=services,dc=sram,dc=tld
-        LDAP_BIND_DN: cn=admin,dc=services,dc=sram,dc=tld
+      - name: Check syntax
+        run: |
+          flake8 .
 
-    # Setup tmate session
-    #- name: Setup tmate session
-    #  uses: mxschmitt/action-tmate@v3
+      - name: ldap - Initialization...
+        run: >
+          sleep 5;
+          ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
+          for f in access eduPerson voPerson groupOfMembers loginProperties;
+          do
+            ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif;
+          done
+        env:
+          LDAP_URL: ldap://localhost:389
+          LDAP_ADMIN_PASSWORD: secret
+          LDAP_CONFIG_PASSWORD: config
+          LDAP_BASE_DN: dc=services,dc=sram,dc=tld
+          LDAP_BIND_DN: cn=admin,dc=services,dc=sram,dc=tld
 
-    - name: Run pytest...
-      run: |
-        export PYTHONPATH="."
-        pytest
-      env:
-        LDAP_URL: ldap://localhost:389
-        LDAP_ADMIN_PASSWORD: secret
-        LDAP_BASE_DN: dc=services,dc=sram,dc=tld
-        LDAP_BIND_DN: cn=admin,dc=services,dc=sram,dc=tld
+      # Setup tmate session
+      #- name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
 
-    - name: Dump ldap...
-      run:
-        ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub
-      env:
-        LDAP_URL: ldap://localhost:389
-        LDAP_BASE_DN: dc=services,dc=sram,dc=tld
+      - name: Run pytest...
+        run: |
+          export PYTHONPATH="."
+          pytest
+        env:
+          LDAP_URL: ldap://localhost:389
+          LDAP_ADMIN_PASSWORD: secret
+          LDAP_BASE_DN: dc=services,dc=sram,dc=tld
+          LDAP_BIND_DN: cn=admin,dc=services,dc=sram,dc=tld
 
-
+      - name: Dump ldap...
+        run:
+          ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub
+        env:
+          LDAP_URL: ldap://localhost:389
+          LDAP_BASE_DN: dc=services,dc=sram,dc=tld
 

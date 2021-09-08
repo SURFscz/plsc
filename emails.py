@@ -2,7 +2,6 @@
 
 import sys
 import yaml
-import json
 from datetime import datetime
 from sbs import SBS
 
@@ -15,7 +14,7 @@ with open(sys.argv[1]) as f:
 src = SBS(config['sbs']['src'])
 
 
-print("SRAM prod contacts generated "+datetime.now().isoformat())
+print("SRAM prod contacts generated " + datetime.now().isoformat())
 print("type:Name:id:role:email")
 
 organisations = src.organisations()
@@ -52,10 +51,10 @@ collaborations = src.collaborations()
 for collaboration in collaborations:
     id = collaboration['id']
     col = src.collaboration(id)
-    if col is None or not col: 
+    if col is None or not col:
         next
     #print(json.dumps(col, indent=2))
-    name = col.get('name','-')
+    name = col.get('name', '-')
     for user in col['collaboration_memberships']:
         role = user['role']
         mail = user['user']['email']

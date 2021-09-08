@@ -80,7 +80,7 @@ def update_service(src, dst, config, sid):
     # branch(es)
     # create_service(src, dst, config, sid)
 
-    print(f"Removing stale service branches")
+    print("Removing stale service branches")
     services = src.service_collaborations()
 
     s_dns = []
@@ -90,11 +90,11 @@ def update_service(src, dst, config, sid):
             for cid in cos:
                 create_service_collaboration(src, dst, config, cid, sid)
 
-    service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
+    service_dns = dst.find(f"{dst.basedn}", "(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
     for service_dn in service_dns:
         print(f"Checking {service_dn}")
         if service_dn not in s_dns:
-            print(f"-  deleting")
+            print("-  deleting")
             dst.rdelete(service_dn)
 
 
@@ -201,7 +201,7 @@ def clean_collaboration(src, dst, cid):
         old_groups = {}
 
         # Find all groups in LDAP
-        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", f"(&(objectClass=sczGroup))")
+        grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}", "(&(objectClass=sczGroup))")
         for grp_dn, grp in grp_dns.items():
             name = grp['cn'][0]
             old_groups[name] = grp_dn
@@ -240,7 +240,7 @@ def clean_collaboration(src, dst, cid):
         grp_entry['cn'] = [grp_name]
         grp_entry['description'] = [grp_id]
 
-        ldif = dst.store(grp_dn, grp_entry)
+        #ldif = dst.store(grp_dn, grp_entry)
         print(f"update group: {grp_dn}")
 
         grps = []
@@ -253,7 +253,7 @@ def clean_collaboration(src, dst, cid):
 
 
 def delete_collaboration(dst, cid):
-    service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(ObjectClass=organization))",
+    service_dns = dst.find(dst.basedn, "(&(objectClass=dcObject)(ObjectClass=organization))",
                            scope=ldap.SCOPE_ONELEVEL)
     for service_dn in service_dns:
         co_dns = dst.find(service_dn, f"(&(objectClass=organization)(o={cid}))")
@@ -307,7 +307,7 @@ def create_service_user(src, dst, config, cid, uid, service):
     eppn = f"{user['user']['id']}@{co['short_name']}.scz.net"
     dst_entry['eduPersonScopedAffiliation'] = [eppn]
 
-    ldif = dst.store(dst_dn, dst_entry)
+    #ldif = dst.store(dst_dn, dst_entry)
     print(f"create user: {dst_dn}")
 
     # roles = user['roles']
@@ -331,7 +331,7 @@ def create_service_user_groups(src, dst, cid, user, service):
     #    if not cid in s:
     #        continue
 
-    print(f"Creating roles")
+    print("Creating roles")
     groups = user['roles']
     uid = util.uid(user['user'])
     co = src.collaboration(cid)
@@ -362,12 +362,12 @@ def create_service_user_groups(src, dst, cid, user, service):
         grp_entry['cn'] = [grp_name]
         grp_entry['description'] = [grp_id]
 
-        ldif = dst.store(grp_dn, grp_entry)
+        #ldif = dst.store(grp_dn, grp_entry)
         print(f"create group: {grp_dn}")
 
 
 def create_group(src, dst, cid, gid):
-    print(f"Creating group")
+    print("Creating group")
     co = src.collaboration(cid)
     co_identifier = co['identifier']
     group = src.group(cid, gid)
@@ -391,7 +391,7 @@ def create_group(src, dst, cid, gid):
         grp_entry['cn'] = [grp_name]
         grp_entry['description'] = [grp_id]
 
-        ldif = dst.store(grp_dn, grp_entry)
+        #ldif = dst.store(grp_dn, grp_entry)
         print(f"create group: {grp_dn}")
 
 
@@ -459,7 +459,7 @@ def clean_group(src, dst, cid, service, group):
     #Here's the magic: Build the new group entry
     grp_entry = {'cn': [grp_name], 'description': [grp_id]}
 
-    ldif = dst.store(grp_dn, grp_entry)
+    #ldif = dst.store(grp_dn, grp_entry)
     print(f"update group: {grp_dn}")
 
 
