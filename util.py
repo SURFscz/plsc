@@ -1,8 +1,5 @@
-import os
-import hashlib
 import json
 import ldap
-from base64 import b64encode
 
 
 def make_secret(password):

@@ -1,6 +1,8 @@
 import ldap
 import ldap.modlist
 import logging
+
+
 class sLDAP(object):
 
     # LDAP connection, private
@@ -61,7 +63,7 @@ class sLDAP(object):
             r = self.__search(basedn, filter, attrs, scope)
             for dn, entry in r:
                 dns[dn] = self.__decode(entry)
-        except ldap.NO_SUCH_OBJECT as e:
+        except ldap.NO_SUCH_OBJECT:
             # nothing found, just return an empty result
             #logging.error(f"find: {e} on filter '{filter}'")
             return {}

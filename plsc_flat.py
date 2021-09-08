@@ -22,6 +22,7 @@ vc = {
     'groups': set(),
 }
 
+
 # Create phase
 def create(src, dst):
     services = util.find_ordered_services(src)
@@ -66,7 +67,7 @@ def create(src, dst):
                 if src_entry['loginDisabled'] == ['TRUE']:
                     src_entry['loginDisabled'] = loginDisabled_effective[service][src_uid]
                 else:
-                    loginDisabled_effective[service][src_uid] = src_entry['loginDisabled']                
+                    loginDisabled_effective[service][src_uid] = src_entry['loginDisabled']
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
                 dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
@@ -79,7 +80,7 @@ def create(src, dst):
                     for k, v in old_entry.items():
                         src_entry.setdefault(k, []).extend(v)
                         src_entry[k] = list(set(src_entry[k]))
-                    
+
                     ldif = dst.modify(dst_dn, old_entry, src_entry)
                     logging.debug("    - modify: {}".format(src_entry))
                 else:
@@ -169,6 +170,7 @@ def cleanup(src, dst):
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
 
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit(sys.argv[0] + "  <conf.yml>")
@@ -181,4 +183,3 @@ if __name__ == "__main__":
 
     create(src, dst)
     cleanup(src, dst)
-    

@@ -3,7 +3,6 @@
 import sys
 import yaml
 import json
-import socket
 import traceback
 
 import mqtt_util
@@ -37,7 +36,7 @@ def service(method, action, msg):
 
 def collaboration(method, action, msg):
     if action == "collaborations/invites":
-        print(f"discarding collaborations invites msg")
+        print("discarding collaborations invites msg")
         return
     cid = int(msg['id'])
     print(f"handling collaboration {method} {action} {cid} {msg}")
@@ -150,7 +149,7 @@ def on_message(message):
             # As flatten loops over services for cid
             # It also misses deleted CO's
             mqtt_flat.flatten(dst, dst, src, cid)
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
 
 
