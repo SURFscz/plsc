@@ -24,9 +24,11 @@ ldap:
     basedn: dc=clients,dc=vnet
     binddn: cn=admin,dc=clients,dc=vnet
     passwd: changethispassword
-pwd: changethispassword
-uid: 1000
-gid: 1000
+    sbs:
+src:
+  host: https://sbs.example.net
+  user: sysread
+  passwd: changethispassword
 ```
 
 ### Local development
@@ -64,3 +66,59 @@ And for groups:
             dst_entry['cn'] = [dst_cn]
             dst_entry['description'] = [src_cn]
 ```
+
+# Testing
+
+For local testing, you need a local LDAP to be started before running tests.
+When you have docker installed on your local machine, you can simple run:
+
+```
+etc/ldap_start.sh
+```
+
+This script will take care of pulling the proper LDAP image, start the docker container and initialize it properly with all required objectclasses.
+
+If you do not have docker installed or wish to use an existing running LDAP server, then please make sure that the config files listed in **etc/ldif** are properly installed.
+
+You can specify LDAP connection and access constants in a local **.env** file, for exanple:
+
+```
+LDAP_URL="ldap://localhost:389"
+LDAP_ADMIN_PASSWORD="secret"
+LDAP_CONFIG_PASSWORD="config"
+LDAP_DOMAIN="sram.tld"
+LDAP_BASE_DN="dc=sram,dc=tld"
+LDAP_BIND_DN="cn=admin,dc=sram,dc=tld"
+
+SBS_URL=https://sbs.example.com
+SBS_USER=sysread
+SBS_PASS=secret
+SBS_API_RECORDING=Yes
+```
+
+You have the option to run against an operational instance of SBS by specifing the **SBS_URL** and **SBS_USER** /**SBS_PASS** constants as shown above. If you do not want to access an SBS instance, just leave these constant out.
+In that case the SBS API's are immitated by the results listed in the local **api** directory of this repository.
+
+In case you are testing against an operational SBS instance, you have the option to record the API results for later use during mockup testing, just set the environment variable **SBS_API_RECORDING** to "Yes". Now the API requests results will be stored in the local directory under **./api/...**
+
+When you omit the **SBS_URL** variable, the tests will run API requests agains the contents off this local **./api/...** directory
+
+When all these preperations are completed, you can now run the tests:
+
+```
+pytest -v
+```
+
+After each Test cycle the contents of the LDAP can be inspected, for that run this command:
+
+```
+etc/ldap_show.sh
+```
+
+When finished you can tear down the local running LDAP instance, by:
+
+```
+etc/ldap_stop.sh
+
+```
+

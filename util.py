@@ -6,11 +6,9 @@ from base64 import b64encode
 
 
 def make_secret(password):
-    salt = os.urandom(4)
-    sha = hashlib.sha1(password.encode('utf-8'))
-    sha.update(salt)
-    b64_digest_salt = b64encode(sha.digest() + salt).strip()
-    return '{SSHA}' + b64_digest_salt.decode('utf-8')
+    import passlib.hash
+    crypted = passlib.hash.sha512_crypt.hash(password)
+    return '{SSHA}' + crypted.decode('ascii')
 
 
 def dn2rdns(dn):

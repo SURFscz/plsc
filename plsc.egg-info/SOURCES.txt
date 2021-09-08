@@ -1,0 +1,9 @@
+README.md
+setup.py
+plsc.egg-info/PKG-INFO
+plsc.egg-info/SOURCES.txt
+plsc.egg-info/dependency_links.txt
+plsc.egg-info/top_level.txt
+tests/__init__.py
+tests/base_test.py
+tests/test_all.py
