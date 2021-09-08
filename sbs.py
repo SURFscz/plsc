@@ -73,7 +73,18 @@ class SBS(object):
     def me(self):
         return self.api('api/users/me')
 
-    # This method is used during Test verification, not during the PLSC cycle !
+    def organisations(self):
+        return self.api('api/organisations/all')
+
+    def organisation(self, org_id):
+        return self.api(f"api/organisations/{org_id}")
+
+    def services(self):
+        return self.api("api/services/all") or []
+
+    def service(self, s_id):
+        return self.api(f"api/services/{s_id}")
+
     def collaborations(self):
         return self.api('api/collaborations/all') or []
 
