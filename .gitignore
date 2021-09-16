@@ -16,5 +16,4 @@ config.d/
 *.pid
 .venv
 .env
-.pytest_cache
 tests/api/

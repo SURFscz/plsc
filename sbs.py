@@ -1,5 +1,7 @@
 import json
 import logging
+from typing import Dict
+
 import requests
 import requests.auth
 import urllib3
@@ -7,8 +9,10 @@ import urllib3
 import os
 import socket
 
+
 def ipv4_only():
     return socket.AF_INET
+
 
 class SBSException(Exception):
     pass
@@ -55,7 +59,7 @@ class SBS(object):
 
         if r.status_code == 200:
             if self.recording_requested:
-                os.makedirs('/'.join(request.split('/')[:-1]), exist_ok = True)
+                os.makedirs('/'.join(request.split('/')[:-1]), exist_ok=True)
 
                 with open(f"./{request}", 'w') as f:
                     f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))
@@ -79,7 +83,7 @@ class SBS(object):
         return self.api(f"api/organisations/{org_id}")
 
     def services(self):
-        return self.api(f"api/services/all") or []
+        return self.api("api/services/all") or []
 
     def service(self, s_id):
         return self.api(f"api/services/{s_id}")
@@ -89,6 +93,9 @@ class SBS(object):
 
     def collaboration(self, c_id):
         return self.api(f"api/collaborations/{c_id}")
+
+    def group(self, c_id, g_id):
+        return self.api(f"api/groups/{g_id}/{c_id}")
 
     def service_attributes(self, uid):
         # t = {
@@ -137,7 +144,7 @@ class SBS(object):
 
         services = {}
         for s in data.get('services', []):
-            services[s['id']] = s 
+            services[s['id']] = s
 
         users = {}
         for u in data.get('users', []):
@@ -148,25 +155,24 @@ class SBS(object):
             for c in o.get('collaborations', []):
                 if not c.get('global_urn', None):
                     c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
-                
+
                 for m in c.get('collaboration_memberships', []):
-                    m['user'] = { **users[m['user_id']], **{'status': m['status']}}
+                    m['user'] = {**users[m['user_id']], **{'status': m['status']}}
 
                 for g in c.get('groups', []):
                     for m in g.get('collaboration_memberships', []):
                         m['user'] = users[m['user_id']]
-    
-                c.setdefault('organisation', {})['short_name'] = o['short_name']                
+
+                c.setdefault('organisation', {})['short_name'] = o['short_name']
 
                 for s in (o.get('services', []) + c.get('services', [])):
                     result.setdefault(services[s]['entity_id'], {})[c['id']] = c
 
         return result
 
-    def users(self, co):
+    @staticmethod
+    def users(co):
         users = {}
-        groups = self.groups(co)
-        #co = self.collaboration(c_id)
         if not co.get('short_name'):
             raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
         for u in co['collaboration_memberships']:
@@ -181,20 +187,9 @@ class SBS(object):
 
         return users
 
-    def groups(self, co):
+    @staticmethod
+    def groups(co):
         groups = {}
-        #co = self.collaboration(c_id)
-        if not co.get('short_name'):
-            raise SBSException(f"Encountered CO {c_id} ({co['name']}) without short_name")
-        for group in co['groups']:
-            g_id = group['id']
-            #g = self.group(c_id, g_id)
-            groups[g_id] = group
-        return groups
-
-    def groups(self, co):
-        groups = {}
-        #co = self.collaboration(c_id)
         if not co.get('short_name'):
             raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
         for group in co['groups']:
@@ -210,7 +205,7 @@ class SBS(object):
         # group[0] is always the virtual CO group co_{name}
         # All other groups are called group_{name}
         co = self.collaboration(c_id)
-        users = {
+        users: Dict[str, Dict] = {
             'groups': {
                 0: f"co_{co['name']}",
             },
@@ -219,12 +214,12 @@ class SBS(object):
         for u in co['collaboration_memberships']:
             users['users'][u['user_id']] = {
                 'user': u['user'],
-                'groups': [ 0 ]
+                'groups': [0]
             }
         for group in co['groups']:
             g_id = group['id']
             users['groups'][g_id] = f"group_{group['name']}"
-            for m in g['collaboration_memberships']:
+            for m in group['collaboration_memberships']:
                 users['users'][m['user_id']]['groups'].append(g_id)
 
         logging.debug(f"USERS {c_id} : {users}")
@@ -261,4 +256,3 @@ class SBS(object):
 
         logging.debug(f"COLLABORATION GROUPS {c_id} : {groups}")
         return groups
-

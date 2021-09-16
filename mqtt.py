@@ -3,13 +3,12 @@
 import sys
 import yaml
 import json
-import socket
 import traceback
 
 import mqtt_util
 import mqtt_flat
-from mqtt_util import mqttClient
-from sldap import sLDAP
+from mqtt_util import MQTTClient
+from sldap import SLdap
 from sbs import SBS
 
 if len(sys.argv) < 2:
@@ -19,7 +18,7 @@ with open(sys.argv[1]) as f:
     config = yaml.safe_load(f)
 
 src = SBS(config['sbs']['src'])
-dst = sLDAP(config['ldap']['dst'])
+dst = SLdap(config['ldap']['dst'])
 mqtt_topic = config['mqtt']['topic']
 
 
@@ -37,7 +36,7 @@ def service(method, action, msg):
 
 def collaboration(method, action, msg):
     if action == "collaborations/invites":
-        print(f"discarding collaborations invites msg")
+        print("discarding collaborations invites msg")
         return
     cid = int(msg['id'])
     print(f"handling collaboration {method} {action} {cid} {msg}")
@@ -152,10 +151,11 @@ def on_message(message):
             mqtt_flat.flatten(dst, dst, src, cid)
     except Exception as e:
         traceback.print_exc()
+        raise Exception(e)
 
 
 def main():
-    mqtt = mqttClient(config['mqtt'])
+    mqtt = MQTTClient(config['mqtt'])
 
     while True:
         msg = mqtt.subscribe(mqtt_topic)

@@ -4,7 +4,7 @@ from aiohttp import web
 
 from gera2ld.pyserve import run_forever, start_server_aiohttp
 
-from sldap import sLDAP
+from sldap import SLdap
 from sbs import SBS
 
 import logging
@@ -20,7 +20,8 @@ import json
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-class API_Handler:
+
+class APIHandler:
     def __init__(self):
         logger.debug("Initializng API HANDLER !")
 
@@ -28,32 +29,34 @@ class API_Handler:
         method = getattr(self, f'do_{request.method}', None)
         if method is None:
             raise web.HTTPNotImplemented()
-            
+
         result = method(request)
         if asyncio.iscoroutine(result):
             result = await result
         return result
 
-    def do_GET(self, request):
+    @staticmethod
+    def do_get(request):
         try:
             with open(f".{request.path}", 'r') as f:
                 data = f.read()
                 return web.json_response(json.loads(data))
 
-            raise Exception(f"No data found for request: {request.path}")
         except Exception as e:
-            logger.error("Exception: {str(e)}")
+            logger.error(f"Exception: {str(e)}")
             return web.json_response({}, status=404)
-        
+
 
 DEFAULT_LOCAL_PORT = 3333
+
+
 class BaseTest(TestCase):
 
     src_conf = {
         'recorder': (os.environ.get("SBS_API_RECORDING", "NO").upper() == "YES"),
-        'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT) ),
-        'user': os.environ.get("SBS_USER","sysread"),
-        'passwd': os.environ.get("SBS_PASS","secret"),
+        'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT)),
+        'user': os.environ.get("SBS_USER", "sysread"),
+        'passwd': os.environ.get("SBS_PASS", "secret"),
         'ipv4_only': True
     }
 
@@ -68,7 +71,7 @@ class BaseTest(TestCase):
     def setUpClass(cls):
         def start_server(loop):
             logger.debug("BaseTest start_server")
-            handle = API_Handler()
+            handle = APIHandler()
             asyncio.set_event_loop(loop)
             run_forever(start_server_aiohttp(handle, ':{}'.format(DEFAULT_LOCAL_PORT)))
 
@@ -87,7 +90,7 @@ class BaseTest(TestCase):
             check_server()
         else:
             cls.loop = None
-      
+
     @classmethod
     def tearDownClass(cls):
         if cls.loop:
@@ -105,7 +108,7 @@ class BaseTest(TestCase):
         logger.debug(self.dst_conf)
 
         self.src = SBS(self.src_conf)
-        self.dst = sLDAP(self.dst_conf)
+        self.dst = SLdap(self.dst_conf)
 
         logger.info("Creating: Ordered structure...")
         plsc_ordered.create(self.src, self.dst)
@@ -117,4 +120,3 @@ class BaseTest(TestCase):
 
     def tearDown(self):
         logger.info("BaseTest tearDown")
-

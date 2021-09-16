@@ -7,17 +7,17 @@ import time
 import copy
 import ldap
 
-from sldap import sLDAP
+from sldap import SLdap
 
 if len(sys.argv) < 2:
     sys.exit(sys.argv[0] + "  <conf.yml>")
     exit()
 
 with open(sys.argv[1]) as f:
-  config = yaml.safe_load(f)
+    config = yaml.safe_load(f)
 
-ldap1 = sLDAP(config['ldap1'])
-ldap2 = sLDAP(config['ldap2'])
+ldap1 = SLdap(config['ldap1'])
+ldap2 = SLdap(config['ldap2'])
 
 timestamp = str(time.time())
 admin_dn = f"cn=admin,{ldap1.basedn}"

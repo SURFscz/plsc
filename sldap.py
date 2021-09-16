@@ -1,7 +1,9 @@
 import ldap
 import ldap.modlist
 import logging
-class sLDAP(object):
+
+
+class SLdap(object):
 
     # LDAP connection, private
     __c = None
@@ -46,36 +48,35 @@ class sLDAP(object):
             r[k] = rv
         return r
 
-    def __search(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
+    def __search(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
         logging.debug("Search: {}".format(basedn))
 
         if attrs is None:
             attrs = []
         if not basedn:
             basedn = self.basedn
-        return self.__c.search_s(basedn, scope, filter, attrs)
+        return self.__c.search_s(basedn, scope, ldap_filter, attrs)
 
-    def find(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
+    def find(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
         dns = {}
         try:
-            r = self.__search(basedn, filter, attrs, scope)
+            r = self.__search(basedn, ldap_filter, attrs, scope)
             for dn, entry in r:
                 dns[dn] = self.__decode(entry)
-        except ldap.NO_SUCH_OBJECT as e:
+        except ldap.NO_SUCH_OBJECT:
             # nothing found, just return an empty result
-            #logging.error(f"find: {e} on filter '{filter}'")
             return {}
         except ldap.NO_RESULTS_RETURNED as e:
-            logging.error(f"find: {e} on filter '{filter}'")
+            logging.error(f"find: {e} on filter '{ldap_filter}'")
             raise e
         return dns
 
-    def rfind(self, basedn, filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
+    def rfind(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
         if basedn:
             b = "{},{}".format(basedn, self.basedn)
         else:
             b = self.basedn
-        return self.find(b, filter, attrs, scope)
+        return self.find(b, ldap_filter, attrs, scope)
 
     def add(self, dn, entry):
         addlist = ldap.modlist.addModlist(self.__encode(entry))

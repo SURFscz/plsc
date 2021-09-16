@@ -9,7 +9,7 @@ import copy
 import os
 import util
 
-from sldap import sLDAP
+from sldap import SLdap
 
 #import ipdb
 #ipdb.set_trace()
@@ -20,6 +20,7 @@ vc = {
     'users': set(),  # only unique values
     'groups': set(),
 }
+
 
 # Create phase
 def create(src, dst):
@@ -108,7 +109,6 @@ def create(src, dst):
                 new_entry['member'] = members
 
                 dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
-                dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", f"(&(ObjectClass=groupOfMembers)(cn={grp_cn}))")
 
                 ldif = dst.store(dst_dn, new_entry)
                 logging.debug("    - store: {}".format(ldif))
@@ -134,11 +134,7 @@ def cleanup(src, dst):
             if dst_entry.get('uid', None):
                 src_uid = dst_entry['uid'][0]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(uid={src_uid})")
-                if len(src_dns):
-                    for src_dn, src_entry in src_dns.items():
-                        pass
-                        #logging.debug("   - srcdn: {}".format(src_dn))
-                else:
+                if len(src_dns)==0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
@@ -152,14 +148,15 @@ def cleanup(src, dst):
             if dst_entry.get('cn', None):
                 src_cn = dst_entry['cn'][0].split('.')[-1]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
-                if len(src_dns):
-                    for src_dn, src_entry in src_dns.items():
-                        pass
-                        #logging.debug("   - srcdn: {}".format(src_dn))
-                else:
+                #if len(src_dns):
+                #    for src_dn, src_entry in src_dns.items():
+                #        pass
+                #        #logging.debug("   - srcdn: {}".format(src_dn))
+                if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -168,9 +165,8 @@ if __name__ == "__main__":
     with open(sys.argv[1]) as f:
         config = yaml.safe_load(f)
 
-    src = sLDAP(config['ldap']['dst'])
-    dst = sLDAP(config['ldap']['dst'])
+    src = SLdap(config['ldap']['dst'])
+    dst = SLdap(config['ldap']['dst'])
 
     create(src, dst)
     cleanup(src, dst)
-    

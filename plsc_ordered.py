@@ -2,17 +2,17 @@
 
 import sys
 import yaml
-import socket
 import copy
 import ldap
 import os
 import util
 import logging
+import uuid
 
-from sldap import sLDAP
+from sldap import SLdap
 from sbs import SBS
 
-from typing import Tuple, List, Dict, Optional, Union
+from typing import Tuple, List, Dict, Union
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
@@ -22,6 +22,7 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 # vc keeps track of visited CO's so we can delete what
 # we have not seen in the Cleanup phase
 vc = {}
+
 
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
@@ -57,7 +58,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
         record['sshPublicKey'] = [sbs_user.get('ssh_key')] if 'ssh_key' in sbs_user else sbs_user.get('ssh_keys')
         record['objectClass'].append('ldapPublicKey')
 
-    record['voPersonStatus'] = [ sbs_user.get('status', 'undefined') ]
+    record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
 
     # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
     for key, val in record.items():
@@ -67,9 +68,9 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     return rdn, record
 
-import uuid
 
 registered_users = []
+
 
 # Create phase
 def create(src, dst):
@@ -100,7 +101,7 @@ def create(src, dst):
 
             admin_dn = 'cn=admin,' + service_dn
             admin_entry = {'objectClass': ['organizationalRole', 'simpleSecurityObject'], 'cn': ['admin'],
-                           'userPassword': [str(uuid.uuid4())] }
+                           'userPassword': [str(uuid.uuid4())]}
             dst.add(admin_dn, admin_entry)
 
             #seq_dn = 'ou=Sequence,' + service_dn
@@ -134,12 +135,6 @@ def create(src, dst):
             vc[service][co_identifier]['roles'] = {}
             vc[service][co_identifier]['members'] = []
             vc[service][co_identifier]['name'] = co.get('name', co_identifier)
-
-            # Skip unknown CO's
-            organizations = dst.rfind(f"dc=ordered,dc={service}",
-                                      f"(&(objectClass=organization)(objectClass=extensibleObject)(o={co_identifier}))")
-            if len(organizations):
-                o_dn, o_entry = list(organizations.items())[0]
 
             # Create CO if necessary
             co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -232,24 +227,6 @@ def create(src, dst):
 
                 registered_users.append(dst_dn)
 
-                # add the uidNumber and gidNumber
-                #uidNumber = None
-                #gidNumber = None
-                dst_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(ObjectClass=person)(eduPersonUniqueId={src_uid}))")
-                if dst_dns:
-                    old_dn, old_entry = list(dst_dns.items())[0]
-                    #uidNumber = old_entry.get('uidNumber', 0)[0]
-                    #gidNumber = old_entry.get('gidNumber', 0)[0]
-
-                #if uidNumber is None:
-                #    uidNumber = dst.get_sequence(f"cn=uidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
-                #if gidNumber is None:
-                #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
-
-                #dst_entry['uidNumber'] = [uidNumber]
-                #dst_entry['gidNumber'] = [gidNumber]
-
-
                 try:
                     ldif = dst.store(dst_dn, dst_entry)
                     logging.debug(f"      - store {dst_dn}: {ldif}")
@@ -282,10 +259,8 @@ def create(src, dst):
                                         f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
 
                     # ipdb.set_trace()
-                    gidNumber: Optional[int] = None
                     if len(grp_dns) == 1:
                         old_dn, old_entry = list(grp_dns.items())[0]
-                        #gidNumber = old_entry.get('gidNumber', [None])[0]
                         members = old_entry.get('member', [])
                         if dst_dn not in members:
                             members.append(dst_dn)
@@ -293,9 +268,6 @@ def create(src, dst):
                         members = [dst_dn]
                     else:
                         raise Exception("Too many dn's, this shouldn't happen")
-
-                    #if not gidNumber:
-                    #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
 
                     # Here's the magic: Build the new group entry
                     grp_entry = {
@@ -312,7 +284,6 @@ def create(src, dst):
                         grp_entry['displayName'] = [group.get('name')]
 
                     # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
-                    # if grp_entry != old_entry:
                     ldif = dst.store(grp_dn, grp_entry)
                     logging.debug("      - store: {}".format(ldif))
 
@@ -361,7 +332,7 @@ def cleanup(dst):
     global registered_users
 
     logging.debug("-- Cleanup ---")
-    service_dns = dst.find(f"{dst.basedn}", f"(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
+    service_dns = dst.find(f"{dst.basedn}", "(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
     for service_dn, s in service_dns.items():
         service = s['dc'][0]
         logging.debug(f"service: {service}")
@@ -370,7 +341,8 @@ def cleanup(dst):
             # service_dn = f"dc={service},{dst.basedn}"
             dst.rdelete(service_dn)
 
-        organizations = dst.rfind(f"dc=ordered,dc={service}", '(&(objectClass=organization)(objectClass=extensibleObject))')
+        organizations = dst.rfind(f"dc=ordered,dc={service}",
+                                  '(&(objectClass=organization)(objectClass=extensibleObject))')
         for o_dn, o_entry in organizations.items():
             if o_entry.get('o'):
                 o_rdns = util.dn2rdns(o_dn)
@@ -393,7 +365,8 @@ def cleanup(dst):
                                 dst.delete(dst_dn)
 
                 logging.debug("  - Groups")
-                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service), '(objectClass=groupOfMembers)')
+                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service),
+                                    '(objectClass=groupOfMembers)')
                 for dst_dn, dst_entry in dst_dns.items():
                     grp_name = dst_entry['cn'][0]
                     #grp_urn = dst_entry['labeledURI'][0]
@@ -440,7 +413,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
 
     src = SBS(config['sbs']['src'])
-    dst = sLDAP(config['ldap']['dst'])
+    dst = SLdap(config['ldap']['dst'])
 
     create(src, dst)
     cleanup(dst)

@@ -11,3 +11,5 @@ requests
 pytest
 pytest-dotenv
 json-server.py
+passlib
+aiohttp
