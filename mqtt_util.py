@@ -461,4 +461,3 @@ def clean_group(src, dst, cid, service, group):
 
     dst.store(grp_dn, grp_entry)
     print(f"update group: {grp_dn}")
-

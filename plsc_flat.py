@@ -134,7 +134,7 @@ def cleanup(src, dst):
             if dst_entry.get('uid', None):
                 src_uid = dst_entry['uid'][0]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(uid={src_uid})")
-                if len(src_dns)==0:
+                if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
