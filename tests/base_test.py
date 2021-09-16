@@ -26,7 +26,7 @@ class APIHandler:
         logger.debug("Initializng API HANDLER !")
 
     async def __call__(self, request):
-        method = getattr(self, f'do_{request.method}', None)
+        method = getattr(self, f'do_{request.method.lower()}', None)
         if method is None:
             raise web.HTTPNotImplemented()
 
