@@ -66,9 +66,8 @@ class SBS(object):
 
             return self.__get_json(r.text)
         else:
-            logging.error(f"API: {request} returns: {r.status_code}")
-
-        return None
+            #logging.error(f"API: {request} returns: {r.status_code}")
+            raise SBSException(f"API: {request} returns: {r.status_code}")
 
     def health(self):
         return self.api('health')
