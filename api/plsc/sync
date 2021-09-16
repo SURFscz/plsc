@@ -5,127 +5,982 @@
                 {
                     "collaboration_memberships": [
                         {
-                            "collaboration_id": 200,
-                            "id": 427,
-                            "role": "admin",
-                            "user_id": 621
+                            "collaboration_id": 316,
+                            "id": 457,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 669
                         },
                         {
-                            "collaboration_id": 200,
-                            "id": 428,
+                            "collaboration_id": 316,
+                            "id": 458,
+                            "role": "admin",
+                            "status": "expired",
+                            "user_id": 673
+                        },
+                        {
+                            "collaboration_id": 316,
+                            "id": 459,
                             "role": "member",
-                            "user_id": 620
+                            "status": "expired",
+                            "user_id": 679
+                        },
+                        {
+                            "collaboration_id": 316,
+                            "id": 460,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 677
+                        },
+                        {
+                            "collaboration_id": 316,
+                            "id": 469,
+                            "role": "admin",
+                            "status": "active",
+                            "user_id": 686
+                        },
+                        {
+                            "collaboration_id": 316,
+                            "id": 498,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 671
+                        },
+                        {
+                            "collaboration_id": 316,
+                            "id": 499,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 672
                         }
                     ],
-                    "global_urn": "testorg:testco",
+                    "description": "Artifical Intelligence computing for the Unincorporated Urban Community",
+                    "global_urn": "uuckfhfjhfdgjshf:ai_computingdkfs",
                     "groups": [
                         {
-                            "collaboration_id": 200,
+                            "collaboration_id": 316,
                             "collaboration_memberships": [
                                 {
-                                    "collaboration_membership_id": 427,
-                                    "group_id": 117,
-                                    "user_id": 621
+                                    "collaboration_membership_id": 459,
+                                    "group_id": 125,
+                                    "user_id": 679
                                 },
                                 {
-                                    "collaboration_membership_id": 428,
-                                    "group_id": 117,
-                                    "user_id": 620
+                                    "collaboration_membership_id": 457,
+                                    "group_id": 125,
+                                    "user_id": 669
                                 }
                             ],
-                            "description": "LOL",
-                            "global_urn": "testorg:testco:harry_is_great",
-                            "id": 117,
-                            "identifier": "2aefccfe-2733-40a7-ada8-9afe651b69bc",
-                            "name": "harry_is_great",
-                            "short_name": "harry_is_great"
+                            "description": "Artifical computing researchers",
+                            "global_urn": "uuckfhfjhfdgjshf:ai_computingdkfs:ai_res",
+                            "id": 125,
+                            "identifier": "a32e2ce9-c838-434b-b81a-2bc6e1629f53",
+                            "name": "AI researchers",
+                            "short_name": "ai_res"
                         },
                         {
-                            "collaboration_id": 200,
+                            "collaboration_id": 316,
+                            "collaboration_memberships": [
+                                {
+                                    "collaboration_membership_id": 457,
+                                    "group_id": 126,
+                                    "user_id": 669
+                                }
+                            ],
+                            "description": "Artifical computing developers",
+                            "global_urn": "uuckfhfjhfdgjshf:ai_computingdkfs:ai_dev",
+                            "id": 126,
+                            "identifier": "2f6816e6-4fb0-4c26-bc0f-b4f5ec1d6e77",
+                            "name": "AI developers",
+                            "short_name": "ai_dev"
+                        },
+                        {
+                            "collaboration_id": 316,
                             "collaboration_memberships": [],
-                            "description": "",
-                            "global_urn": "testorg:testco:test",
-                            "id": 118,
-                            "identifier": "86c6efb2-55d5-4144-97ab-b1da3bc875c1",
-                            "name": "test group",
-                            "short_name": "test"
+                            "description": "dfkjfvks fggbdfhb sdfgbdsfg idsf gsdiufg iusdfgidfgsudfg sdfg isdfg isdfg",
+                            "global_urn": "uuckfhfjhfdgjshf:ai_computingdkfs:ofdksjdfgnjkfgbs",
+                            "id": 128,
+                            "identifier": "ea93e0e6-262b-4a0c-86b0-da8eeeaf52c6",
+                            "name": "delme",
+                            "short_name": "ofdksjdfgnjkfgbs"
                         }
                     ],
-                    "id": 200,
-                    "identifier": "f6525b84-5098-4083-9b2f-1fdaa0444c68",
-                    "name": "TEST CO",
-                    "organisation_id": 100,
-                    "services": [],
-                    "short_name": "testco"
+                    "id": 316,
+                    "identifier": "ca12b67a-25c8-4d38-8286-c826554f4e0f",
+                    "name": "AI computing",
+                    "organisation_id": 106,
+                    "services": [
+                        260,
+                        265
+                    ],
+                    "short_name": "ai_computingdkfs",
+                    "status": "active"
+                },
+                {
+                    "collaboration_memberships": [
+                        {
+                            "collaboration_id": 318,
+                            "id": 461,
+                            "role": "admin",
+                            "status": "active",
+                            "user_id": 678
+                        },
+                        {
+                            "collaboration_id": 318,
+                            "id": 477,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 694
+                        },
+                        {
+                            "collaboration_id": 318,
+                            "id": 482,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 695
+                        },
+                        {
+                            "collaboration_id": 318,
+                            "id": 495,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 686
+                        }
+                    ],
+                    "description": "UUC Teachers",
+                    "global_urn": "uuckfhfjhfdgjshf:uuc_teachers_sho",
+                    "groups": [],
+                    "id": 318,
+                    "identifier": "06b66972-85f6-47d3-a6f0-9a6fabf4ead4",
+                    "name": "UUC Teachers",
+                    "organisation_id": 106,
+                    "services": [
+                        269
+                    ],
+                    "short_name": "uuc_teachers_sho",
+                    "status": "active"
                 }
             ],
-            "id": 100,
-            "identifier": "2631a1b5-aa91-4f12-aecb-707e5917cd79",
-            "name": "TEST ORG",
+            "id": 106,
+            "identifier": "70c03c6e-5fb3-45ef-8e71-f6c60e6ad231",
+            "name": "UUC",
             "organisation_memberships": [
                 {
-                    "organisation_id": 100,
+                    "organisation_id": 106,
+                    "role": "admin",
+                    "user_id": 669
+                },
+                {
+                    "organisation_id": 106,
+                    "role": "admin",
+                    "user_id": 671
+                },
+                {
+                    "organisation_id": 106,
                     "role": "manager",
-                    "user_id": 621
+                    "user_id": 675
+                },
+                {
+                    "organisation_id": 106,
+                    "role": "manager",
+                    "user_id": 685
+                }
+            ],
+            "schac_home_organisations": [
+                {
+                    "name": "rug.nl",
+                    "organisation_id": 106
+                }
+            ],
+            "services": [
+                264,
+                267
+            ],
+            "short_name": "uuckfhfjhfdgjshf"
+        },
+        {
+            "collaborations": [
+                {
+                    "collaboration_memberships": [
+                        {
+                            "collaboration_id": 317,
+                            "id": 462,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 674
+                        },
+                        {
+                            "collaboration_id": 317,
+                            "id": 463,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 672
+                        },
+                        {
+                            "collaboration_id": 317,
+                            "id": 464,
+                            "role": "member",
+                            "status": "expired",
+                            "user_id": 677
+                        },
+                        {
+                            "collaboration_id": 317,
+                            "id": 497,
+                            "role": "admin",
+                            "status": "active",
+                            "user_id": 686
+                        },
+                        {
+                            "collaboration_id": 317,
+                            "id": 501,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 695
+                        }
+                    ],
+                    "description": "University of Amsterdam Research - Urban Crowd Control",
+                    "global_urn": "uva:research",
+                    "groups": [
+                        {
+                            "collaboration_id": 317,
+                            "collaboration_memberships": [
+                                {
+                                    "collaboration_membership_id": 462,
+                                    "group_id": 127,
+                                    "user_id": 674
+                                },
+                                {
+                                    "collaboration_membership_id": 501,
+                                    "group_id": 127,
+                                    "user_id": 695
+                                }
+                            ],
+                            "description": "Science",
+                            "global_urn": "uva:research:science",
+                            "id": 127,
+                            "identifier": "61e0b8cd-bcd0-4254-8062-adecdd4a6865",
+                            "name": "Science",
+                            "short_name": "science"
+                        }
+                    ],
+                    "id": 317,
+                    "identifier": "2c8403c3-8432-421c-ac05-f97ab8f4a91a",
+                    "name": "UVA UCC research",
+                    "organisation_id": 107,
+                    "services": [
+                        263,
+                        264,
+                        266,
+                        269
+                    ],
+                    "short_name": "research",
+                    "status": "active"
+                },
+                {
+                    "collaboration_memberships": [
+                        {
+                            "collaboration_id": 319,
+                            "id": 476,
+                            "role": "admin",
+                            "status": "active",
+                            "user_id": 692
+                        },
+                        {
+                            "collaboration_id": 319,
+                            "id": 488,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 694
+                        },
+                        {
+                            "collaboration_id": 319,
+                            "id": 490,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 686
+                        },
+                        {
+                            "collaboration_id": 319,
+                            "id": 491,
+                            "role": "admin",
+                            "status": "active",
+                            "user_id": 688
+                        }
+                    ],
+                    "description": "UU",
+                    "global_urn": "uva:uu_short",
+                    "groups": [],
+                    "id": 319,
+                    "identifier": "46787b15-9ba6-4341-ab0b-da365fc488ee",
+                    "name": "UU",
+                    "organisation_id": 107,
+                    "services": [
+                        266
+                    ],
+                    "short_name": "uu_short",
+                    "status": "active"
+                },
+                {
+                    "collaboration_memberships": [],
+                    "description": "",
+                    "global_urn": "uva:qwer",
+                    "groups": [],
+                    "id": 324,
+                    "identifier": "ab04bd4f-3488-4bb8-ac60-a0f0c6d6ef67",
+                    "name": "werweqr",
+                    "organisation_id": 107,
+                    "services": [
+                        262,
+                        266
+                    ],
+                    "short_name": "qwer",
+                    "status": "active"
+                }
+            ],
+            "id": 107,
+            "identifier": "bcf28075-ff33-402c-a93a-bd4a874cfdf2",
+            "name": "Amsterdam UVA",
+            "organisation_memberships": [
+                {
+                    "organisation_id": 107,
+                    "role": "admin",
+                    "user_id": 679
+                },
+                {
+                    "organisation_id": 107,
+                    "role": "manager",
+                    "user_id": 685
+                }
+            ],
+            "schac_home_organisations": [
+                {
+                    "name": "example.org",
+                    "organisation_id": 107
+                }
+            ],
+            "services": [
+                261
+            ],
+            "short_name": "uva"
+        },
+        {
+            "collaborations": [],
+            "id": 108,
+            "identifier": "64bb5f90-9af9-4cac-8ec9-b47456e695a0",
+            "name": "test",
+            "organisation_memberships": [],
+            "schac_home_organisations": [
+                {
+                    "name": "TEST.TEST",
+                    "organisation_id": 108
+                }
+            ],
+            "services": [],
+            "short_name": "test"
+        },
+        {
+            "collaborations": [
+                {
+                    "collaboration_memberships": [
+                        {
+                            "collaboration_id": 323,
+                            "id": 492,
+                            "role": "admin",
+                            "status": "active",
+                            "user_id": 692
+                        },
+                        {
+                            "collaboration_id": 323,
+                            "id": 493,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 686
+                        },
+                        {
+                            "collaboration_id": 323,
+                            "id": 500,
+                            "role": "member",
+                            "status": "active",
+                            "user_id": 694
+                        }
+                    ],
+                    "description": "testco",
+                    "global_urn": "test_hk:testco",
+                    "groups": [
+                        {
+                            "collaboration_id": 323,
+                            "collaboration_memberships": [
+                                {
+                                    "collaboration_membership_id": 492,
+                                    "group_id": 130,
+                                    "user_id": 692
+                                }
+                            ],
+                            "description": "",
+                            "global_urn": "test_hk:testco:reviewers",
+                            "id": 130,
+                            "identifier": "2462f7d4-1bfa-425f-9542-26493a93bbc1",
+                            "name": "reviewers",
+                            "short_name": "reviewers"
+                        }
+                    ],
+                    "id": 323,
+                    "identifier": "1297be69-2757-4bf8-aa0f-a96dfbe7d96b",
+                    "name": "Test CO",
+                    "organisation_id": 109,
+                    "services": [
+                        264
+                    ],
+                    "short_name": "testco",
+                    "status": "active"
+                }
+            ],
+            "id": 109,
+            "identifier": "66eb2bd7-18a2-4d81-9f94-c7bcb1961560",
+            "name": "Test HK",
+            "organisation_memberships": [
+                {
+                    "organisation_id": 109,
+                    "role": "admin",
+                    "user_id": 690
+                },
+                {
+                    "organisation_id": 109,
+                    "role": "manager",
+                    "user_id": 691
                 }
             ],
             "schac_home_organisations": [],
-            "services": [
-                243
+            "services": [],
+            "short_name": "test_hk"
+        },
+        {
+            "collaborations": [],
+            "id": 110,
+            "identifier": "8b2f665d-c44b-4a01-89e8-d45b8206526a",
+            "name": "Test manager/admin",
+            "organisation_memberships": [
+                {
+                    "organisation_id": 110,
+                    "role": "manager",
+                    "user_id": 695
+                }
             ],
-            "short_name": "testorg"
+            "schac_home_organisations": [
+                {
+                    "name": "eduxample.com",
+                    "organisation_id": 110
+                }
+            ],
+            "services": [],
+            "short_name": "test_manager_inv"
+        },
+        {
+            "collaborations": [],
+            "id": 111,
+            "identifier": "14b990e8-9107-45ec-90f3-96cfdeded452",
+            "name": "bastest",
+            "organisation_memberships": [
+                {
+                    "organisation_id": 111,
+                    "role": "admin",
+                    "user_id": 687
+                },
+                {
+                    "organisation_id": 111,
+                    "role": "manager",
+                    "user_id": 695
+                }
+            ],
+            "schac_home_organisations": [
+                {
+                    "name": "foo.baz",
+                    "organisation_id": 111
+                }
+            ],
+            "services": [],
+            "short_name": "bastestookwat"
+        },
+        {
+            "collaborations": [],
+            "id": 112,
+            "identifier": "b27cf785-4113-49cb-bb6a-ede41a9b631d",
+            "name": "Langenaam universiteit",
+            "organisation_memberships": [],
+            "schac_home_organisations": [],
+            "services": [],
+            "short_name": "langenaamunivers"
         }
     ],
     "services": [
         {
-            "contact_email": "john.doe@example.com",
-            "entity_id": "testservice",
-            "id": 242,
-            "name": "TEST SERVICE"
+            "contact_email": "john@example.org",
+            "entity_id": "https://mail",
+            "id": 260,
+            "name": "Mail Services"
         },
         {
-            "contact_email": "john.doe@example.com",
-            "entity_id": "testservice2",
-            "id": 243,
-            "name": "TEST SERVICE 2"
+            "contact_email": "john@example.org",
+            "entity_id": "https://wireless",
+            "id": 261,
+            "name": "Wireless"
+        },
+        {
+            "contact_email": null,
+            "entity_id": "https://cloud",
+            "id": 262,
+            "name": "Cloudy"
+        },
+        {
+            "contact_email": "floris.fokkinga@surf.nl",
+            "entity_id": "https://storage",
+            "id": 263,
+            "name": "Storage"
+        },
+        {
+            "contact_email": "help@wiki.com",
+            "entity_id": "https://wiki",
+            "id": 264,
+            "name": "Wiki"
+        },
+        {
+            "contact_email": "help@network.com",
+            "entity_id": "https://network",
+            "id": 265,
+            "name": "Network Services"
+        },
+        {
+            "contact_email": "oharsta@zilverline.com",
+            "entity_id": "service_ssh_uva",
+            "id": 266,
+            "name": "SSH UvA"
+        },
+        {
+            "contact_email": null,
+            "entity_id": "uuc_scheduler_entity_id",
+            "id": 267,
+            "name": "uuc_scheduler_name"
+        },
+        {
+            "contact_email": "harry+service_admin@kodden.nl",
+            "entity_id": "test_ldap",
+            "id": 268,
+            "name": "TEST LDAP"
+        },
+        {
+            "contact_email": "bas@zoetekouw.net",
+            "entity_id": "https://sp01.devtest.eduteams.org/simplesaml/module.php/saml/sp/metadata.php/default-sp",
+            "id": 269,
+            "name": "EduTEAMS Test service"
         }
     ],
     "users": [
+        {
+            "eduperson_principal_name": null,
+            "email": "john@example.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 669,
+            "last_login_date": "2021-09-08 08:44:19",
+            "name": "John Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
+            ],
+            "uid": "urn:john",
+            "username": "john"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "mike@example.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 670,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "Mike Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:mike",
+            "username": "mike"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "mary@example.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 671,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "Mary Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:mary",
+            "username": "mdoe"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "peter@example.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 672,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "Peter Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:peter",
+            "username": "peter"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "oharsta@zilverline.com",
+            "family_name": null,
+            "given_name": null,
+            "id": 673,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "The Boss",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:admin",
+            "username": "admin"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "roger@example.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 674,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "Roger Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:roger",
+            "username": "roger"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "harry@example.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 675,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "Harry Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:harry",
+            "username": "harry"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "james@example.org",
+            "family_name": null,
+            "given_name": "James",
+            "id": 676,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "James Byrd",
+            "scoped_affiliation": null,
+            "ssh_keys": [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
+            ],
+            "uid": "urn:james",
+            "username": "james"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "sarah@uva.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 677,
+            "last_login_date": "2021-08-04 13:54:39",
+            "name": "Sarah Cross",
+            "scoped_affiliation": null,
+            "ssh_keys": [
+                "some-lame-key"
+            ],
+            "uid": "urn:sarah",
+            "username": "sarah"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "betty@uuc.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 678,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "betty",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:betty",
+            "username": "betty"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "jane@ucc.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 679,
+            "last_login_date": "2021-08-04 13:57:53",
+            "name": "Jane Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:jane",
+            "username": "jane"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "paul@ucc.org",
+            "family_name": null,
+            "given_name": null,
+            "id": 685,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "Paul Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "urn:paul",
+            "username": "paul"
+        },
         {
             "eduperson_principal_name": "j.doe@example.com",
             "email": "j.doe@example.com",
             "family_name": "Doe",
             "given_name": "John admin",
-            "id": 619,
+            "id": 686,
+            "last_login_date": "2021-09-09 09:02:53",
             "name": "John admin Doe",
             "scoped_affiliation": "affiliate@university-example.org",
-            "ssh_keys": [],
+            "ssh_keys": [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box\n",
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHZUeqXZ5KjIVuYTUEImoC/ze3Y05QWbZBxJFMuTvs+ oharsta@zilverline.com\n",
+                "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAiL0jjDdFqK/kYThqKt7THrjABTPWvXmB3URIpGKCP/jZlSuCUP3Oc+IxuFeXSIMvVIYeW2PZAjXQGTn60XzPHr+M0NoGcPAvzZf2u57aX3YKaL93cZSBHR97H+XhcYdrm7ATwfjMDgfgj7+VTvW4nI46Z+qjxmYifc8uVELolg1TDHWY789ggcdvy92oGjB0VUgMEywrOP+LS0DgG4dmkoUBWGP9dvYcPZDUF4q0XY9ZHhvyPWEZ3o2vETTrEJr9QHYwgjmFfJn2VFNnD/4qeDDHOmSlDgEOfQcZIm+XUOn9eVsv//dAPSY/yMJXf8d0ZSm+VS29QShMjA4R+7yh5WhsIhouBRno2PpEVVb37Xwe3V6U3o9UnQ3ADtL75DbrZ5beNWcmKzlJ7jVX5QzHSBAnePbBx/fyeP/f144xPtJWB3jW/kXjtPyWjpzGndaPQ0WgXkbf8fvIuB3NJTTcZ7PeIKnLaMIzT5XNCR+xobvdC8J9d6k84/q/laJKF3G8KbRGPNwnoVg1cwWFez+dzqo2ypcTtv/20yAmz86EvuohZoWrtoWvkZLCoyxdqO93ymEjgHAn2bsIWyOODtXovxAJqPgk3dxM1f9PAEQwc1bG+Z/Gc1Fd8DncgxyhKSQzLsfWroTnIn8wsnmhPJtaZWNuT5BJa8GhnzX09g6nhbk=\n"
+            ],
             "uid": "900613f87a9c8539b15729264ccc50af20c865ba@acc.sram.eduteams.org",
             "username": "jdoe"
+        },
+        {
+            "eduperson_principal_name": "bas@surfnet.nl",
+            "email": "bas.zoetekouw@surfnet.nl",
+            "family_name": "Zoetekouw",
+            "given_name": "Bas",
+            "id": 687,
+            "last_login_date": "2021-08-03 12:29:38",
+            "name": "Bas Zoetekouw",
+            "scoped_affiliation": "employee@surfnet.nl",
+            "ssh_keys": [
+                "ssh-rsa ikbengek hoi"
+            ],
+            "uid": "9bf251bf6cfa9eb8c75f15a90075fa7074eb3d48@acc.sram.eduteams.org",
+            "username": "bzoetekouw"
+        },
+        {
+            "eduperson_principal_name": "fokki001@surfnet.nl",
+            "email": "floris.fokkinga@surf.nl",
+            "family_name": "Fokkinga",
+            "given_name": "Floris",
+            "id": 688,
+            "last_login_date": "2021-08-03 08:36:58",
+            "name": "Floris Fokkinga",
+            "scoped_affiliation": null,
+            "ssh_keys": [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9JdyvibcEiDF6lzlxjJ2GBRvz0+EkLYXSdx6auYWlTpXTgACyD3QoNRtFoOUm5/APF6m4Rq+9CF/fuVczEVlTbPr2yiBxcihElBhBorD+SNAm9fjaVsTAjo8Q0iA43fTLZROCVDJHI06sGFrg4b2v3OTol8HHMMI1avQdp2OZFBYoNua9zpLYcIglOw50Z/3c7hXTkOVaPx9C5fWDI9tpzMXkzAX8pcEuwcJqjbF5ep9W9G586O/UkhhHP0a7le/XGZRA7hbSdLyCjpw+bg3gAJc7nI4G2PhedEMdgC4eJfzipD5K4klPB2aET6jtq7OpEZwGm12X5UIu0pCti4aQZKxyKo6IOqeZ95ygD5uT2gicfH3W778+K3uuaQaG/5V9VLr0Zn6uUAM5nN9isR8cw841QuPI+Zg5Z2JrO0NSmr2BkRo//DzQ5miHp6uKUOnQ3OItlSNhF5ZccxFQbPx/dVR0JuAGi2BRQp1OTUGMGWlAJXVThuyoWdo0q8JWock=\n",
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9JdyvibcEiDF6lzlxjJ2GBRvz0+EkLYXSdx6auYWlTpXTgACyD3QoNasfOUm5/APF6m4Rq+9CF/fuVczEVlTbPr2yiBxcihElBhBorD+SNAm9laskdjfsaldifjklsadf3fTLZROCVDJHI06sGFrg4b2v3OTol8HHMMI1avQdp2OZFBYoNua9zpLYcIglOw50Z/3c7hXTkOVaPx9C5fWDI9tpzMXkzAX8pcEuwcJqjbF5ep9W9G586O/UkhhHP0a7le/XGZRA7hbSdLyCjpw+bg3gAJc7nI4G2PhedEMdgC4eJfzipD5K4klPB2aET6jtq7OpEZwGm12X5UIu0pCti4aQZKxyKo6IOqeZ95ygD5uT2gicfH3W778+K3uuaQaG/5V9VLr0Zn6uUAM5nN9isR8cw841QuPI+Zg5Z2JrO0NSmr2BkRo//DzQ5miHp6uKUOnQ3OItlSNhF5ZccxFQbPx/dVR0JuAGi2BRQp1OTUGMGWlAJXVThuyoWdo0q8JWock=\n"
+            ],
+            "uid": "e84a37938bf633d1e08377ab36024398308a8e22@acc.sram.eduteams.org",
+            "username": "ffokkinga"
+        },
+        {
+            "eduperson_principal_name": "j.doe@example.com",
+            "email": "arnout.terpstra@surf.nl",
+            "family_name": "Doe",
+            "given_name": "John",
+            "id": 689,
+            "last_login_date": "2021-07-17 10:09:09",
+            "name": "John Doe",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "87d97331673b0b22686c4e229a510f67809bd6df@acc.sram.eduteams.org",
+            "username": "jdoe2"
         },
         {
             "eduperson_principal_name": "harry@surfnet.nl",
             "email": "harry.kodden@surf.nl",
             "family_name": "Kodden",
             "given_name": "Harry",
-            "id": 620,
+            "id": 690,
+            "last_login_date": "2021-09-08 07:54:56",
             "name": "Harry Kodden",
             "scoped_affiliation": "affiliate@surfnet.nl",
-            "ssh_keys": ["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfCxx8zNkFdGldM1+czM7JDO7VYOi74i+duO/IL2B+CSxdeFPHfTfUB3OGJyXKEdJ9wMiDKjybvQLqEFo1uqK404vfTGG7nrtUltMFwpAEpMy9JXLIH0FuDWH9aIzXXoATd2C8VzanDEMuvi/f3nFjszCegtsae0YmogUIlgyvhJ78LzGz/p9eC1yaxHCjE3Q56MlqEIMPaTBUgJGzv+ZnhqUU0e+jZ1YHFdZVUaX4AEl2QHVTetixrTw9nkEjcS55rZ88qwNiQn8eqIyx1wcqaUzxNWsLc7NXFrUpUe1uEh0iWD2gysYZ9ZfVSlnIUoXcDLqPBZLhcIpOL0QxqtYJ harryk@M0417005\n"],
+            "ssh_keys": [],
             "uid": "72e8fabfeca6a933d2eb97dc96053f10dc49fd8d@acc.sram.eduteams.org",
             "username": "hkodden"
         },
         {
-            "eduperson_principal_name": "3c7796d5-143d-4f6a-8534-7fcdc635ed5a@eduid.nl",
-            "email": "harry+335@kodden.nl",
+            "eduperson_principal_name": "db694505-68fe-4123-80d0-c948a27907e6@eduid.nl",
+            "email": "harry+333@kodden.nl",
             "family_name": "Kodden",
             "given_name": "Harry",
-            "id": 621,
+            "id": 691,
+            "last_login_date": "2021-08-10 07:48:12",
             "name": "Harry Kodden",
             "scoped_affiliation": null,
             "ssh_keys": [],
-            "uid": "6ea1b5d3e95069bc08f2ba436498c60d469852d5@acc.sram.eduteams.org",
+            "uid": "fd7cf60ffdc2123fe66a534bdc91efc9b521327b@acc.sram.eduteams.org",
             "username": "hkodden2"
+        },
+        {
+            "eduperson_principal_name": "9067be0e-cba2-4389-b6a0-79f479f599f5@eduid.nl",
+            "email": "harry+co_admin@kodden.nl",
+            "family_name": "Kodden",
+            "given_name": "Harry",
+            "id": 692,
+            "last_login_date": "2021-08-09 08:28:37",
+            "name": "Harry Kodden",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "be617411d78b1e2d959826cfef0a4e41242bba28@acc.sram.eduteams.org",
+            "username": "hkodden3"
+        },
+        {
+            "eduperson_principal_name": "4dba9507-5fca-4106-96ef-9a505d75a5db@eduid.nl",
+            "email": "harry+co_member@kodden.nl",
+            "family_name": "Kodden",
+            "given_name": "Harry",
+            "id": 693,
+            "last_login_date": "2021-08-10 10:27:23",
+            "name": "Harry Kodden",
+            "scoped_affiliation": null,
+            "ssh_keys": [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfCxx8zNkFdGldM1+czM7JDO7VYOi74i+duO/IL2B+CSxdeFPHfTfUB3OGJyXKEdJ9wMiDKjybvQLqEFo1uqK404vfTGG7nrtUltMFwpAEpMy9JXLIH0FuDWH9aIzXXoATd2C8VzanDEMuvi/f3nFjszCegtsae0YmogUIlgyvhJ78LzGz/p9eC1yaxHCjE3Q56MlqEIMPaTBUgJGzv+ZnhqUU0e+jZ1YHFdZVUaX4AEl2QHVTetixrTw9nkEjcS55rZ88qwNiQn8eqIyx1wcqaUzxNWsLc7NXFrUpUe1uEh0iWD2gysYZ9ZfVSlnIUoXcDLqPBZLhcIpOL0QxqtYJ harryk@M0417005"
+            ],
+            "uid": "22979781dc5f759e0ffae7ebd583ec2c9889acb5@acc.sram.eduteams.org",
+            "username": "hkodden4"
+        },
+        {
+            "eduperson_principal_name": "b28b9146-3286-4f7e-b358-278a9e1222c3@eduid.nl",
+            "email": "1@florisfokkinga.nl",
+            "family_name": "Fokkinga",
+            "given_name": "Floris",
+            "id": 694,
+            "last_login_date": "2021-08-26 11:36:29",
+            "name": "Floris Fokkinga",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "49f64caa5e815ed1c9ece27a024e85e129f7644d@acc.sram.eduteams.org",
+            "username": "ffokkinga2"
+        },
+        {
+            "eduperson_principal_name": "a3788af4-491b-4a3c-9567-5131e70a2498@eduid.nl",
+            "email": "bas@zoetekouw.net",
+            "family_name": "Zoetekouw",
+            "given_name": "Bas",
+            "id": 695,
+            "last_login_date": "2021-09-08 08:39:35",
+            "name": "Bas Zoetekouw",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "47c0c59a7b098d55bea53555080ff88d9bcba524@acc.sram.eduteams.org",
+            "username": "bzoetekouw2"
+        },
+        {
+            "eduperson_principal_name": "arnout@surfnet.nl",
+            "email": "arnout.terpstra@surfnet.nl",
+            "family_name": "Terpstra",
+            "given_name": "Arnout",
+            "id": 697,
+            "last_login_date": "2021-08-31 07:37:47",
+            "name": "Arnout Terpstra",
+            "scoped_affiliation": "employee@surfnet.nl",
+            "ssh_keys": [],
+            "uid": "5f8405e4bb0ae0814dbdd25539e42ea58d18f58d@acc.sram.eduteams.org",
+            "username": "aterpstra"
+        },
+        {
+            "eduperson_principal_name": "f059c3ec-1a60-4832-b7b3-696de18e329b@eduid.nl",
+            "email": "bas+sramtest1@zoetekouw.net",
+            "family_name": "De Eerste Tester",
+            "given_name": "Bas",
+            "id": 698,
+            "last_login_date": "None",
+            "name": "Bas De Eerste Tester",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "2d98c7ffdf9230f4d6b5678df165a0d9ae9bc01f@acc.sram.eduteams.org",
+            "username": "bdeeerstet"
+        },
+        {
+            "eduperson_principal_name": "arnout.terpstra_surf.nl@test-idp.lab.surf.nl",
+            "email": "arnout.terpstra@surf.nl",
+            "family_name": "Terpstra",
+            "given_name": "Arnout",
+            "id": 699,
+            "last_login_date": "2021-08-17 09:45:22",
+            "name": "Arnout Terpstra",
+            "scoped_affiliation": "member@test-idp.lab.surf.nl",
+            "ssh_keys": [],
+            "uid": "35cc9bf442b1e7b334e6c2c803ce204d91f7ac2e@acc.sram.eduteams.org",
+            "username": "aterpstra2"
+        },
+        {
+            "eduperson_principal_name": "2579fb0a-21d6-4fdd-ad70-55107d4420d1@eduid.nl",
+            "email": "3@florisfokkinga.nl",
+            "family_name": "Fokkinga",
+            "given_name": "3",
+            "id": 700,
+            "last_login_date": "2021-08-16 12:57:49",
+            "name": "3 Fokkinga",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "79da55aeba99853d476f48bab44794c4b84165fe@acc.sram.eduteams.org",
+            "username": "fokkinga"
+        },
+        {
+            "eduperson_principal_name": "e3580817-f1b2-4337-8f8b-e889205f7adb@eduid.nl",
+            "email": "2@florisfokkinga.nl",
+            "family_name": "Fokkinga",
+            "given_name": "Floris",
+            "id": 701,
+            "last_login_date": "None",
+            "name": "Floris Fokkinga",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "59fe169307af3ebb6e99f3d1d07221e8c0175ca5@acc.sram.eduteams.org",
+            "username": "ffokkinga4"
+        },
+        {
+            "eduperson_principal_name": "9ad39747-053e-494b-b2f0-42e0b8d55603@eduid.nl",
+            "email": "4@florisfokkinga.nl",
+            "family_name": "Fokkinga",
+            "given_name": "4",
+            "id": 702,
+            "last_login_date": "2021-08-24 09:55:52",
+            "name": "4 Fokkinga",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "37d8f08cd4b53a57f7c7d44a408250ab8cf7e796@acc.sram.eduteams.org",
+            "username": "fokkinga2"
+        },
+        {
+            "eduperson_principal_name": "oharsta+test+sbs@zilverline.com",
+            "email": "oharsta+test+sbs@zilverline.com",
+            "family_name": "Johny",
+            "given_name": "Johny",
+            "id": 703,
+            "last_login_date": "None",
+            "name": "Johny Johny",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "7c0862adfa1f435c817e4f2e736f2995c8268ef9@acc.sram.eduteams.org",
+            "username": "jjohny"
+        },
+        {
+            "eduperson_principal_name": null,
+            "email": "edwin.van.de.bospoort@gmail.com",
+            "family_name": "BospoortTestert",
+            "given_name": "Edwin",
+            "id": 704,
+            "last_login_date": "2021-09-01 12:33:57",
+            "name": "Edwin BospoortTestert",
+            "scoped_affiliation": null,
+            "ssh_keys": [],
+            "uid": "907595f1f4769850ef3147526f55e2faa072fb60@acc.sram.eduteams.org",
+            "username": "ebospoortt"
         }
     ]
 }

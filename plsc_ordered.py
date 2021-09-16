@@ -57,6 +57,8 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
         record['sshPublicKey'] = [sbs_user.get('ssh_key')] if 'ssh_key' in sbs_user else sbs_user.get('ssh_keys')
         record['objectClass'].append('ldapPublicKey')
 
+    record['voPersonStatus'] = [ sbs_user.get('status', 'undefined') ]
+
     # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
     for key, val in record.items():
         record[key] = list(filter(None, record[key]))
