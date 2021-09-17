@@ -156,7 +156,11 @@ class SBS(object):
                     c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
 
                 for m in c.get('collaboration_memberships', []):
-                    m['user'] = {**users[m['user_id']], **{'status': m['status']}}
+                    status = c.get('status', 'active')
+                    if status == 'active':
+                        status = m['status']
+
+                    m['user'] = {**users[m['user_id']], **{'status': status}}
 
                 for g in c.get('groups', []):
                     for m in g.get('collaboration_memberships', []):
