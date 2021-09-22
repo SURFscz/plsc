@@ -5,7 +5,7 @@ import getopt
 import csv
 import yaml
 import argparse
-from typing import List, Dict
+from typing import List, Dict, Set
 from datetime import datetime
 from sbs import SBS
 from pprint import pprint
@@ -14,10 +14,11 @@ from pprint import pprint
 contacts_type = List[Dict[str, str]]
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='List contacts from SBS.')
     parser.add_argument('--sbs', type=str, required=True,
                         help='config file containing SBS endpoints and credentials')
+
     org_group = parser.add_mutually_exclusive_group()
     org_group.add_argument('--org', default=True, action='store_true', help='Fetch org admins/managers (default: true)')
     org_group.add_argument('--no-org', dest='org', action='store_false', help=argparse.SUPPRESS)
@@ -27,6 +28,9 @@ def parse_args():
     srvc_group = parser.add_mutually_exclusive_group()
     srvc_group.add_argument('--service', default=True, action='store_true', help='Fetch service contacts (default)')
     srvc_group.add_argument('--no-service', dest='service', action='store_false', help=argparse.SUPPRESS)
+
+    parser.add_argument('--output', choices=["csv","email_list"], default="csv",
+                        help="Type of output to produce (default: csv)")
 
     args = parser.parse_args()
     return args
@@ -90,18 +94,26 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
     return contacts
 
 
-def main() -> None:
-    args = parse_args()
-    pprint(args)
-
-    sbs = open_sbs(args.sbs)
-    contacts = fetch_contacts(sbs, org=args.org, co=args.co, service=args.service)
-
+def write_csv(contacts: contacts_type) -> None:
     w = csv.writer(sys.stdout, dialect="excel")
     w.writerow(["SRAM prod contacts generated " + datetime.now().isoformat()])
     columns = ("type", "id", "name", "role", "mail")
     w.writerow(columns)
     w.writerows([[c[key] for key in columns] for c in contacts])
+
+
+def main() -> None:
+    args = parse_args()
+
+    sbs = open_sbs(args.sbs)
+    contacts = fetch_contacts(sbs, org=args.org, co=args.co, service=args.service)
+
+    if args.output == 'csv':
+        write_csv(contacts)
+    elif args.output == 'email_list':
+        # uniquify list of emails
+        emails: Set[str] = set(c['mail'].lower() for c in contacts if c['mail'])
+        print(*sorted(emails), sep="\n")
 
 
 if __name__ == "__main__":
