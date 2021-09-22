@@ -4,16 +4,32 @@ import sys
 import getopt
 import csv
 import yaml
+import argparse
 from typing import List, Dict
 from datetime import datetime
 from sbs import SBS
-
-
-if len(sys.argv) < 2:
-    sys.exit(sys.argv[0] + "  <conf.yml>")
+from pprint import pprint
 
 
 contacts_type = List[Dict[str, str]]
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='List contacts from SBS.')
+    parser.add_argument('--sbs', type=str, required=True,
+                        help='config file containing SBS endpoints and credentials')
+    org_group = parser.add_mutually_exclusive_group()
+    org_group.add_argument('--org', default=True, action='store_true', help='Fetch org admins/managers (default: true)')
+    org_group.add_argument('--no-org', dest='org', action='store_false', help=argparse.SUPPRESS)
+    co_group = parser.add_mutually_exclusive_group()
+    co_group.add_argument('--co', default=False, action='store_true', help='Fetch co admins (default: false)')
+    co_group.add_argument('--no-co', dest='co', action='store_false', help=argparse.SUPPRESS)
+    srvc_group = parser.add_mutually_exclusive_group()
+    srvc_group.add_argument('--service', default=True, action='store_true', help='Fetch service contacts (default)')
+    srvc_group.add_argument('--no-service', dest='service', action='store_false', help=argparse.SUPPRESS)
+
+    args = parser.parse_args()
+    return args
 
 
 def open_sbs(plsc_config_file: str) -> SBS:
@@ -75,8 +91,11 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
 
 
 def main() -> None:
-    sbs = open_sbs(sys.argv[1])
-    contacts = fetch_contacts(sbs)
+    args = parse_args()
+    pprint(args)
+
+    sbs = open_sbs(args.sbs)
+    contacts = fetch_contacts(sbs, org=args.org, co=args.co, service=args.service)
 
     w = csv.writer(sys.stdout, dialect="excel")
     w.writerow(["SRAM prod contacts generated " + datetime.now().isoformat()])
