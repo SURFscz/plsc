@@ -1,15 +1,9 @@
+-r requirements-minimal.txt
 paho-mqtt
-urllib3
-setuptools
 pyasn1
 pyasn1-modules
 python-ldap
-PyYAML
-future-fstrings
-ipdb
-requests
 pytest
 pytest-dotenv
 json-server.py
-passlib
 aiohttp
