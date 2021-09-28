@@ -32,7 +32,7 @@ class TestAll(BaseTest):
             self.assertTrue(r)
             return r
 
-        def check_people(rdn, people):
+        def check_people(rdn, people, context_checks):
             """ Check that people object exists and that users exists
             """
             check_object(rdn)
@@ -47,6 +47,10 @@ class TestAll(BaseTest):
                 if u['user'].get('ssh_keys', None):
                     assert('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
                     assert('sshPublicKey' in user_object[list(user_object)[0]].keys())
+
+                # Here a sequence of function can be initiated to verify this person in a particular context
+                for f in context_checks:
+                    f(u)
 
         def check_group(rdn, group, members):
             """ Check that group object exists and members are defined
@@ -69,12 +73,12 @@ class TestAll(BaseTest):
 
                 assert(sorted(found_members) == sorted(required_members))
 
-        def check_ldap(rdn, people, groups, group_name_function):
+        def check_ldap(rdn, people, groups, group_name_function, context_checks=[]):
             """ check for ordered object entry and check both people and object subtrees
             """
             check_object(rdn)
 
-            check_people(f"ou=people,{rdn}", people)
+            check_people(f"ou=people,{rdn}", people, context_checks)
             check_group(f"ou=groups,{rdn}", group_name_function("@all"), people)
 
             for g in groups:
@@ -85,6 +89,13 @@ class TestAll(BaseTest):
 
             detail = self.src.collaboration(c['id'])
             for s in detail['services']:
+
+                def check_ordered_person_expiry(person):
+                    # When CO is expired, the person in de Ordered Subtree should mut be expired as well
+                    if detail['status'] == 'expired':
+                        logger.debug(f"Checking expiry status of {person['user']['username']}")
+                        assert([person['status'], 'expired'])
+
                 org_sname = c['organisation']['short_name']
 
                 def group_name_ordered(g):
@@ -99,7 +110,8 @@ class TestAll(BaseTest):
                     f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
                     detail['collaboration_memberships'],
                     detail['groups'],
-                    group_name_ordered
+                    group_name_ordered,
+                    context_checks=[check_ordered_person_expiry]
                 )
 
                 check_ldap(
