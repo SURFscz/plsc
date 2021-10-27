@@ -153,14 +153,18 @@ def cleanup(src, dst):
                 # Verify that referenced CO is still operational CO in Ordered structure
                 # If not, remove this object.
                 logging.debug(f"CHECKING CO : {org}.{co}...")
-                src_dns = src.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={org}.{co}))")
+                src_dns = src.rfind(
+                    f"dc=ordered,dc={service}",
+                    f"(&(objectClass=organization)(o={org}.{co}))")
                 if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
                 else:
                     # Verify that group still valid group within referenced CO...
-                    src_dns = src.rfind(f"o={org}.{co},dc=ordered,dc={service}", f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
+                    src_dns = src.rfind(
+                        f"o={org}.{co},dc=ordered,dc={service}",
+                        f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
                     #if len(src_dns):
                     #    for src_dn, src_entry in src_dns.items():
                     #        pass

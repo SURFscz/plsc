@@ -342,8 +342,10 @@ def cleanup(dst):
             dst.rdelete(service_dn)
             continue
 
-        organizations = dst.rfind(f"dc=ordered,dc={service}",
-                                  '(&(objectClass=organization)(objectClass=extensibleObject))')
+        organizations = dst.rfind(
+            f"dc=ordered,dc={service}",
+            '(&(objectClass=organization)(objectClass=extensibleObject))')
+            
         for o_dn, o_entry in organizations.items():
             if o_entry.get('o'):
                 o_rdns = util.dn2rdns(o_dn)
@@ -357,7 +359,9 @@ def cleanup(dst):
 
                     logging.debug("  - People")
                     src_members = vc.get(dc, {}).get(co, {}).get('members', [])
-                    dst_dns = dst.rfind("ou=people,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
+                    dst_dns = dst.rfind(
+                        "ou=people,o={},dc=ordered,dc={}".format(co, service), 
+                        '(objectClass=person)')
                     for dst_dn, dst_entry in dst_dns.items():
                         logging.debug("    - dstdn: {}".format(dst_dn))
                         if dst_entry.get('eduPersonUniqueId', None):
