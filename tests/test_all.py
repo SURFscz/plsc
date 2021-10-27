@@ -25,7 +25,7 @@ class TestAll(BaseTest):
                 assert(len(r) == expected_count)
 
             if not r:
-                logger.info("No results for: {}".format(rdn))
+                logger.error("No results for: {}".format(rdn))
 
             logger.debug("Result: {}".format(r))
 
@@ -85,7 +85,7 @@ class TestAll(BaseTest):
                 check_group(f"ou=groups,{rdn}", group_name_function(g['short_name']), g['collaboration_memberships'])
 
         for c in self.src.collaborations():
-            logger.info(f"* Checking collanboration: {c['name']}")
+            logger.info(f"* Checking collaboration: {c['name']}")
 
             detail = self.src.collaboration(c['id'])
             for s in detail['services']:
