@@ -143,7 +143,7 @@ def create(src, dst):
                 'o': [co_identifier],
                 #'uniqueIdentifier': [co_id],
                 'uniqueIdentifier': [co['identifier']],
-                #'labeledURI': [co_identifier]
+                'labeledURI': [co['logo']]
             }
             if co.get('description'):
                 co_entry['description'] = [co.get('description')]
