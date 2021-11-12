@@ -171,6 +171,8 @@ class SBS(object):
                 for s in (o.get('services', []) + c.get('services', [])):
                     result.setdefault(services[s]['entity_id'], {})[c['id']] = c
 
+                c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['id'])
+
         return result
 
     @staticmethod
