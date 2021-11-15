@@ -342,10 +342,8 @@ def cleanup(dst):
             dst.rdelete(service_dn)
             continue
 
-        organizations = dst.rfind(
-            f"dc=ordered,dc={service}",
-            '(&(objectClass=organization)(objectClass=extensibleObject))')
-
+        organizations = dst.rfind(f"dc=ordered,dc={service}",
+                                  '(&(objectClass=organization)(objectClass=extensibleObject))')
         for o_dn, o_entry in organizations.items():
             if o_entry.get('o'):
                 o_rdns = util.dn2rdns(o_dn)
@@ -354,63 +352,62 @@ def cleanup(dst):
 
                 logging.debug(f"  - CO: {co}")
                 logging.debug(f"    - dstdn: {o_dn}")
-
-                if vc[service].get(co):
-
-                    logging.debug("  - People")
-                    src_members = vc.get(dc, {}).get(co, {}).get('members', [])
-                    dst_dns = dst.rfind(
-                        "ou=people,o={},dc=ordered,dc={}".format(co, service),
-                        '(objectClass=person)')
-                    for dst_dn, dst_entry in dst_dns.items():
-                        logging.debug("    - dstdn: {}".format(dst_dn))
-                        if dst_entry.get('eduPersonUniqueId', None):
-                            dst_uid = dst_entry['eduPersonUniqueId'][0]
-                            if dst_uid not in src_members:
-                                logging.debug("      dst_uid not found in src_members, deleting {}".format(dst_dn))
-                                dst.delete(dst_dn)
-                            else:
-                                # verify that rdn uid is indeed (stil) valid registered user, if not delete entry
-                                if dst_dn not in registered_users:
-                                    dst.delete(dst_dn)
-
-                    logging.debug("  - Groups")
-                    dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service),
-                                        '(objectClass=groupOfMembers)')
-                    for dst_dn, dst_entry in dst_dns.items():
-                        grp_name = dst_entry['cn'][0]
-                        #grp_urn = dst_entry['labeledURI'][0]
-                        logging.debug("    - dstdn: {}".format(dst_dn))
-                        # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
-                        src_id = dst_entry.get('uniqueIdentifier')
-                        if src_id is None:
-                            logging.debug("        sbs identifier not found, deleting {}".format(dst_dn))
-                            dst.delete(dst_dn)
-                        else:
-                            new_entry = copy.deepcopy(dst_entry)
-                            src_id = src_id[0]
-                            dst_members = new_entry.get('member', [])
-                            #src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(int(src_id), [])
-                            src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(src_id, [])
-                            removed = False  # TODO: rename this to is_modified
-                            # ipdb.set_trace()
-                            for dst_member in dst_members:
-                                dst_rdn = util.dn2rdns(dst_member)["uid"][0]
-                                #dst_rdn = util.dn2rdns(dst_member)['cn'][0]
-                                logging.debug("      - dst_member: {}".format(dst_rdn))
-                                if dst_member not in src_members:
-                                    logging.debug("        dst_member not found, deleting {}".format(dst_rdn))
-                                    dst_members.remove(dst_member)
-                                    removed = True
-                            if removed:
-                                dst.modify(dst_dn, dst_entry, new_entry)
-                            if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
-                                logging.debug(f"        {grp_name} not found, deleting {dst_dn}")
-                                dst.delete(dst_dn)
-
-                else:
+                if vc[service].get(co) is None:
                     logging.debug(f"   - {co} not found in our services, deleting")
                     dst.rdelete(o_dn)
+                    continue
+
+                logging.debug("  - People")
+                src_members = vc.get(dc, {}).get(co, {}).get('members', [])
+                dst_dns = dst.rfind("ou=people,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
+                for dst_dn, dst_entry in dst_dns.items():
+                    logging.debug("    - dstdn: {}".format(dst_dn))
+                    if dst_entry.get('eduPersonUniqueId', None):
+                        dst_uid = dst_entry['eduPersonUniqueId'][0]
+                        if dst_uid not in src_members:
+                            logging.debug("      dst_uid not found in src_members, deleting {}".format(dst_dn))
+                            dst.delete(dst_dn)
+                        else:
+                            # verify that rdn uid is indeed (stil) valid registered user, if not delete entry
+                            if dst_dn not in registered_users:
+                                dst.delete(dst_dn)
+
+                logging.debug("  - Groups")
+                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service),
+                                    '(objectClass=groupOfMembers)')
+                for dst_dn, dst_entry in dst_dns.items():
+                    grp_name = dst_entry['cn'][0]
+                    if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
+                        logging.debug(f"        {grp_name} not found, deleting {dst_dn}")
+                        dst.delete(dst_dn)
+                        continue
+                    
+                    #grp_urn = dst_entry['labeledURI'][0]
+                    logging.debug("    - dstdn: {}".format(dst_dn))
+                    # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
+                    src_id = dst_entry.get('uniqueIdentifier')
+                    if src_id is None:
+                        logging.debug("        sbs identifier not found, deleting {}".format(dst_dn))
+                        dst.delete(dst_dn)
+                    else:
+                        new_entry = copy.deepcopy(dst_entry)
+                        src_id = src_id[0]
+                        dst_members = new_entry.get('member', [])
+                        #src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(int(src_id), [])
+                        src_members = vc.get(dc, {}).get(co, {}).get('roles', {}).get(src_id, [])
+                        removed = False  # TODO: rename this to is_modified
+                        # ipdb.set_trace()
+                        for dst_member in dst_members:
+                            dst_rdn = util.dn2rdns(dst_member)["uid"][0]
+                            #dst_rdn = util.dn2rdns(dst_member)['cn'][0]
+                            logging.debug("      - dst_member: {}".format(dst_rdn))
+                            if dst_member not in src_members:
+                                logging.debug("        dst_member not found, deleting {}".format(dst_rdn))
+                                dst_members.remove(dst_member)
+                                removed = True
+                        if removed:
+                            dst.modify(dst_dn, dst_entry, new_entry)
+
 
 
 if __name__ == "__main__":
