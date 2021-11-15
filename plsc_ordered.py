@@ -381,7 +381,7 @@ def cleanup(dst):
                         logging.debug(f"        {grp_name} not found, deleting {dst_dn}")
                         dst.delete(dst_dn)
                         continue
-                    
+    
                     #grp_urn = dst_entry['labeledURI'][0]
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
@@ -407,7 +407,6 @@ def cleanup(dst):
                                 removed = True
                         if removed:
                             dst.modify(dst_dn, dst_entry, new_entry)
-
 
 
 if __name__ == "__main__":
