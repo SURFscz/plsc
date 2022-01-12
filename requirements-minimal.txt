@@ -1,6 +1,5 @@
 setuptools
 urllib3
 PyYAML
-future-fstrings
 requests
 passlib
