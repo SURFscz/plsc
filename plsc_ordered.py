@@ -141,10 +141,15 @@ def create(src, dst):
             co_entry = {
                 'objectClass': ['top', 'organization', 'extensibleObject'],
                 'o': [co_identifier],
-                #'uniqueIdentifier': [co_id],
-                'uniqueIdentifier': [co['identifier']],
-                #'labeledURI': [co_identifier]
+                'uniqueIdentifier': [co['identifier']]
             }
+
+            # Add labeledURI attribute...
+            for labeledURI in ['sbs_url', 'logo']:
+                if labeledURI in co and co[labeledURI]:
+                    co_entry.setdefault('labeledURI', []).append(
+                        co[labeledURI].strip().replace(' ', '%20'))
+
             if co.get('description'):
                 co_entry['description'] = [co.get('description')]
             if co.get('name'):
