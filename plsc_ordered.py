@@ -340,6 +340,7 @@ def cleanup(dst):
             logging.debug(f"- {service} not found in our services, deleting")
             # service_dn = f"dc={service},{dst.basedn}"
             dst.rdelete(service_dn)
+            continue
 
         organizations = dst.rfind(f"dc=ordered,dc={service}",
                                   '(&(objectClass=organization)(objectClass=extensibleObject))')
@@ -348,6 +349,13 @@ def cleanup(dst):
                 o_rdns = util.dn2rdns(o_dn)
                 co = o_rdns['o'][0]
                 dc = o_rdns['dc'][1]
+
+                logging.debug(f"  - CO: {co}")
+                logging.debug(f"    - dstdn: {o_dn}")
+                if vc[service].get(co) is None:
+                    logging.debug(f"   - {co} not found in our services, deleting")
+                    dst.rdelete(o_dn)
+                    continue
 
                 logging.debug("  - People")
                 src_members = vc.get(dc, {}).get(co, {}).get('members', [])
@@ -369,6 +377,11 @@ def cleanup(dst):
                                     '(objectClass=groupOfMembers)')
                 for dst_dn, dst_entry in dst_dns.items():
                     grp_name = dst_entry['cn'][0]
+                    if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
+                        logging.debug(f"        {grp_name} not found, deleting {dst_dn}")
+                        dst.delete(dst_dn)
+                        continue
+
                     #grp_urn = dst_entry['labeledURI'][0]
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
@@ -394,15 +407,6 @@ def cleanup(dst):
                                 removed = True
                         if removed:
                             dst.modify(dst_dn, dst_entry, new_entry)
-                        if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
-                            logging.debug(f"        {grp_name} not found, deleting {dst_dn}")
-                            dst.delete(dst_dn)
-
-                logging.debug("  - CO")
-                logging.debug(f"    - dstdn: {o_dn}")
-                if vc[service].get(co) is None:
-                    logging.debug(f"   - {co} not found in our services, deleting")
-                    dst.rdelete(o_dn)
 
 
 if __name__ == "__main__":
