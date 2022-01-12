@@ -45,7 +45,7 @@ jobs:
 
       - name: Check syntax
         run: |
-          flake8 --max-line-length=120 --ignore=E265 .
+          flake8 .
 
       - name: ldap - Initialization...
         run: |

@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
 import sys
-import getopt
 import csv
 import yaml
 import argparse
 from typing import List, Dict, Set
 from datetime import datetime
 from sbs import SBS
-from pprint import pprint
 
 
 contacts_type = List[Dict[str, str]]
@@ -29,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     srvc_group.add_argument('--service', default=True, action='store_true', help='Fetch service contacts (default)')
     srvc_group.add_argument('--no-service', dest='service', action='store_false', help=argparse.SUPPRESS)
 
-    parser.add_argument('--output', choices=["csv","email_list"], default="csv",
+    parser.add_argument('--output', choices=["csv", "email_list"], default="csv",
                         help="Type of output to produce (default: csv)")
 
     args = parser.parse_args()
