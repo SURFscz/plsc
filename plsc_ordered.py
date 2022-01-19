@@ -242,6 +242,11 @@ def create(src, dst):
                 # record user as CO member
                 vc[service][co_identifier]['members'].append(src_uid)
 
+                # Pivotal #180730988
+                if dst_entry['voPersonStatus'][0] == 'expired':
+                    logging.debug(f"User {dst_rdn} is not participating in any group because of expiration !")
+                    continue # Do not register this user as member of any group.
+
                 # handle groups
                 logging.debug("    - Groups")
                 for group in src_detail['groups']:
@@ -308,6 +313,12 @@ def create(src, dst):
                     src_user = src_detail['user']
                     src_uid = util.uid(src_user)
                     dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
+
+                    # Pivotal #180730988
+                    if dst_entry['voPersonStatus'][0] == 'expired':
+                        logging.debug(f"User {dst_rdn} is not participating @ALL group because of expiration !")
+                        continue # Do not register this user as member of any group.
+
                     dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
                     members.append(dst_dn)
                     vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)

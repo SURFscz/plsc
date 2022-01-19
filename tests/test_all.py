@@ -58,18 +58,26 @@ class TestAll(BaseTest):
 
             check_object(rdn)
 
-            for m in members:
-                logger.debug(f"Need member: {m['user']['username']}")
+            group_object = check_object(f"cn={group},{rdn}")
 
-            if len(members) > 0:
-                group_object = check_object(f"cn={group},{rdn}")
+            # Now we check that de LDAP group actually contains the 'active' members.
+            # 'expired' members are excluded since they should not
+            # appear in any group. (According to pivotal: #180730988)
+
+            active_members = []
+            for m in members:
+                logger.debug(f"member: {m['user']['username']}, status: {m['status']}")
+                if m['status'] == 'active':
+                    active_members.append(m)
+
+            if len(active_members) > 0:
                 member_element = group_object[list(group_object)[0]]['member']
 
                 for m in member_element:
                     logger.debug(f"Found member: {m}")
 
                 found_members = [m.split(',')[0].split('=')[1] for m in member_element]
-                required_members = [m['user']['username'] for m in members]
+                required_members = [m['user']['username'] for m in active_members]
 
                 assert(sorted(found_members) == sorted(required_members))
 
