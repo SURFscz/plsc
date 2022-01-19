@@ -245,7 +245,7 @@ def create(src, dst):
                 # Pivotal #180730988
                 if dst_entry['voPersonStatus'][0] == 'expired':
                     logging.debug(f"User {dst_rdn} is not participating in any group because of expiration !")
-                    continue # Do not register this user as member of any group.
+                    continue
 
                 # handle groups
                 logging.debug("    - Groups")
@@ -317,7 +317,7 @@ def create(src, dst):
                     # Pivotal #180730988
                     if dst_entry['voPersonStatus'][0] == 'expired':
                         logging.debug(f"User {dst_rdn} is not participating @ALL group because of expiration !")
-                        continue # Do not register this user as member of any group.
+                        continue
 
                     dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
                     members.append(dst_dn)
