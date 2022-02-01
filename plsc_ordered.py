@@ -55,7 +55,8 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     record['uid'] = [username]
     if sbs_user.get('ssh_keys') or sbs_user.get('ssh_keys'):
-        record['sshPublicKey'] = [sbs_user.get('ssh_key')] if 'ssh_key' in sbs_user else sbs_user.get('ssh_keys')
+        sshkeys = [sbs_user.get('ssh_key')] if 'ssh_key' in sbs_user else sbs_user.get('ssh_keys')
+        record['sshPublicKey'] = list(set(sshkeys))
         record['objectClass'].append('ldapPublicKey')
 
     record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
