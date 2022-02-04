@@ -149,7 +149,8 @@ def create(src, dst):
             for labeledURI in ['sbs_url', 'logo']:
                 if labeledURI in co and co[labeledURI]:
                     co_entry.setdefault('labeledURI', []).append(
-                        co[labeledURI].strip().replace(' ', '%20'))
+                        co[labeledURI].strip().replace(' ', '%20') + " " + labeledURI
+                    )
 
             if co.get('description'):
                 co_entry['description'] = [co.get('description')]
