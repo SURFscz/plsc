@@ -77,7 +77,7 @@ jobs:
 
       - name: Dump ldap...
         run:
-          ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub
+          ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub objectclass=organizationalUnit
         env:
           LDAP_URL: ldap://localhost:389
           LDAP_BASE_DN: dc=services,dc=sram,dc=tld
