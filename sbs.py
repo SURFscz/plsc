@@ -89,7 +89,7 @@ class SBS(object):
 
     def collaborations(self):
         return self.api('api/collaborations/all') or []
-    
+
     def all_users(self):
         data = self.api("api/plsc/sync") or []
         return data.get('users', [])
@@ -173,7 +173,7 @@ class SBS(object):
                 c.setdefault('organisation', {})['short_name'] = o['short_name']
 
                 for s in (o.get('services', []) + c.get('services', [])):
-                    result.setdefault(services[s]['entity_id'], {'service_id':s, 'cos': {}})['cos'][c['id']] = c
+                    result.setdefault(services[s]['entity_id'], {'service_id': s, 'cos': {}})['cos'][c['id']] = c
 
                 c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['id'])
 

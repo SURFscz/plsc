@@ -107,11 +107,11 @@ class TestAll(BaseTest):
                     if detail['status'] == 'expired':
                         logger.debug(f"Checking expiry status of {person['user']['username']}")
                         assert([person['status'], 'expired'])
-                
+
                 def check_accepted_policy_agreement(person, person_object):
                     # Verify that AUP attribute exists when accepted by user for this service
                     # and not exists when not (yet) accepted by the user...
-                    
+
                     username = person['user']['username']
 
                     aup_found = False

@@ -237,18 +237,16 @@ def create(src, dst):
                 dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
                 # Pivotal #181218689
-                accepted_aups = src_user.get("accepted_aups",[])
+                accepted_aups = src_user.get("accepted_aups", [])
                 for aup in accepted_aups:
                     if aup.get("service_id", -1) == service_id:
-                        
-                        agreed_at = datetime.datetime.strptime(aup['agreed_at']+"+0000", '%Y-%m-%d %H:%M:%S%z')
+
+                        agreed_at = datetime.datetime.strptime(aup['agreed_at'] + "+0000", '%Y-%m-%d %H:%M:%S%z')
 
                         dst_entry['voPersonPolicyAgreement'] = ["time-{}: {}".format(
-                                int(datetime.datetime.timestamp(agreed_at)),
-                                aup['url']
-                            )
-                        ]
-                        logging.debug("AUP: Service: "+service+" User: "+dst_entry['uid'][0]+" voPersonPolicyAgreement: "+dst_entry['voPersonPolicyAgreement'][0])
+                            int(datetime.datetime.timestamp(agreed_at)),
+                            aup['url']
+                        )]
 
                 registered_users.append(dst_dn)
 
