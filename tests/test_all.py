@@ -7,6 +7,10 @@ logger = logging.getLogger(__name__)
 
 class TestAll(BaseTest):
 
+    def setUp(self):
+        super().setUp()
+        self.users = self.src.all_users()
+
     def test_ldap_services(self):
         """ this test will traverse the SBS structure and verify
         that all relevant components are registered as expected in LDAP
@@ -50,7 +54,7 @@ class TestAll(BaseTest):
 
                 # Here a sequence of function can be initiated to verify this person in a particular context
                 for f in context_checks:
-                    f(u)
+                    f(u, user_object)
 
         def check_group(rdn, group, members):
             """ Check that group object exists and members are defined
@@ -98,11 +102,37 @@ class TestAll(BaseTest):
             detail = self.src.collaboration(c['id'])
             for s in detail['services']:
 
-                def check_ordered_person_expiry(person):
+                def check_ordered_person_expiry(person, _):
                     # When CO is expired, the person in de Ordered Subtree should mut be expired as well
                     if detail['status'] == 'expired':
                         logger.debug(f"Checking expiry status of {person['user']['username']}")
                         assert([person['status'], 'expired'])
+
+                def check_accepted_policy_agreement(person, person_object):
+                    # Verify that AUP attribute exists when accepted by user for this service
+                    # and not exists when not (yet) accepted by the user...
+
+                    username = person['user']['username']
+
+                    aup_found = False
+
+                    for u in self.users:
+                        if u['username'] == username:
+                            assert('accepted_aups' in u)
+
+                            for aup in u['accepted_aups']:
+                                assert('service_id' in aup)
+
+                                if aup['service_id'] == s['id']:
+                                    aup_found = True
+                                    break
+
+                            break
+
+                    if 'voPersonPolicyAgreement' in person_object[list(person_object)[0]]:
+                        assert(aup_found)
+                    else:
+                        assert(not aup_found)
 
                 org_sname = c['organisation']['short_name']
 
@@ -119,7 +149,7 @@ class TestAll(BaseTest):
                     detail['collaboration_memberships'],
                     detail['groups'],
                     group_name_ordered,
-                    context_checks=[check_ordered_person_expiry]
+                    context_checks=[check_ordered_person_expiry, check_accepted_policy_agreement]
                 )
 
                 check_ldap(

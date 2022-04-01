@@ -8,6 +8,7 @@ import os
 import util
 import logging
 import uuid
+import datetime
 
 from sldap import SLdap
 from sbs import SBS
@@ -86,8 +87,11 @@ def create(src, dst):
     collaborations = src.service_collaborations()
 
     logging.debug("--- Create ---")
-    for service, cos in collaborations.items():
+    for service, details in collaborations.items():
         vc[service] = {}
+
+        cos = details['cos']
+        service_id = details['service_id']
 
         logging.debug("service: {}".format(service))
 
@@ -231,6 +235,18 @@ def create(src, dst):
                 # convert the BS data to an ldap record
                 dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
                 dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+
+                # Pivotal #181218689
+                accepted_aups = src_user.get("accepted_aups", [])
+                for aup in accepted_aups:
+                    if aup.get("service_id", -1) == service_id:
+
+                        agreed_at = datetime.datetime.strptime(aup['agreed_at'] + "+0000", '%Y-%m-%d %H:%M:%S%z')
+
+                        dst_entry['voPersonPolicyAgreement'] = ["time-{}: {}".format(
+                            int(datetime.datetime.timestamp(agreed_at)),
+                            aup['url']
+                        )]
 
                 registered_users.append(dst_dn)
 
