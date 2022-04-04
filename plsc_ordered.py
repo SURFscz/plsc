@@ -97,6 +97,7 @@ def create(src, dst):
 
         # check if service exists and create it if necessary
         service_dn = f"dc={service},{dst.basedn}"
+        admin_dn = 'cn=admin,' + service_dn
 
         # find existing services
         service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
@@ -104,9 +105,12 @@ def create(src, dst):
             service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
 
-            admin_dn = 'cn=admin,' + service_dn
-            admin_entry = {'objectClass': ['organizationalRole', 'simpleSecurityObject'], 'cn': ['admin'],
-                           'userPassword': [str(uuid.uuid4())]}
+            # Initialize with admin object
+            admin_entry = {
+                'objectClass': ['organizationalRole', 'simpleSecurityObject'],
+                'cn': ['admin'],
+                'userPassword': [str(uuid.uuid4())]
+            }
             dst.add(admin_dn, admin_entry)
 
             #seq_dn = 'ou=Sequence,' + service_dn
@@ -120,6 +124,18 @@ def create(src, dst):
             #gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + service_dn
             #gid_entry = {'objectClass': ['top', 'device'], 'serialNumber': [config['gid']]}
             #dst.add(gid_dn, gid_entry)
+
+        # Adjust admin userPassword with ldap_password if given in SBS.
+        # https://github.com/SURFscz/plsc/issues/24
+        ldap_password = details.get('ldap_password', None)
+        if ldap_password:
+            current_admin = dst.find(admin_dn, "(&(objectClass=simpleSecurityObject)(cn=admin))")
+
+            dst.modify(admin_dn, list(current_admin.values())[0], {
+                'objectClass': ['organizationalRole', 'simpleSecurityObject'],
+                'cn': ['admin'],
+                'userPassword': ["{CRYPT}" + ldap_password]
+            })
 
         # check if dc=ordered subtree exists and create it if necessary
         ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")

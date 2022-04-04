@@ -149,7 +149,10 @@ class TestAll(BaseTest):
                     detail['collaboration_memberships'],
                     detail['groups'],
                     group_name_ordered,
-                    context_checks=[check_ordered_person_expiry, check_accepted_policy_agreement]
+                    context_checks=[
+                        check_ordered_person_expiry,
+                        check_accepted_policy_agreement
+                    ]
                 )
 
                 check_ldap(
@@ -158,3 +161,11 @@ class TestAll(BaseTest):
                     detail['groups'],
                     group_name_flat
                 )
+
+                logger.info(f"*** Checking Admin account: {s['entity_id']}")
+                assert('ldap_password' in s)
+                admin_object = check_object(f"cn=admin,dc={s['entity_id']},{self.dst_conf['basedn']}", expected_count=1)
+                ldap_password = s['ldap_password']
+                if ldap_password:
+                    userPassword = admin_object[list(admin_object)[0]]['userPassword']
+                    assert(userPassword == '{CRYPT}' + ldap_password)
