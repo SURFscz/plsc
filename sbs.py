@@ -173,7 +173,13 @@ class SBS(object):
                 c.setdefault('organisation', {})['short_name'] = o['short_name']
 
                 for s in (o.get('services', []) + c.get('services', [])):
-                    result.setdefault(services[s]['entity_id'], {'service_id': s, 'cos': {}})['cos'][c['id']] = c
+                    result.setdefault(
+                        services[s]['entity_id'], {
+                            'service_id': s,
+                            'cos': {},
+                            'ldap_password': services[s]['ldap_password']
+                        }
+                    )['cos'][c['id']] = c
 
                 c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['id'])
 
