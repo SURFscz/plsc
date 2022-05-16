@@ -1,0 +1,2 @@
+-r requirements-minimal.txt
+haproxyadmin~=0.2.4

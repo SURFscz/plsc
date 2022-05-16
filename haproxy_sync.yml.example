@@ -1,0 +1,9 @@
+---
+sbs:
+  host: https://sbs.scz-vm.net
+  user: haproxy_acl
+  passwd: changethispassword
+  verify_ssl: false
+haproxy:
+  socket: /run/haproxy/admin.sock
+  acl_file: /etc/haproxy/acl_ldap_sbs.cfg

@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Dict
+from typing import Dict, List
 
 import requests
 import requests.auth
@@ -121,6 +121,10 @@ class SBS(object):
         # return r
         a = self.api(f"api/users/user?uid={uid}")
         return a
+
+    def service_ipranges(self) -> List[str]:
+        data = self.api("api/plsc/ip_ranges") or []
+        return data.get('service_ipranges', [])
 
     def old_service_collaborations(self):
         services = {}
