@@ -156,6 +156,7 @@ def create(src, dst):
             vc[service][co_identifier]['roles'] = {}
             vc[service][co_identifier]['members'] = []
             vc[service][co_identifier]['name'] = co.get('name', co_identifier)
+            vc[service][co_identifier]['tags'] = co.get('tags')
 
             # Create CO if necessary
             co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -176,6 +177,8 @@ def create(src, dst):
                 co_entry['description'] = [co.get('description')]
             if co.get('name'):
                 co_entry['displayName'] = [co.get('name')]
+            if co.get('tags'):
+                co_entry['businessCategory'] = co.get('tags')
 
             co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
             if len(co_dns) == 0:
@@ -371,6 +374,8 @@ def create(src, dst):
                     'description': ['All CO members'],
                     'displayName': [f'All Members of {vc[service][co_identifier]["name"]}']
                 }
+                if vc[service][co_identifier]["tags"]:
+                    grp_entry['businessCategory'] = vc[service][co_identifier]["tags"]
 
                 ldif = dst.store(grp_dn, grp_entry)
                 logging.debug("      - store: {}".format(ldif))
