@@ -13,7 +13,7 @@ import datetime
 from sldap import SLdap
 from sbs import SBS
 
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Union, Optional
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
@@ -23,6 +23,12 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 # vc keeps track of visited CO's, so we can delete what
 # we have not seen in the Cleanup phase
 vc = {}
+
+
+def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[List[str]]:
+    if values is None:
+        return None
+    return [f"{scope}{sep}{v}" for v in values]
 
 
 # Here's the magic: Build the new person entry
@@ -156,7 +162,8 @@ def create(src, dst):
             vc[service][co_identifier]['roles'] = {}
             vc[service][co_identifier]['members'] = []
             vc[service][co_identifier]['name'] = co.get('name', co_identifier)
-            vc[service][co_identifier]['tags'] = co.get('tags')
+            vc[service][co_identifier]['tags'] = add_scope(values=co.get('tags'),
+                                                           scope=co['organisation']['short_name'])
 
             # Create CO if necessary
             co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
@@ -178,7 +185,8 @@ def create(src, dst):
             if co.get('name'):
                 co_entry['displayName'] = [co.get('name')]
             if co.get('tags'):
-                co_entry['businessCategory'] = co.get('tags')
+                co_entry['businessCategory'] = add_scope(values=co.get('tags'),
+                                                         scope=co['organisation']['short_name'])
 
             co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
             if len(co_dns) == 0:
