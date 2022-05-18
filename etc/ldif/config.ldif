@@ -1,4 +1,4 @@
 dn: cn=config
 changetype: modify
 add: olcAttributeOptions
-olcAttributeOptions: 'time-#'
+olcAttributeOptions: time-
