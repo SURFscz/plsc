@@ -20,7 +20,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 SBSPerson = Dict[str, str]
 LDAPEntry = Dict[str, List[Union[str, int]]]
 
-# vc keeps track of visited CO's so we can delete what
+# vc keeps track of visited CO's, so we can delete what
 # we have not seen in the Cleanup phase
 vc = {}
 
@@ -62,7 +62,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
 
-    # clean up the lists, such that we return empty lists if no attribute it present, rather than [None]
+    # clean up the lists, such that we return empty lists if no attribute is present, rather than [None]
     for key, val in record.items():
         record[key] = list(filter(None, record[key]))
 
@@ -219,6 +219,8 @@ def create(src, dst):
                     members = old_entry.get('member', [])
                 elif len(grp_dns) == 0:
                     members = []
+                else:
+                    raise Exception(f"Found multiple groups for dn={grp_dn}")
 
                 #if not gidNumber:
                 #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
@@ -251,7 +253,7 @@ def create(src, dst):
                 src_uid = util.uid(src_user)
                 logging.debug("    - src_uid: {}/{}".format(src_id, src_uid))
 
-                # convert the BS data to an ldap record
+                # convert the BS data to an LDAP record
                 dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
                 dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
 
@@ -314,7 +316,7 @@ def create(src, dst):
                     elif len(grp_dns) == 0:
                         members = [dst_dn]
                     else:
-                        raise Exception("Too many dn's, this shouldn't happen")
+                        raise Exception("Too many DNs, this shouldn't happen")
 
                     # Here's the magic: Build the new group entry
                     grp_entry = {
@@ -406,7 +408,7 @@ def cleanup(dst):
                 dc = o_rdns['dc'][1]
 
                 logging.debug(f"  - CO: {co}")
-                logging.debug(f"    - dstdn: {o_dn}")
+                logging.debug(f"    - dest_dn: {o_dn}")
                 if vc[service].get(co) is None:
                     logging.debug(f"   - {co} not found in our services, deleting")
                     dst.rdelete(o_dn)
@@ -416,14 +418,14 @@ def cleanup(dst):
                 src_members = vc.get(dc, {}).get(co, {}).get('members', [])
                 dst_dns = dst.rfind("ou=people,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
                 for dst_dn, dst_entry in dst_dns.items():
-                    logging.debug("    - dstdn: {}".format(dst_dn))
+                    logging.debug("    - dest_dn: {}".format(dst_dn))
                     if dst_entry.get('eduPersonUniqueId', None):
                         dst_uid = dst_entry['eduPersonUniqueId'][0]
                         if dst_uid not in src_members:
                             logging.debug("      dst_uid not found in src_members, deleting {}".format(dst_dn))
                             dst.delete(dst_dn)
                         else:
-                            # verify that rdn uid is indeed (stil) valid registered user, if not delete entry
+                            # verify that rdn uid is indeed (still) valid registered user, if not delete entry
                             if dst_dn not in registered_users:
                                 dst.delete(dst_dn)
 
@@ -438,7 +440,7 @@ def cleanup(dst):
                         continue
 
                     #grp_urn = dst_entry['labeledURI'][0]
-                    logging.debug("    - dstdn: {}".format(dst_dn))
+                    logging.debug("    - dest_dn: {}".format(dst_dn))
                     # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
                     src_id = dst_entry.get('uniqueIdentifier')
                     if src_id is None:
@@ -464,7 +466,7 @@ def cleanup(dst):
                             dst.modify(dst_dn, dst_entry, new_entry)
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
         sys.exit(sys.argv[0] + "  <conf.yml>")
 
@@ -476,3 +478,7 @@ if __name__ == "__main__":
 
     create(src, dst)
     cleanup(dst)
+
+
+if __name__ == "__main__":
+    main()
