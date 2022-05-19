@@ -272,10 +272,9 @@ def create(src, dst):
 
                         agreed_at = datetime.datetime.strptime(aup['agreed_at'] + "+0000", '%Y-%m-%d %H:%M:%S%z')
 
-                        dst_entry['voPersonPolicyAgreement'] = ["time-{}: {}".format(
-                            int(datetime.datetime.timestamp(agreed_at)),
-                            aup['url']
-                        )]
+                        dst_entry['voPersonPolicyAgreement;time-{}'.format(
+                            int(datetime.datetime.timestamp(agreed_at))
+                        )] = [aup['url']]
 
                 registered_users.append(dst_dn)
 

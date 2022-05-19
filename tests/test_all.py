@@ -129,7 +129,14 @@ class TestAll(BaseTest):
 
                             break
 
-                    if 'voPersonPolicyAgreement' in person_object[list(person_object)[0]]:
+                    policy_agreement_attribute = False
+
+                    for a in person_object[list(person_object)[0]]:
+                        if a.startswith('voPersonPolicyAgreement'):
+                            policy_agreement_attribute = True
+                            break
+
+                    if policy_agreement_attribute:
                         assert(aup_found)
                     else:
                         assert(not aup_found)
