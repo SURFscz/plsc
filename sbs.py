@@ -4,6 +4,8 @@ from typing import Dict, List
 
 import requests
 import requests.auth
+from requests.adapters import HTTPAdapter
+from requests.adapters import ConnectionError
 import urllib3
 
 import os
@@ -30,6 +32,10 @@ class SBS(object):
         self.verify_ssl = config.get('verify_ssl', True)
         self.recording_requested = config.get('recorder', False)
 
+        adapter = HTTPAdapter(max_retries=3)
+        self.session = requests.Session()
+        self.session.mount(self.host, adapter)
+
         if config.get("ipv4_only", False):
             import urllib3.util.connection as urllib3_connection
 
@@ -50,14 +56,23 @@ class SBS(object):
     def api(self, request, method='GET', headers=None, data=None):
         logging.debug(f"API: {request}...")
 
-        r = requests.request(method, url=f"{self.host}/{request}",
-                             headers=headers,
-                             auth=requests.auth.HTTPBasicAuth(self.user, self.password),
-                             verify=self.verify_ssl,
-                             data=data)
-        #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
+        status_code = 0
+        retries = 3
+        while retries and status_code in [0, 503, 504]:
+            try:
+                #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
+                r = self.session.request(method, url=f"{self.host}/{request}",
+                                     headers=headers,
+                                     auth=requests.auth.HTTPBasicAuth(self.user, self.password),
+                                     verify=self.verify_ssl,
+                                     data=data,
+                                     timeout=30)
+                status_code = r.status_code
+                retries -= 1
+            except ConnectionError as ce:
+                raise SBSException(f"API: {request} result: {ce}")
 
-        if r.status_code == 200:
+        if status_code == 200:
             if self.recording_requested:
                 os.makedirs('/'.join(request.split('/')[:-1]), exist_ok=True)
 
@@ -66,8 +81,8 @@ class SBS(object):
 
             return self.__get_json(r.text)
         else:
-            #logging.error(f"API: {request} returns: {r.status_code}")
-            raise SBSException(f"API: {request} returns: {r.status_code}")
+            #logging.error(f"API: {request} returns: {status_code}")
+            raise SBSException(f"API: {request} returns: {status_code}")
 
     def health(self):
         return self.api('health')
