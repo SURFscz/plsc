@@ -60,13 +60,14 @@ class SBS(object):
         retries = 3
         while retries and status_code in [0, 503, 504]:
             try:
-                #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
+                # print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
                 r = self.session.request(method, url=f"{self.host}/{request}",
-                                     headers=headers,
-                                     auth=requests.auth.HTTPBasicAuth(self.user, self.password),
-                                     verify=self.verify_ssl,
-                                     data=data,
-                                     timeout=30)
+                                         headers=headers,
+                                         auth=requests.auth.HTTPBasicAuth(
+                                             self.user, self.password),
+                                         verify=self.verify_ssl,
+                                         data=data,
+                                         timeout=30)
                 status_code = r.status_code
                 retries -= 1
             except ConnectionError as ce:
@@ -77,11 +78,12 @@ class SBS(object):
                 os.makedirs('/'.join(request.split('/')[:-1]), exist_ok=True)
 
                 with open(f"./{request}", 'w') as f:
-                    f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))
+                    f.write(json.dumps(json.loads(r.text),
+                                       indent=4, sort_keys=True))
 
             return self.__get_json(r.text)
         else:
-            #logging.error(f"API: {request} returns: {status_code}")
+            # logging.error(f"API: {request} returns: {status_code}")
             raise SBSException(f"API: {request} returns: {status_code}")
 
     def health(self):
@@ -126,10 +128,12 @@ class SBS(object):
         #     'urn:mace:dir:attribute-def:shortName': 'username',
         #     'urn:mace:dir:attribute-def:sn': 'family_name',
         #     'urn:mace:dir:attribute-def:uid': 'uid',
-        #     'urn:mace:terena.org:attribute-def:schacHomeOrganization': 'schac_home_organisation',
+        #     'urn:mace:terena.org:attribute-def:'
+        #     'schacHomeOrganization': 'schac_home_organisation',
         #     'urn:oid:1.3.6.1.4.1.24552.1.1.1.13': 'ssh_key',
         # }
-        # a = self.api(f"api/users/attributes?service_entity_id={entity_id}&uid={uid}")
+        # a = self.api(f"api/users/attributes?"
+        #               "service_entity_id={entity_id}&uid={uid}")
         # r = {}
         # for k,v in a.items():
         #     r[t.get(k,'other')] = v
@@ -144,16 +148,18 @@ class SBS(object):
     def old_service_collaborations(self):
         services = {}
         cs = self.collaborations()
-        #print(f"cs: {cs}")
+        # print(f"cs: {cs}")
         for c in cs:
             c_id = c['id']
             detail = self.collaboration(c_id)
             # temporary hack because global_urn is not always defined yet
             if not detail.get('global_urn'):
-                detail['global_urn'] = "{}:{}".format(detail['organisation']['short_name'], detail['short_name'])
-            #print(f"detail: {detail}")
+                detail['global_urn'] = (
+                    "{}:{}".format(detail['organisation']['short_name'],
+                                   detail['short_name']))
+            # print(f"detail: {detail}")
             for s in detail['services'] + detail['organisation']['services']:
-                #print(f"s: {s}")
+                # print(f"s: {s}")
                 entity_id = s['entity_id']
                 services.setdefault(entity_id, {})[c_id] = detail
 
@@ -176,7 +182,8 @@ class SBS(object):
 
             for c in o.get('collaborations', []):
                 if not c.get('global_urn', None):
-                    c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
+                    c['global_urn'] = "{}:{}".format(o['short_name'],
+                                                     c['short_name'])
 
                 for m in c.get('collaboration_memberships', []):
                     status = c.get('status', 'active')
@@ -189,7 +196,8 @@ class SBS(object):
                     for m in g.get('collaboration_memberships', []):
                         m['user'] = users[m['user_id']]
 
-                c.setdefault('organisation', {})['short_name'] = o['short_name']
+                c.setdefault('organisation', {})['short_name'] = (
+                    o['short_name'])
 
                 for s in (o.get('services', []) + c.get('services', [])):
                     result.setdefault(
@@ -200,7 +208,8 @@ class SBS(object):
                         }
                     )['cos'][c['id']] = c
 
-                c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['id'])
+                c['sbs_url'] = "{}/collaborations/{}".format(self.host,
+                                                             c['id'])
 
         return result
 
@@ -208,14 +217,15 @@ class SBS(object):
     def users(co):
         users = {}
         if not co.get('short_name'):
-            raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
+            raise SBSException(f"Encountered CO {co['id']} ({co['name']})"
+                               "without short_name")
         for u in co['collaboration_memberships']:
             users[u['user_id']] = {
                 'user': u['user'],
                 'groups': []
             }
         for group in co['groups']:
-            #g = self.group(c_id, g_id)
+            # g = self.group(c_id, g_id)
             for m in group['collaboration_memberships']:
                 users[m['user_id']]['groups'].append(group)
 
@@ -225,7 +235,8 @@ class SBS(object):
     def groups(co):
         groups = {}
         if not co.get('short_name'):
-            raise SBSException(f"Encountered CO {co['id']} ({co['name']}) without short_name")
+            raise SBSException(f"Encountered CO {co['id']} ({co['name']}) "
+                               "without short_name")
         for group in co['groups']:
             g_id = group['id']
             groups[g_id] = group
