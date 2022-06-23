@@ -94,6 +94,7 @@ class SLdap(object):
         if modlist:
             try:
                 logging.info("[LDAP] Update: {}".format(dn))
+                logging.debug("[LDAP] Update will modify: {}".format(modlist))
                 self.__c.modify_s(dn, modlist)
             except Exception as e:
                 logging.error(f"Exception on modify of {dn}: {e}")
