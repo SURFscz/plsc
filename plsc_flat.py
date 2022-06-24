@@ -11,15 +11,10 @@ import util
 
 from sldap import SLdap
 
-#import ipdb
-#ipdb.set_trace()
+# import ipdb
+# ipdb.set_trace()
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
-
-vc = {
-    'users': set(),  # only unique values
-    'groups': set(),
-}
 
 
 # Create phase
@@ -34,13 +29,17 @@ def create(src, dst):
 
     logging.debug("--- Create ---")
     for service, cos in collaborations.items():
+
+        # voPersonStatus is a special case (per service)
+        voPersonStatus = {}
+
         logging.debug("service: {}".format(service))
         for co_id in cos:
             logging.debug(f"- co: {co_id}")
 
             co_dn = f"dc=flat,dc={service},{dst.basedn}"
 
-            # create Flat dn it is doesn't exist
+            # Create flat dn if it doesn't exist
             flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
             if len(flat_dns) == 0:
                 flat_dn = f"dc=flat,dc={service},{dst.basedn}"
@@ -58,11 +57,11 @@ def create(src, dst):
                 logging.debug("  - srcdn: {}".format(src_dn))
                 src_uid = src_entry['uid'][0]
 
-                vc['users'].add(src_uid)
+                voPersonStatus.setdefault(src_uid, []).append(src_entry.pop('voPersonStatus', ['active'])[0])
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
                 dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                    "(&(ObjectClass=person)(cn={}))".format(src_uid))
+                                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
 
                 # We can't just store People, we need to merge attributes
                 if len(dst_dns) == 1:
@@ -82,8 +81,6 @@ def create(src, dst):
                 grp_rdns = util.dn2rdns(grp_dn)
                 grp_cn = f"{co_id}.{grp_rdns['cn'][0]}"
                 logging.debug(f"cn: {grp_cn}")
-
-                vc['groups'].add(grp_cn)
 
                 members: List[str] = []
                 scz_members = grp_entry.get('member', [])
@@ -113,11 +110,21 @@ def create(src, dst):
                 ldif = dst.store(dst_dn, new_entry)
                 logging.debug("    - store: {}".format(ldif))
 
+        flat_dn = f"dc=flat,dc={service},{dst.basedn}"
+        for uid, statuses in voPersonStatus.items():
+            status = 'active' if 'active' in statuses else 'expired'
+            dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
+                                "(&(ObjectClass=person)(uid={}))".format(uid))
+
+            # Add correct voPersonStatus to entry
+            if len(dst_dns) == 1:
+                dn, entry = list(dst_dns.items())[0]
+                entry['voPersonStatus'] = [status]
+                ldif = dst.store(dn, entry)
+
 
 # Cleanup phase
 def cleanup(src, dst):
-    global vc
-
     services = util.find_ordered_services(src)
     collaborations = util.find_ordered_collaborations(src, services)
 
