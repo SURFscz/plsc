@@ -5,6 +5,7 @@ include/
 lib/
 plsc.yml
 mirrorcheck.yml
+scim_aws.yml
 sbs.yml
 share/
 lib64

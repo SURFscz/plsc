@@ -1,0 +1,15 @@
+---
+sbs:
+  src:
+    host: https://sbs.scz-vm.net/
+    user: sysread
+    passwd: ***
+    verify_ssl: false
+aws:
+  host: https://scim.us-east-1.amazonaws.com/***/scim/v2
+  token:
+    "1234abcd....\
+    ...\
+    ...\
+    ..."
+  co: 303
