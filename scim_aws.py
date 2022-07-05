@@ -40,12 +40,11 @@ for membership in my_co['collaboration_memberships']:
     name = user['name']
     email = user['email']
     uid = user['uid']
-    if 'Doe' not in name or True:
-        co_users[user_id] = {
-            'uid': uid,
-            'name': name,
-            'email': email
-        }
+    co_users[user_id] = {
+        'uid': uid.replace(':', '-'),
+        'name': name,
+        'email': email
+    }
 
 users = aws.list_users()
 aws_users = {}
@@ -64,7 +63,7 @@ for external_id, co_user in co_users.items():
     user = {
         'active': True,
         'external_id': external_id,
-        'user_name': co_user['email'],
+        'user_name': co_user['uid'],
         'display_name': co_user['name'],
         'given_name': co_user['name'],
         'family_name': co_user['name'],
