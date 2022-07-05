@@ -64,7 +64,8 @@ class BaseTest(TestCase):
         'uri': os.environ["LDAP_URL"],
         'basedn': os.environ["LDAP_BASE_DN"],
         'binddn': os.environ["LDAP_BIND_DN"],
-        'passwd': os.environ["LDAP_ADMIN_PASSWORD"]
+        'passwd': os.environ["LDAP_ADMIN_PASSWORD"],
+        'sizelimit': int(os.environ.get("LDAP_SIZELIMIT", 500))
     }
 
     @classmethod

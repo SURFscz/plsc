@@ -20,7 +20,9 @@ class SLdap(object):
         binddn = config['binddn']
         passwd = config['passwd']
 
-        logging.debug("Initializing ldap: {}".format(uri))
+        self.sizelimit = int(config.get('sizelimit', 500))
+
+        logging.info("Initializing ldap: {}, sizelimit: {}".format(uri, self.sizelimit))
         self.__c = ldap.initialize(uri)
 
         if binddn == 'external':
@@ -55,7 +57,29 @@ class SLdap(object):
             attrs = []
         if not basedn:
             basedn = self.basedn
-        return self.__c.search_s(basedn, scope, ldap_filter, attrs)
+
+        page_control = ldap.controls.SimplePagedResultsControl(True, size=self.sizelimit, cookie='')
+        result = []
+
+        while True:
+            page = self.__c.search_ext(basedn, scope, ldap_filter, attrs, serverctrls=[page_control])
+            _, rdata, _, serverctrls = self.__c.result3(page)
+
+            result.extend(rdata)
+            controls = [
+                control for control in serverctrls
+                if control.controlType == ldap.controls.SimplePagedResultsControl.controlType
+            ]
+
+            if not controls:
+                logging.errror('The server ignores RFC 2696 control')
+            if not controls[0].cookie:
+                break
+
+            logging.debug("Paging ...")
+            page_control.cookie = controls[0].cookie
+
+        return result
 
     def find(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
         dns = {}

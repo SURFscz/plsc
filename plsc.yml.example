@@ -5,11 +5,13 @@ ldap:
     basedn: dc=scz,dc=vnet
     binddn: cn=admin,dc=scz,dc=vnet
     passwd: changethispassword
+    sizelimit: 500
   dst:
     uri: ldap://ldap.vm.scz-vm.net
     basedn: dc=services,dc=vnet
     binddn: cn=admin,dc=clients,dc=vnet
     passwd: changethispassword
+    sizelimit: 500
 sbs:
   src:
     host: https://sbs.example.net
