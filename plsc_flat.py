@@ -27,9 +27,12 @@ def create(src, dst):
     collaborations = util.find_ordered_collaborations(src, services)
     logging.debug(f"c: {collaborations}")
 
+    all_dns = dst.find(dst.basedn)
+
     logging.debug("--- Create ---")
     for service, cos in collaborations.items():
 
+        service_dn = f"dc={service},{dst.basedn}"
         # voPersonStatus is a special case (per service)
         voPersonStatus = {}
 
@@ -42,7 +45,7 @@ def create(src, dst):
             # Create flat dn if it doesn't exist
             flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
             if len(flat_dns) == 0:
-                flat_dn = f"dc=flat,dc={service},{dst.basedn}"
+                flat_dn = f"dc=flat,{service_dn}"
                 flat_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['flat'], 'ou': ['flat']}
                 dst.add(flat_dn, flat_entry)
                 for ou in ['Groups', 'People']:
@@ -51,8 +54,8 @@ def create(src, dst):
                     dst.add(ou_dn, ou_entry)
 
             logging.debug("  - People")
-            src_dns = src.rfind(f"ou=People,o={co_id},dc=ordered,dc={service}", '(ObjectClass=person)')
 
+            src_dns = src.rfind(f"ou=People,o={co_id},dc=ordered,dc={service}", '(ObjectClass=person)')
             for src_dn, src_entry in src_dns.items():
                 logging.debug("  - srcdn: {}".format(src_dn))
                 src_uid = src_entry['uid'][0]
@@ -60,9 +63,9 @@ def create(src, dst):
                 voPersonStatus.setdefault(src_uid, []).append(src_entry.pop('voPersonStatus', ['active'])[0])
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
-                dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
-
+                #dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
+                #                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
+                dst_dns = all_dns.get(dst_dn, {})
                 # We can't just store People, we need to merge attributes
                 if len(dst_dns) == 1:
                     old_dn, old_entry = list(dst_dns.items())[0]
@@ -73,8 +76,8 @@ def create(src, dst):
                 logging.debug("    - store: {}".format(ldif))
 
             logging.debug("  - Groups")
-            grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
 
+            grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
             for grp_dn, grp_entry in grp_dns.items():
                 logging.debug("  - group_dn: {}".format(grp_dn))
 
@@ -113,9 +116,9 @@ def create(src, dst):
         flat_dn = f"dc=flat,dc={service},{dst.basedn}"
         for uid, statuses in voPersonStatus.items():
             status = 'active' if 'active' in statuses else 'expired'
-            dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                "(&(ObjectClass=person)(uid={}))".format(uid))
-
+            #dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
+            #                    "(&(ObjectClass=person)(uid={}))".format(uid))
+            dst_dns = all_dns.get("oud=People,{flat_dn}", {})
             # Add correct voPersonStatus to entry
             if len(dst_dns) == 1:
                 dn, entry = list(dst_dns.items())[0]
@@ -128,8 +131,12 @@ def cleanup(src, dst):
     services = util.find_ordered_services(src)
     collaborations = util.find_ordered_collaborations(src, services)
 
+    all_dns = dst.find(dst.basedn)
+
     logging.debug("--- Cleanup ---")
     for service, _ in collaborations.items():
+        service_dn = f"dc={service},{dst.basedn}"
+
         logging.debug("service: {}".format(service))
 
         logging.debug("  - People")
@@ -160,9 +167,10 @@ def cleanup(src, dst):
                 # Verify that referenced CO is still operational CO in Ordered structure
                 # If not, remove this object.
                 logging.debug(f"CHECKING CO : {org}.{co}...")
-                src_dns = src.rfind(
-                    f"dc=ordered,dc={service}",
-                    f"(&(objectClass=organization)(o={org}.{co}))")
+                #src_dns = src.rfind(
+                #    f"dc=ordered,dc={service}",
+                #    f"(&(objectClass=organization)(o={org}.{co}))")
+                src_dns = all_dns.get(f"o={org}.{co},dc=ordered,{service_dn}", {})
                 if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
@@ -172,10 +180,6 @@ def cleanup(src, dst):
                     src_dns = src.rfind(
                         f"o={org}.{co},dc=ordered,dc={service}",
                         f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
-                    #if len(src_dns):
-                    #    for src_dn, src_entry in src_dns.items():
-                    #        pass
-                    #        #logging.debug("   - srcdn: {}".format(src_dn))
                     if len(src_dns) == 0:
                         logging.debug("    - dstdn: {}".format(dst_dn))
                         logging.debug("      srcdn not found, deleting {}".format(dst_dn))

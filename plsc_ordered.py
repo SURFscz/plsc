@@ -9,6 +9,7 @@ import util
 import logging
 import uuid
 import datetime
+import json
 
 from sldap import SLdap
 from sbs import SBS
@@ -23,6 +24,10 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 # vc keeps track of visited CO's, so we can delete what
 # we have not seen in the Cleanup phase
 vc = {}
+
+def pprint(d):
+     pretty = json.dumps(d, indent=2)
+     print(pretty)
 
 
 def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[List[str]]:
@@ -92,6 +97,9 @@ def create(src, dst):
     # Find all CO's in SBS
     collaborations = src.service_collaborations()
 
+    # Get the destination LDAP entries
+    all_dns = dst.find(dst.basedn)
+
     logging.debug("--- Create ---")
     for service, details in collaborations.items():
         vc[service] = {}
@@ -106,7 +114,9 @@ def create(src, dst):
         admin_dn = 'cn=admin,' + service_dn
 
         # find existing services
-        service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
+        #service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
+        service_dns = all_dns.get(service_dn, {})
+
         if len(service_dns) == 0:  # no existing service found
             service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
@@ -118,18 +128,6 @@ def create(src, dst):
                 'userPassword': [str(uuid.uuid4())]
             }
             dst.add(admin_dn, admin_entry)
-
-            #seq_dn = 'ou=Sequence,' + service_dn
-            #seq_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': ['Sequence']}
-            #dst.add(seq_dn, seq_entry)
-
-            #uid_dn = 'cn=uidNumberSequence,ou=Sequence,' + service_dn
-            #uid_entry = {'objectClass': ['top', 'device'], 'serialNumber': [config['uid']]}
-            #dst.add(uid_dn, uid_entry)
-
-            #gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + service_dn
-            #gid_entry = {'objectClass': ['top', 'device'], 'serialNumber': [config['gid']]}
-            #dst.add(gid_dn, gid_entry)
 
         # Adjust admin userPassword with ldap_password if given in SBS.
         # https://github.com/SURFscz/plsc/issues/24
@@ -144,9 +142,11 @@ def create(src, dst):
             })
 
         # check if dc=ordered subtree exists and create it if necessary
-        ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
+        #ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
+        ordered_dn = f"dc=ordered,{service_dn}"
+        ordered_dns = all_dns.get(ordered_dn, {})
         if len(ordered_dns) == 0:
-            ordered_dn = f"dc=ordered,dc={service},{dst.basedn}"
+            ordered_dn = f"dc=ordered,{service_dn}"
             ordered_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['ordered'], 'ou': ['ordered']}
             dst.store(ordered_dn, ordered_entry)
 
@@ -166,7 +166,7 @@ def create(src, dst):
                                                            scope=co['organisation']['short_name'])
 
             # Create CO if necessary
-            co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+            co_dn = f"o={co_identifier},{ordered_dn}"
             co_entry = {
                 'objectClass': ['top', 'organization', 'extensibleObject'],
                 'o': [co_identifier],
@@ -188,18 +188,21 @@ def create(src, dst):
                 co_entry['businessCategory'] = add_scope(values=co.get('tags'),
                                                          scope=co['organisation']['short_name'])
 
-            co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
+            #co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
+            co_dns = all_dns.get(co_dn, {})
             if len(co_dns) == 0:
                 dst.add(co_dn, co_entry)
                 for ou in ['Groups', 'People']:
                     ou_dn = 'ou=' + ou + ',' + co_dn
                     ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
                     dst.add(ou_dn, ou_entry)
-            elif len(co_dns) == 1:
-                current_entry = list(co_dns.values())[0]
-                dst.modify(co_dn, current_entry, co_entry)
+            #elif len(co_dns) == 1:
             else:
-                raise Exception(f"Found multiple COs for o={co_identifier}")
+                #current_entry = list(co_dns.values())[0]
+                current_entry = co_dns
+                dst.modify(co_dn, current_entry, co_entry)
+            #else:
+                #raise Exception(f"Found multiple COs for o={co_identifier}")
 
             users = src.users(co)
             # logging.debug(f"users: {users}")
@@ -218,17 +221,19 @@ def create(src, dst):
                 logging.debug("      - grp: {}/{}".format(group['id'], grp_urn))
                 vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
-                grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-                grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
-                                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
+                grp_dn = f"cn={grp_name},ou=Groups,{co_dn}"
+                #grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                #                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
+                grp_dns = all_dns.get(grp_dn, {})
                 if len(grp_dns) == 1:
                     old_dn, old_entry = list(grp_dns.items())[0]
                     #gidNumber = old_entry.get('gidNumber', [None])[0]
                     members = old_entry.get('member', [])
-                elif len(grp_dns) == 0:
-                    members = []
+                #elif len(grp_dns) == 0:
                 else:
-                    raise Exception(f"Found multiple groups for dn={grp_dn}")
+                    members = []
+                #else:
+                    #raise Exception(f"Found multiple groups for dn={grp_dn}")
 
                 #if not gidNumber:
                 #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
@@ -310,9 +315,10 @@ def create(src, dst):
                     #vc[service][co_identifier].setdefault('groups', []).append(grp_urn)
                     vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
-                    grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-                    grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
-                                        f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
+                    grp_dn = f"cn={grp_name},ou=Groups,{co_dn}"
+                    #grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                    #                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
+                    grp_dns = all_dns.get(grp_dn, {})
 
                     # ipdb.set_trace()
                     if len(grp_dns) == 1:
@@ -320,10 +326,11 @@ def create(src, dst):
                         members = old_entry.get('member', [])
                         if dst_dn not in members:
                             members.append(dst_dn)
-                    elif len(grp_dns) == 0:
-                        members = [dst_dn]
+                    #elif len(grp_dns) == 0:
                     else:
-                        raise Exception("Too many DNs, this shouldn't happen")
+                        members = [dst_dn]
+                    #else:
+                        #raise Exception("Too many DNs, this shouldn't happen")
 
                     # Here's the magic: Build the new group entry
                     grp_entry = {
@@ -396,6 +403,7 @@ def cleanup(dst):
     global registered_users
 
     logging.debug("-- Cleanup ---")
+
     service_dns = dst.find(f"{dst.basedn}", "(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
     for service_dn, s in service_dns.items():
         service = s['dc'][0]
