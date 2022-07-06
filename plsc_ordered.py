@@ -189,8 +189,8 @@ def create(src, dst):
                                                          scope=co['organisation']['short_name'])
 
             #co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
-            co_dns = all_dns.get(co_dn, {})
-            if len(co_dns) == 0:
+            co_dns = all_dns.get(co_dn, None)
+            if not co_dns:
                 dst.add(co_dn, co_entry)
                 for ou in ['Groups', 'People']:
                     ou_dn = 'ou=' + ou + ',' + co_dn
@@ -224,10 +224,10 @@ def create(src, dst):
                 grp_dn = f"cn={grp_name},ou=Groups,{co_dn}"
                 #grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
                 #                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
-                grp_dns = all_dns.get(grp_dn, {})
-                if len(grp_dns) == 1:
-                    old_dn, old_entry = list(grp_dns.items())[0]
-                    #gidNumber = old_entry.get('gidNumber', [None])[0]
+                grp_dns = all_dns.get(grp_dn, None)
+                if grp_dns:
+                    #old_dn, old_entry = list(grp_dns.items())[0]
+                    old_entry = grp_dns
                     members = old_entry.get('member', [])
                 #elif len(grp_dns) == 0:
                 else:
@@ -318,11 +318,12 @@ def create(src, dst):
                     grp_dn = f"cn={grp_name},ou=Groups,{co_dn}"
                     #grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
                     #                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
-                    grp_dns = all_dns.get(grp_dn, {})
+                    grp_dns = all_dns.get(grp_dn, None)
 
                     # ipdb.set_trace()
-                    if len(grp_dns) == 1:
-                        old_dn, old_entry = list(grp_dns.items())[0]
+                    if grp_dns:
+                        #old_dn, old_entry = list(grp_dns.items())[0]
+                        old_entry = grp_dns
                         members = old_entry.get('member', [])
                         if dst_dn not in members:
                             members.append(dst_dn)
