@@ -76,7 +76,7 @@ class SLdap(object):
             if not controls[0].cookie:
                 break
 
-            logging.debug("Paging ...")
+            #logging.debug("Paging ...")
             page_control.cookie = controls[0].cookie
 
         return result
@@ -138,6 +138,20 @@ class SLdap(object):
             return self.add(dn, new_entry)
         else:
             return "Too many dn's This shouldn't happen"
+
+    # A cheaper store
+    def merge(self, dn, all_dns, old_entry, new_entry):
+        logging.debug("Merging ldap: {}".format(new_entry))
+        if not old_entry:
+            ldif = self.add(dn, new_entry)
+        elif old_entry == new_entry:
+            ldif = {}
+        else:
+            ldif = self.modify(dn, old_entry, new_entry)
+        all_dns[dn] = new_entry
+        return ldif
+
+
 
     def delete(self, dn):
         logging.info(f"Deleting dn='{dn}'")

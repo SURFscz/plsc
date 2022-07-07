@@ -146,11 +146,10 @@ def create(src, dst):
         # check if dc=ordered subtree exists and create it if necessary
         #ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
         ordered_dn = f"dc=ordered,{service_dn}"
-        ordered_dns = all_dns.get(ordered_dn, {})
-        if len(ordered_dns) == 0:
-            ordered_dn = f"dc=ordered,{service_dn}"
+        old_dn = all_dns.get(ordered_dn, {})
+        if not old_dn:
             ordered_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['ordered'], 'ou': ['ordered']}
-            dst.store(ordered_dn, ordered_entry)
+            dst.add(ordered_dn, ordered_entry)
 
         # iterate over all COs that are connected to this service
         for co_id, co in cos.items():
@@ -257,17 +256,16 @@ def create(src, dst):
 
                 # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
                 # if grp_entry != old_entry:
-                #logging.info(f"{grp_dns}")
-                #logging.info(f"{grp_entry}")
-                if not old_entry:
-                    ldif = dst.add(grp_dn, grp_entry)
-                elif old_entry == grp_entry:
-                    ldif = {}
-                    #logging.info("equal")
-                else:
-                    #logging.info("not equal")
-                    ldif = dst.modify(grp_dn, old_entry, grp_entry)
-                all_dns[grp_dn] = grp_entry
+                #if not old_entry:
+                    #ldif = dst.add(grp_dn, grp_entry)
+                #elif old_entry == grp_entry:
+                    #ldif = {}
+                    ##logging.info("equal")
+                #else:
+                    ##logging.info("not equal")
+                    #ldif = dst.modify(grp_dn, old_entry, grp_entry)
+                #all_dns[grp_dn] = grp_entry
+                ldif = dst.merge(grp_dn, all_dns, old_entry, grp_entry)
 
                 #exit()
                 logging.debug(f"      - store: {ldif}")
@@ -300,14 +298,14 @@ def create(src, dst):
 
                 old_entry = all_dns.get(dst_dn, None)
                 try:
-                    if not old_entry:
-                        ldif = dst.add(dst_dn, dst_entry)
-                    elif old_entry == dst_entry:
-                        ldif = {}
-                    else:
-                        ldif = dst.modify(dst_dn, old_entry, dst_entry)
-                    all_dns[dst_dn] = dst_entry
-                    #ldif = dst.store(dst_dn, dst_entry)
+                    #if not old_entry:
+                        #ldif = dst.add(dst_dn, dst_entry)
+                    #elif old_entry == dst_entry:
+                        #ldif = {}
+                    #else:
+                        #ldif = dst.modify(dst_dn, old_entry, dst_entry)
+                    #all_dns[dst_dn] = dst_entry
+                    ldif = dst.merge(dst_dn, all_dns, old_entry, dst_entry)
                     logging.debug(f"      - store {dst_dn}: {ldif}")
                 except ldap.OBJECT_CLASS_VIOLATION as e:
                     logging.error(f"Error creating LDIF: {str(e)} for {dst_dn}")
@@ -370,14 +368,14 @@ def create(src, dst):
                         grp_entry['displayName'] = [group.get('name')]
 
                     # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
-                    if not old_entry:
-                        ldif = dst.add(grp_dn, grp_entry)
-                    elif old_entry == grp_entry:
-                        ldif = {}
-                    else:
-                        ldif = dst.modify(grp_dn, old_entry, grp_entry)
-                    all_dns[grp_dn] = grp_entry
-                    #ldif = dst.store(grp_dn, grp_entry)
+                    #if not old_entry:
+                        #ldif = dst.add(grp_dn, grp_entry)
+                    #elif old_entry == grp_entry:
+                        #ldif = {}
+                    #else:
+                        #ldif = dst.modify(grp_dn, old_entry, grp_entry)
+                    #all_dns[grp_dn] = grp_entry
+                    ldif = dst.merge(grp_dn, all_dns, old_entry, grp_entry)
                     logging.debug("      - store: {}".format(ldif))
 
             if True:
@@ -424,15 +422,14 @@ def create(src, dst):
                     grp_entry['businessCategory'] = vc[service][co_identifier]["tags"]
 
                 old_entry = all_dns.get(grp_dn, None)
-                if not old_entry:
-                    dst.add(grp_dn, grp_entry)
-                elif old_entry == grp_entry:
-                    ldif = {}
-                else:
-                    dst.modify(grp_dn, old_entry, grp_entry)
-                all_dns[grp_dn] = grp_entry
-
-                #ldif = dst.store(grp_dn, grp_entry)
+                #if not old_entry:
+                    #dst.add(grp_dn, grp_entry)
+                #elif old_entry == grp_entry:
+                    #ldif = {}
+                #else:
+                    #dst.modify(grp_dn, old_entry, grp_entry)
+                #all_dns[grp_dn] = grp_entry
+                ldif = dst.merge(grp_dn, all_dns, old_entry, grp_entry)
                 logging.debug("      - store: {}".format(ldif))
 
 

@@ -118,14 +118,15 @@ def create(src, dst):
 
                 dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
 
-                old_dn = all_dns.get(dst_dn, None)
-                if not old_dn:
-                    ldif = dst.add(dst_dn, new_entry)
-                elif old_dn == new_entry:
-                    ldif = {}
-                else:
-                    ldif = dst.modify(dst_dn, old_dn, new_entry)
-                all_dns[dst_dn] = new_entry
+                old_entry = all_dns.get(dst_dn, None)
+                #if not old_entry:
+                    #ldif = dst.add(dst_dn, new_entry)
+                #elif old_entry == new_entry:
+                    #ldif = {}
+                #else:
+                    #ldif = dst.modify(dst_dn, old_entry, new_entry)
+                #all_dns[dst_dn] = new_entry
+                ldif = dst.merge(dst_dn, all_dns, old_entry, new_entry)
                 logging.debug("    - store: {}".format(ldif))
 
         flat_dn = f"dc=flat,{service_dn}"
