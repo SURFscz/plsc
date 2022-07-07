@@ -65,12 +65,9 @@ def create(src, dst):
                 voPersonStatus.setdefault(src_uid, []).append(src_entry.pop('voPersonStatus', ['active'])[0])
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
-                #dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                #                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
                 old_dn = all_dns.get(dst_dn, {})
                 # We can't just store People, we need to merge attributes
                 if old_dn:
-                    #old_dn, old_entry = list(dst_dns.items())[0]
                     for k, v in old_dn.items():
                         src_entry.setdefault(k, []).extend(v)
                         src_entry[k] = list(set(src_entry[k]))
@@ -110,7 +107,6 @@ def create(src, dst):
                         # no valid member found?
                         continue
                     members.append(member_dn)
-                    #logging.debug(f"uid: {member_dn}")
 
                 new_entry = copy.deepcopy(grp_entry)
                 new_entry['cn'] = [grp_cn]
@@ -119,21 +115,12 @@ def create(src, dst):
                 dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
 
                 old_entry = all_dns.get(dst_dn, None)
-                #if not old_entry:
-                    #ldif = dst.add(dst_dn, new_entry)
-                #elif old_entry == new_entry:
-                    #ldif = {}
-                #else:
-                    #ldif = dst.modify(dst_dn, old_entry, new_entry)
-                #all_dns[dst_dn] = new_entry
                 ldif = dst.merge(dst_dn, all_dns, old_entry, new_entry)
-                logging.debug("    - store: {}".format(ldif))
+                logging.debug("    - merge: {}".format(ldif))
 
         flat_dn = f"dc=flat,{service_dn}"
         for uid, statuses in voPersonStatus.items():
             status = 'active' if 'active' in statuses else 'expired'
-            #dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-            #                    "(&(ObjectClass=person)(uid={}))".format(uid))
             dst_dn = f"uid={uid},ou=People,{flat_dn}"
             old_entry = all_dns.get(dst_dn, {})
             new_entry = old_entry.copy()
@@ -160,9 +147,6 @@ def cleanup(src, dst):
         logging.debug("  - People")
         dst_dns = dst.rfind(f"ou=People,dc=flat,dc={service}", "(objectClass=person)")
         for dst_dn, dst_entry in dst_dns.items():
-            #logging.debug("  - dstdn: {}".format(dst_dn))
-            #logging.debug("    entry: {}".format(dst_entry))
-
             if dst_entry.get('uid', None):
                 src_uid = dst_entry['uid'][0]
                 src_dns = src.rfind(f"dc=ordered,dc={service}", f"(uid={src_uid})")
@@ -174,9 +158,6 @@ def cleanup(src, dst):
         logging.debug("  - Groups")
         dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", "(objectClass=groupOfMembers)")
         for dst_dn, dst_entry in dst_dns.items():
-            #logging.debug("  - dstdn: {}".format(dst_dn))
-            #logging.debug("    entry: {}".format(dst_entry))
-
             if dst_entry.get('cn', None):
                 org = dst_entry['cn'][0].split('.')[-3]
                 co = dst_entry['cn'][0].split('.')[-2]
@@ -185,9 +166,6 @@ def cleanup(src, dst):
                 # Verify that referenced CO is still operational CO in Ordered structure
                 # If not, remove this object.
                 logging.debug(f"CHECKING CO : {org}.{co}...")
-                #src_dns = src.rfind(
-                #    f"dc=ordered,dc={service}",
-                #    f"(&(objectClass=organization)(o={org}.{co}))")
                 src_dns = all_dns.get(f"o={org}.{co},dc=ordered,{service_dn}", {})
                 if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
