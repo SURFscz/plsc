@@ -344,7 +344,7 @@ def create(src, dst):
                     # ipdb.set_trace()
                     if old_entry:
                         #old_dn, old_entry = list(grp_dns.items())[0]
-                        members = old_entry.get('member', [])
+                        members = old_entry.get('member', []).copy()
                         if dst_dn not in members:
                             members.append(dst_dn)
                     #elif len(grp_dns) == 0:
