@@ -120,6 +120,7 @@ def create(src, dst):
         if len(service_dns) == 0:  # no existing service found
             service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
+            all_dns[service_dn] = service_entry
 
             # Initialize with admin object
             admin_entry = {
@@ -128,6 +129,7 @@ def create(src, dst):
                 'userPassword': [str(uuid.uuid4())]
             }
             dst.add(admin_dn, admin_entry)
+            all_dns[admin_dn] = admin_entry
 
         # Adjust admin userPassword with ldap_password if given in SBS.
         # https://github.com/SURFscz/plsc/issues/24
@@ -196,11 +198,13 @@ def create(src, dst):
                     ou_dn = 'ou=' + ou + ',' + co_dn
                     ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
                     dst.add(ou_dn, ou_entry)
+                    all_dns[ou_dn] = ou_entry
             #elif len(co_dns) == 1:
             else:
                 #current_entry = list(co_dns.values())[0]
                 current_entry = co_dns
                 dst.modify(co_dn, current_entry, co_entry)
+            all_dns[co_dn] = co_entry
             #else:
                 #raise Exception(f"Found multiple COs for o={co_identifier}")
 
@@ -224,10 +228,9 @@ def create(src, dst):
                 grp_dn = f"cn={grp_name},ou=Groups,{co_dn}"
                 #grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
                 #                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
-                grp_dns = all_dns.get(grp_dn, None)
-                if grp_dns:
+                old_entry = all_dns.get(grp_dn, None)
+                if old_entry:
                     #old_dn, old_entry = list(grp_dns.items())[0]
-                    old_entry = grp_dns
                     members = old_entry.get('member', [])
                 #elif len(grp_dns) == 0:
                 else:
@@ -254,8 +257,20 @@ def create(src, dst):
 
                 # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
                 # if grp_entry != old_entry:
-                ldif = dst.store(grp_dn, grp_entry)
-                logging.debug("      - store: {}".format(ldif))
+                #logging.info(f"{grp_dns}")
+                #logging.info(f"{grp_entry}")
+                if not old_entry:
+                    ldif = dst.add(grp_dn, grp_entry)
+                elif old_entry == grp_entry:
+                    ldif = {}
+                    #logging.info("equal")
+                else:
+                    #logging.info("not equal")
+                    ldif = dst.modify(grp_dn, old_entry, grp_entry)
+                all_dns[grp_dn] = grp_entry
+
+                #exit()
+                logging.debug(f"      - store: {ldif}")
 
             logging.debug("  - People")
 
@@ -283,8 +298,16 @@ def create(src, dst):
 
                 registered_users.append(dst_dn)
 
+                old_entry = all_dns.get(dst_dn, None)
                 try:
-                    ldif = dst.store(dst_dn, dst_entry)
+                    if not old_entry:
+                        ldif = dst.add(dst_dn, dst_entry)
+                    elif old_entry == dst_entry:
+                        ldif = {}
+                    else:
+                        ldif = dst.modify(dst_dn, old_entry, dst_entry)
+                    all_dns[dst_dn] = dst_entry
+                    #ldif = dst.store(dst_dn, dst_entry)
                     logging.debug(f"      - store {dst_dn}: {ldif}")
                 except ldap.OBJECT_CLASS_VIOLATION as e:
                     logging.error(f"Error creating LDIF: {str(e)} for {dst_dn}")
@@ -318,12 +341,11 @@ def create(src, dst):
                     grp_dn = f"cn={grp_name},ou=Groups,{co_dn}"
                     #grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
                     #                    f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
-                    grp_dns = all_dns.get(grp_dn, None)
+                    old_entry = all_dns.get(grp_dn, None)
 
                     # ipdb.set_trace()
-                    if grp_dns:
+                    if old_entry:
                         #old_dn, old_entry = list(grp_dns.items())[0]
-                        old_entry = grp_dns
                         members = old_entry.get('member', [])
                         if dst_dn not in members:
                             members.append(dst_dn)
@@ -348,7 +370,14 @@ def create(src, dst):
                         grp_entry['displayName'] = [group.get('name')]
 
                     # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
-                    ldif = dst.store(grp_dn, grp_entry)
+                    if not old_entry:
+                        ldif = dst.add(grp_dn, grp_entry)
+                    elif old_entry == grp_entry:
+                        ldif = {}
+                    else:
+                        ldif = dst.modify(grp_dn, old_entry, grp_entry)
+                    all_dns[grp_dn] = grp_entry
+                    #ldif = dst.store(grp_dn, grp_entry)
                     logging.debug("      - store: {}".format(ldif))
 
             if True:
@@ -394,7 +423,16 @@ def create(src, dst):
                 if vc[service][co_identifier]["tags"]:
                     grp_entry['businessCategory'] = vc[service][co_identifier]["tags"]
 
-                ldif = dst.store(grp_dn, grp_entry)
+                old_entry = all_dns.get(grp_dn, None)
+                if not old_entry:
+                    dst.add(grp_dn, grp_entry)
+                elif old_entry == grp_entry:
+                    ldif = {}
+                else:
+                    dst.modify(grp_dn, old_entry, grp_entry)
+                all_dns[grp_dn] = grp_entry
+
+                #ldif = dst.store(grp_dn, grp_entry)
                 logging.debug("      - store: {}".format(ldif))
 
 

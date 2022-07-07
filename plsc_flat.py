@@ -48,10 +48,12 @@ def create(src, dst):
                 flat_dn = f"dc=flat,{service_dn}"
                 flat_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['flat'], 'ou': ['flat']}
                 dst.add(flat_dn, flat_entry)
+                all_dns[flat_dn] = flat_entry
                 for ou in ['Groups', 'People']:
                     ou_dn = 'ou=' + ou + ',' + flat_dn
                     ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
                     dst.add(ou_dn, ou_entry)
+                    all_dns[ou_dn] = ou_entry
 
             logging.debug("  - People")
 
@@ -65,14 +67,20 @@ def create(src, dst):
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
                 #dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
                 #                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
-                dst_dns = all_dns.get(dst_dn, {})
+                old_dn = all_dns.get(dst_dn, {})
                 # We can't just store People, we need to merge attributes
-                if len(dst_dns) == 1:
-                    old_dn, old_entry = list(dst_dns.items())[0]
-                    for k, v in old_entry.items():
+                if old_dn:
+                    #old_dn, old_entry = list(dst_dns.items())[0]
+                    for k, v in old_dn.items():
                         src_entry.setdefault(k, []).extend(v)
                         src_entry[k] = list(set(src_entry[k]))
-                ldif = dst.store(dst_dn, src_entry)
+                    if old_dn == src_entry:
+                        ldif = {}
+                    else:
+                        ldif = dst.modify(dst_dn, old_dn, src_entry)
+                else:
+                    ldif = dst.add(dst_dn, src_entry)
+                all_dns[dst_dn] = src_entry
                 logging.debug("    - store: {}".format(ldif))
 
             logging.debug("  - Groups")
@@ -110,20 +118,29 @@ def create(src, dst):
 
                 dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
 
-                ldif = dst.store(dst_dn, new_entry)
+                old_dn = all_dns.get(dst_dn, None)
+                if not old_dn:
+                    ldif = dst.add(dst_dn, new_entry)
+                elif old_dn == new_entry:
+                    ldif = {}
+                else:
+                    ldif = dst.modify(dst_dn, old_dn, new_entry)
+                all_dns[dst_dn] = new_entry
                 logging.debug("    - store: {}".format(ldif))
 
-        flat_dn = f"dc=flat,dc={service},{dst.basedn}"
+        flat_dn = f"dc=flat,{service_dn}"
         for uid, statuses in voPersonStatus.items():
             status = 'active' if 'active' in statuses else 'expired'
             #dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
             #                    "(&(ObjectClass=person)(uid={}))".format(uid))
-            dst_dns = all_dns.get("oud=People,{flat_dn}", {})
+            dst_dn = f"uid={uid},ou=People,{flat_dn}"
+            old_entry = all_dns.get(dst_dn, {})
+            new_entry = old_entry.copy()
+            new_entry['voPersonStatus'] = [status]
             # Add correct voPersonStatus to entry
-            if len(dst_dns) == 1:
-                dn, entry = list(dst_dns.items())[0]
-                entry['voPersonStatus'] = [status]
-                ldif = dst.store(dn, entry)
+            if old_entry != new_entry:
+                dst.modify(dst_dn, old_entry, new_entry)
+                all_dns[dst_dn] = new_entry
 
 
 # Cleanup phase
