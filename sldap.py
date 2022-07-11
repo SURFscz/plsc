@@ -12,6 +12,8 @@ class SLdap(object):
     basedn = None
 
     def __init__(self, config):
+        self.cache = {}
+
         ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, 0)
         ldap.set_option(ldap.OPT_X_TLS_DEMAND, True)
 
@@ -82,6 +84,11 @@ class SLdap(object):
         return result
 
     def find(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
+
+        for c in self.cache.get(basedn, []):
+            if c['filter'] == ldap_filter and c['attrs'] == attrs and c['scope'] == scope:
+                return c['dns']
+
         dns = {}
         try:
             r = self.__search(basedn, ldap_filter, attrs, scope)
@@ -93,6 +100,14 @@ class SLdap(object):
         except ldap.NO_RESULTS_RETURNED as e:
             logging.error(f"find: {e} on filter '{ldap_filter}'")
             raise e
+
+        self.cache.setdefault(basedn, []).append({
+            'filter': ldap_filter,
+            'attrs': attrs,
+            'scope': scope,
+            'dns': dns
+        })
+
         return dns
 
     def rfind(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
@@ -117,6 +132,7 @@ class SLdap(object):
         modlist = ldap.modlist.modifyModlist(self.__encode(old_entry), self.__encode(new_entry))
         if modlist:
             try:
+                self.cache.pop(dn, None)
                 logging.info("[LDAP] Update: {}".format(dn))
                 logging.debug("[LDAP] Update will modify: {}".format(modlist))
                 self.__c.modify_s(dn, modlist)
@@ -142,6 +158,7 @@ class SLdap(object):
     def delete(self, dn):
         logging.info(f"Deleting dn='{dn}'")
         try:
+            self.cache.pop(dn, None)
             logging.info("[LDAP] Delete: {}".format(dn))
             self.__c.delete_s(dn)
         except Exception as e:

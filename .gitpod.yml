@@ -26,5 +26,3 @@ tasks:
 vscode:
   extensions:
     - littlefoxteam.vscode-python-test-adapter
-    - hbenl.vscode-test-explorer
-    - hbenl.test-adapter-converter
