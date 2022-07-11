@@ -1,7 +1,7 @@
 image:
   file: .gitpod.Dockerfile
 
-    # List the ports you want to expose and what to do when they are served. See https://www.gitpod.io/docs/config-ports/
+# List the ports you want to expose and what to do when they are served. See https://www.gitpod.io/docs/config-ports/
 ports:
   - port: 3000
     onOpen: open-preview
@@ -9,7 +9,7 @@ ports:
 # List the start up tasks. You can start them in parallel in multiple terminals. See https://www.gitpod.io/docs/config-start-tasks/
 tasks:
 
-  - init: |
+  - command: |
       mkdir -p .vscode;
       cat << EOF > .vscode/settings.json
       {
@@ -17,8 +17,6 @@ tasks:
         "python.testing.pytestArgs": [
           "tests"
         ],
-        "python.testing.unittestEnabled": false,
-        "python.testing.nosetestsEnabled": false,
         "python.testing.pytestEnabled": true
       }
       EOF
@@ -28,4 +26,5 @@ tasks:
 vscode:
   extensions:
     - littlefoxteam.vscode-python-test-adapter
-
+    - hbenl.vscode-test-explorer
+    - hbenl.test-adapter-converter
