@@ -8,12 +8,12 @@ ports:
 
 # List the start up tasks. You can start them in parallel in multiple terminals. See https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  
+
   - init: |
       mkdir -p .vscode;
       cat << EOF > .vscode/settings.json
       {
-        "python.pythonPath": "$(which python)",
+        "python.defaultInterpreterPath": "$(which python)",
         "python.testing.pytestArgs": [
           "tests"
         ],
@@ -24,7 +24,7 @@ tasks:
       EOF
       python -m pip install -r requirements.txt;
       export PYTHONPATH=$pwd;
-      
+
 vscode:
   extensions:
     - littlefoxteam.vscode-python-test-adapter

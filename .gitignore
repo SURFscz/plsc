@@ -17,3 +17,5 @@ config.d/
 .venv
 .env
 tests/api/
+.vscode/
+.theia/
