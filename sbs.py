@@ -45,9 +45,9 @@ class SBS(object):
         retries = Retry(
             total=config.get('retry', 1),
             backoff_factor=0.1,
-            status_forcelist=[ 503, 504 ]
+            status_forcelist=[503, 504]
         )
-        
+
         self.session.mount(f"{self.host}", HTTPAdapter(max_retries=retries))
 
     @staticmethod
@@ -62,12 +62,15 @@ class SBS(object):
     def api(self, request, method='GET', headers=None, data=None):
         logging.debug(f"API: {request}...")
 
-        r = self.session.request(method, url=f"{self.host}/{request}",
-                        headers=headers,
-                        auth=requests.auth.HTTPBasicAuth(self.user, self.password),
-                        verify=self.verify_ssl,
-                        timeout=self.timeout,
-                        data=data)
+        r = self.session.request(
+            method,
+            url=f"{self.host}/{request}",
+            headers=headers,
+            auth=requests.auth.HTTPBasicAuth(self.user, self.password),
+            verify=self.verify_ssl,
+            timeout=self.timeout,
+            data=data
+        )
         #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
 
         if r.status_code == 200:
