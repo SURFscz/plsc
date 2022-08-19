@@ -22,7 +22,7 @@ class SLdap(object):
 
         self.sizelimit = int(config.get('sizelimit', 500))
 
-        logging.info("Initializing ldap: {}, sizelimit: {}".format(uri, self.sizelimit))
+        logging.debug("[LDAP] Initializing ldap: {}, sizelimit: {}".format(uri, self.sizelimit))
         self.__c = ldap.initialize(uri)
 
         if binddn == 'external':
@@ -51,7 +51,7 @@ class SLdap(object):
         return r
 
     def __search(self, basedn, ldap_filter='(ObjectClass=*)', attrs=None, scope=ldap.SCOPE_SUBTREE):
-        logging.debug("Search: {}".format(basedn))
+        logging.debug("[LDAP] Search: {}".format(basedn))
 
         if attrs is None:
             attrs = []
@@ -76,7 +76,7 @@ class SLdap(object):
             if not controls[0].cookie:
                 break
 
-            logging.debug("Paging ...")
+            #logging.debug("Paging ...")
             page_control.cookie = controls[0].cookie
 
         return result
@@ -105,7 +105,7 @@ class SLdap(object):
     def add(self, dn, entry):
         addlist = ldap.modlist.addModlist(self.__encode(entry))
         try:
-            logging.info("[LDAP] Create: {}".format(dn))
+            logging.debug("[LDAP] Create: {}".format(dn))
             self.__c.add_s(dn, addlist)
         except Exception as e:
             logging.error(f"Exception on add of {dn}: {e}")
@@ -117,8 +117,7 @@ class SLdap(object):
         modlist = ldap.modlist.modifyModlist(self.__encode(old_entry), self.__encode(new_entry))
         if modlist:
             try:
-                logging.info("[LDAP] Update: {}".format(dn))
-                logging.debug("[LDAP] Update will modify: {}".format(modlist))
+                logging.debug("[LDAP] Modify: {}".format(modlist))
                 self.__c.modify_s(dn, modlist)
             except Exception as e:
                 logging.error(f"Exception on modify of {dn}: {e}")
@@ -128,7 +127,7 @@ class SLdap(object):
 
     # store tries to add, then modifies if exists.
     def store(self, dn, new_entry):
-        logging.debug("Storing ldap: {}".format(new_entry))
+        logging.debug("[LDAP] Store: {}".format(new_entry))
 
         dst_dns = self.find(dn, scope=ldap.SCOPE_BASE)
         if len(dst_dns) == 1:
@@ -139,10 +138,21 @@ class SLdap(object):
         else:
             return "Too many dn's This shouldn't happen"
 
+    # A cheaper store
+    def merge(self, dn, all_dns, old_entry, new_entry):
+        logging.debug("[LDAP] Merge: {}".format(new_entry))
+        if not old_entry:
+            ldif = self.add(dn, new_entry)
+        elif old_entry == new_entry:
+            ldif = {}
+        else:
+            ldif = self.modify(dn, old_entry, new_entry)
+        all_dns[dn] = new_entry
+        return ldif
+
     def delete(self, dn):
-        logging.info(f"Deleting dn='{dn}'")
         try:
-            logging.info("[LDAP] Delete: {}".format(dn))
+            logging.debug("[LDAP] Delete: {}".format(dn))
             self.__c.delete_s(dn)
         except Exception as e:
             logging.error("{}\n  {}".format(dn, e))
