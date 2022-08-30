@@ -57,7 +57,11 @@ def create(src, dst):
                 logging.debug("  - srcdn: {}".format(src_dn))
                 src_uid = src_entry['uid'][0]
 
-                voPersonStatus.setdefault(src_uid, []).append(src_entry.pop('voPersonStatus', ['active'])[0])
+                overruling_status = 'active'
+                current_status = src_entry.get('voPersonStatus', [overruling_status])[0]
+                voPersonStatus.setdefault(src_uid, []).append(current_status)
+                src_entry['voPersonStatus'] = [overruling_status] \
+                    if overruling_status in voPersonStatus[src_uid] else [current_status]
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
                 dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
@@ -109,18 +113,6 @@ def create(src, dst):
 
                 ldif = dst.store(dst_dn, new_entry)
                 logging.debug("    - store: {}".format(ldif))
-
-        flat_dn = f"dc=flat,dc={service},{dst.basedn}"
-        for uid, statuses in voPersonStatus.items():
-            status = 'active' if 'active' in statuses else 'expired'
-            dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                "(&(ObjectClass=person)(uid={}))".format(uid))
-
-            # Add correct voPersonStatus to entry
-            if len(dst_dns) == 1:
-                dn, entry = list(dst_dns.items())[0]
-                entry['voPersonStatus'] = [status]
-                ldif = dst.store(dn, entry)
 
 
 # Cleanup phase
