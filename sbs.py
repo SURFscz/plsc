@@ -4,6 +4,8 @@ from typing import Dict, List
 
 import requests
 import requests.auth
+from requests.adapters import HTTPAdapter, Retry
+
 import urllib3
 
 import os
@@ -28,6 +30,7 @@ class SBS(object):
         self.user = config.get('user', 'sysread')
         self.password = config.get('passwd', 'changethispassword')
         self.verify_ssl = config.get('verify_ssl', True)
+        self.timeout = config.get('timeout', None)
         self.recording_requested = config.get('recorder', False)
 
         if config.get("ipv4_only", False):
@@ -37,6 +40,15 @@ class SBS(object):
 
         if not self.verify_ssl:
             urllib3.disable_warnings()
+
+        self.session = requests.Session()
+        retries = Retry(
+            total=config.get('retry', 1),
+            backoff_factor=0.1,
+            status_forcelist=[503, 504]
+        )
+
+        self.session.mount(f"{self.host}", HTTPAdapter(max_retries=retries))
 
     @staticmethod
     def __get_json(string):
@@ -50,11 +62,15 @@ class SBS(object):
     def api(self, request, method='GET', headers=None, data=None):
         logging.debug(f"API: {request}...")
 
-        r = requests.request(method, url=f"{self.host}/{request}",
-                             headers=headers,
-                             auth=requests.auth.HTTPBasicAuth(self.user, self.password),
-                             verify=self.verify_ssl,
-                             data=data)
+        r = self.session.request(
+            method,
+            url=f"{self.host}/{request}",
+            headers=headers,
+            auth=requests.auth.HTTPBasicAuth(self.user, self.password),
+            verify=self.verify_ssl,
+            timeout=self.timeout,
+            data=data
+        )
         #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
 
         if r.status_code == 200:
