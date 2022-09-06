@@ -26,14 +26,14 @@ class TestAll(BaseTest):
             r = self.dst.find(rdn)
 
             if expected_count:
-                assert(len(r) == expected_count)
+                self.assertEqual(len(r), expected_count)
 
             if not r:
                 logger.error("No results for: {}".format(rdn))
 
             logger.debug("Result: {}".format(r))
 
-            self.assertTrue(r)
+            self.assertTrue(bool(r))
             return r
 
         def check_people(rdn, people, context_checks):
@@ -49,8 +49,8 @@ class TestAll(BaseTest):
                 # Example: verify that ssh Public key and objectClass is present
                 # when SBS user profile has ssh_keys...
                 if u['user'].get('ssh_keys', None):
-                    assert('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
-                    assert('sshPublicKey' in user_object[list(user_object)[0]].keys())
+                    self.assertTrue('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
+                    self.assertTrue('sshPublicKey' in user_object[list(user_object)[0]].keys())
 
                 # Here a sequence of function can be initiated to verify this person in a particular context
                 for f in context_checks:
@@ -83,7 +83,7 @@ class TestAll(BaseTest):
                 found_members = [m.split(',')[0].split('=')[1] for m in member_element]
                 required_members = [m['user']['username'] for m in active_members]
 
-                assert(sorted(found_members) == sorted(required_members))
+                self.assertEqual(sorted(found_members), sorted(required_members))
 
         def check_ldap(rdn, people, groups, group_name_function, context_checks=[]):
             """ check for ordered object entry and check both people and object subtrees
@@ -106,7 +106,7 @@ class TestAll(BaseTest):
                     # When CO is expired, the person in de Ordered Subtree should mut be expired as well
                     if detail['status'] == 'expired':
                         logger.debug(f"Checking expiry status of {person['user']['username']}")
-                        assert([person['status'], 'expired'])
+                        self.assertEqual([person['status'], 'expired'])
 
                 def check_accepted_policy_agreement(person, person_object):
                     # Verify that AUP attribute exists when accepted by user for this service
@@ -118,10 +118,10 @@ class TestAll(BaseTest):
 
                     for u in self.users:
                         if u['username'] == username:
-                            assert('accepted_aups' in u)
+                            self.assertTrue('accepted_aups' in u)
 
                             for aup in u['accepted_aups']:
-                                assert('service_id' in aup)
+                                self.assertTrue('service_id' in aup)
 
                                 if aup['service_id'] == s['id']:
                                     aup_found = True
@@ -137,9 +137,9 @@ class TestAll(BaseTest):
                             break
 
                     if policy_agreement_attribute:
-                        assert(aup_found)
+                        self.assertTrue(aup_found)
                     else:
-                        assert(not aup_found)
+                        self.assertFalse(aup_found)
 
                 org_sname = c['organisation']['short_name']
 
@@ -170,9 +170,9 @@ class TestAll(BaseTest):
                 )
 
                 logger.info(f"*** Checking Admin account: {s['entity_id']}")
-                assert('ldap_password' in s)
+                self.assertTrue('ldap_password' in s)
                 admin_object = check_object(f"cn=admin,dc={s['entity_id']},{self.dst_conf['basedn']}", expected_count=1)
                 ldap_password = s['ldap_password']
                 if ldap_password:
                     userPassword = admin_object[list(admin_object)[0]]['userPassword']
-                    assert(userPassword == '{CRYPT}' + ldap_password)
+                    self.assertEqual(userPassword, '{CRYPT}' + ldap_password)
