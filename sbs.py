@@ -197,7 +197,9 @@ class SBS(object):
                         services[s]['entity_id'], {
                             'service_id': s,
                             'cos': {},
-                            'ldap_password': services[s]['ldap_password']
+                            'ldap_password': services[s]['ldap_password'],
+                            'aup': services[s].get('accepted_user_policy', None),
+                            'pp': services[s].get('privacy_policy', None)
                         }
                     )['cos'][c['id']] = c
 

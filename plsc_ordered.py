@@ -107,6 +107,22 @@ def create(src, dst):
 
         # find existing services
         service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
+
+        # Define service entry
+        service_entry = {
+            'objectClass': ['dcObject', 'organization'],
+            'dc': [service],
+            'o': [service]
+        }
+        aup = details['aup']
+        pp = details['pp']
+        if aup or pp:
+            service_entry['objectClass'].append('labeledURIObject')
+        if aup:
+            service_entry.setdefault('labeledURI', []).append(f"{aup} aup")
+        if pp:
+            service_entry.setdefault('labeledURI', []).append(f"{pp} pp")
+
         if len(service_dns) == 0:  # no existing service found
             service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
@@ -130,6 +146,10 @@ def create(src, dst):
             #gid_dn = 'cn=gidNumberSequence,ou=Sequence,' + service_dn
             #gid_entry = {'objectClass': ['top', 'device'], 'serialNumber': [config['gid']]}
             #dst.add(gid_dn, gid_entry)
+        elif len(service_dns) == 1:
+            dst.store(service_dn, service_entry)
+        else:
+            raise Exception(f"Found multiple dns for service {service}")
 
         # Adjust admin userPassword with ldap_password if given in SBS.
         # https://github.com/SURFscz/plsc/issues/24
