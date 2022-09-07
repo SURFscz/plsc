@@ -11,6 +11,8 @@ import urllib3
 import os
 import socket
 
+logger = logging.getLogger()
+
 
 def ipv4_only():
     return socket.AF_INET
@@ -60,7 +62,7 @@ class SBS(object):
         return json.dumps(data)
 
     def api(self, request, method='GET', headers=None, data=None):
-        logging.debug(f"API: {request}...")
+        logger.debug(f"API: {request}...")
 
         r = self.session.request(
             method,
@@ -82,7 +84,7 @@ class SBS(object):
 
             return self.__get_json(r.text)
         else:
-            #logging.error(f"API: {request} returns: {r.status_code}")
+            #logger.error(f"API: {request} returns: {r.status_code}")
             raise SBSException(f"API: {request} returns: {r.status_code}")
 
     def health(self):
@@ -233,7 +235,7 @@ class SBS(object):
             g_id = group['id']
             groups[g_id] = group
 
-        logging.debug(f"GROUPS {co['short_name']} : {groups}")
+        logger.debug(f"GROUPS {co['short_name']} : {groups}")
         return groups
 
     def collaboration_users(self, c_id):
@@ -259,7 +261,7 @@ class SBS(object):
             for m in group['collaboration_memberships']:
                 users['users'][m['user_id']]['groups'].append(g_id)
 
-        logging.debug(f"USERS {c_id} : {users}")
+        logger.debug(f"USERS {c_id} : {users}")
         return users
 
     def collaboration_groups(self, c_id):
@@ -291,5 +293,5 @@ class SBS(object):
                 groups['groups'][g_id]['name'] = f"group_{g['name']}"
                 groups['users'][m['user_id']] = m['user']
 
-        logging.debug(f"COLLABORATION GROUPS {c_id} : {groups}")
+        logger.debug(f"COLLABORATION GROUPS {c_id} : {groups}")
         return groups
