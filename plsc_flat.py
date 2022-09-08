@@ -64,15 +64,7 @@ def create(src, dst):
                     if overruling_status in voPersonStatus[src_uid] else [current_status]
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
-                dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                    "(&(ObjectClass=person)(uid={}))".format(src_uid))
 
-                # We can't just store People, we need to merge attributes
-                if len(dst_dns) == 1:
-                    old_dn, old_entry = list(dst_dns.items())[0]
-                    for k, v in old_entry.items():
-                        src_entry.setdefault(k, []).extend(v)
-                        src_entry[k] = list(set(src_entry[k]))
                 ldif = dst.store(dst_dn, src_entry)
                 logging.debug("    - store: {}".format(ldif))
 

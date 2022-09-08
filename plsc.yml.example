@@ -17,4 +17,7 @@ sbs:
     host: https://sbs.example.net
     user: sysread
     passwd: changethispassword
+    verify_ssl: True
+    retry: 3
+    timeout: 30
 pwd: '{CRYPT}!'
