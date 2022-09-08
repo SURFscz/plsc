@@ -1,0 +1,23 @@
+---
+ldap:
+  src:
+    uri: "ldap://localhost:1389/"
+    basedn: "dc=services,dc=vnet"
+    binddn: "cn=Directory Manager"
+    passwd: "secret"
+    sizelimit: 5000
+  dst:
+    uri: "ldap://localhost:1389/"
+    basedn: "dc=services,dc=vnet"
+    binddn: "cn=Directory Manager"
+    passwd: "secret"
+    sizelimit: 5000
+sbs:
+  src:
+    host: "https://sbs.scz-vm.net"
+    user: "sysread"
+    passwd: "changethispassword"
+    verify_ssl: False
+pwd: "{CRYPT}!"
+uid: 1000
+gid: 1000

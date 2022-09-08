@@ -4,6 +4,7 @@ bin/
 include/
 lib/
 plsc.yml
+plsc_opendj.yml
 mirrorcheck.yml
 sbs.yml
 share/
