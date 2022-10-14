@@ -20,6 +20,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 # Create phase
 def create(src, dst):
     global vc
+    overruling_status = 'expired'
 
     services = util.find_ordered_services(src)
     logging.debug(f"s: {services}")
@@ -32,6 +33,7 @@ def create(src, dst):
 
         # voPersonStatus is a special case (per service)
         voPersonStatus = {}
+        dst_entries = {}
 
         logging.debug("service: {}".format(service))
         for co_id in cos:
@@ -57,12 +59,13 @@ def create(src, dst):
                 logging.debug("  - srcdn: {}".format(src_dn))
                 src_uid = src_entry['uid'][0]
 
-                voPersonStatus.setdefault(src_uid, []).append(src_entry.pop('voPersonStatus', ['active'])[0])
+                current_status = src_entry.get('voPersonStatus', [overruling_status])[0]
+                voPersonStatus.setdefault(src_uid, []).append(current_status)
+                src_entry['voPersonStatus'] = [overruling_status] \
+                    if overruling_status in voPersonStatus[src_uid] else [current_status]
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
-
-                ldif = dst.store(dst_dn, src_entry)
-                logging.debug("    - store: {}".format(ldif))
+                dst_entries[dst_dn] = src_entry
 
             logging.debug("  - Groups")
             grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
@@ -102,17 +105,9 @@ def create(src, dst):
                 ldif = dst.store(dst_dn, new_entry)
                 logging.debug("    - store: {}".format(ldif))
 
-        flat_dn = f"dc=flat,dc={service},{dst.basedn}"
-        for uid, statuses in voPersonStatus.items():
-            status = 'active' if 'active' in statuses else 'expired'
-            dst_dns = dst.rfind("ou=People,dc=flat,dc={}".format(service),
-                                "(&(ObjectClass=person)(uid={}))".format(uid))
-
-            # Add correct voPersonStatus to entry
-            if len(dst_dns) == 1:
-                dn, entry = list(dst_dns.items())[0]
-                entry['voPersonStatus'] = [status]
-                ldif = dst.store(dn, entry)
+        for dst_dn, dst_entry in dst_entries.items():
+            ldif = dst.store(dst_dn, dst_entry)
+            logging.debug(f"    - store: {dst_dn} {ldif}")
 
 
 # Cleanup phase
