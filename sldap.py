@@ -22,7 +22,7 @@ class SLdap(object):
         binddn = config['binddn']
         passwd = config['passwd']
 
-        self.sizelimit = int(config.get('sizelimit', -1))
+        self.sizelimit = int(config.get('sizelimit', 100))
 
         logger.info("Initializing ldap: {}, sizelimit: {}".format(uri, self.sizelimit))
         self.__c = ldap.initialize(uri)
