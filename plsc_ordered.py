@@ -48,7 +48,11 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record['mail'] = [sbs_user.get('email')]
 
     # affiliation
-    record['voPersonExternalAffiliation'] = [sbs_user.get('scoped_affiliation')]
+    scoped_affiliation = sbs_user.get('scoped_affiliation')
+    if scoped_affiliation:
+        record['voPersonExternalAffiliation'] = [v.strip() for v in sbs_user.get('scoped_affiliation').split(',')]
+    else:
+        record['voPersonExternalAffiliation'] = []
     # TODO: fix this hack. ePSA is not stored in SBS, but as it is always fixed, we can hardcode it here
     record['eduPersonScopedAffiliation'] = ['member@sram.surf.nl']
 
