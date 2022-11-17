@@ -1,0 +1,59 @@
+{
+  "accepted_user_policy": null,
+  "collaboration_memberships_count": 4,
+  "created_at": 1668692534,
+  "created_by": "urn:admin",
+  "description": "University of Amsterdam Research - Urban Crowd Control",
+  "disable_join_requests": false,
+  "disclose_email_information": false,
+  "disclose_member_information": true,
+  "expiry_date": null,
+  "global_urn": "uva:research",
+  "id": 4,
+  "identifier": "0e8b535f-b01c-442b-85e2-8a74e30f36c7",
+  "invitations_count": 1,
+  "last_activity_date": 1668692534,
+  "logo": "https://sbs.scz-vm.net/api/images/collaborations/eccf4079-3bcd-46da-899a-cdcf6153c204",
+  "name": "UVA UCC research",
+  "organisation": {
+    "category": "University",
+    "collaboration_creation_allowed": false,
+    "collaborations_count": 2,
+    "created_at": 1668692534,
+    "created_by": "urn:admin",
+    "description": "University of Amsterdam",
+    "id": 4,
+    "identifier": "b844f34b-81e5-4cb5-86df-333048a367f3",
+    "logo": "https://sbs.scz-vm.net/api/images/organisations/6c33366d-a04d-4411-94e9-2d6324297c2d",
+    "name": "Amsterdam UVA",
+    "on_boarding_msg": null,
+    "organisation_memberships_count": 2,
+    "schac_home_organisations": [
+      {
+        "created_at": 1668692535,
+        "created_by": "urn:admin",
+        "id": 4,
+        "name": "example.org",
+        "organisation_id": 4,
+        "updated_by": "urn:admin"
+      }
+    ],
+    "services_restricted": false,
+    "short_name": "uva",
+    "updated_by": "urn:admin",
+    "uuid4": "6c33366d-a04d-4411-94e9-2d6324297c2d"
+  },
+  "organisation_id": 4,
+  "short_name": "research",
+  "status": "active",
+  "tags": [
+    {
+      "id": 2,
+      "tag_value": "tag_uva"
+    }
+  ],
+  "updated_at": 1668692534,
+  "updated_by": "urn:admin",
+  "uuid4": "eccf4079-3bcd-46da-899a-cdcf6153c204",
+  "website_url": "https://www.google.nl"
+}
