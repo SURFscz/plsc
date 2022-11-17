@@ -13,7 +13,11 @@ def clean_dir(location):
     for entry in files:
         entry = os.path.realpath(os.path.join(location, entry))
         print(f"remove {entry}")
-        # os.remove(entry)
+        if os.path.isdir(entry):
+            clean_dir(entry)
+            os.rmdir(entry)
+        else:
+            os.remove(entry)
 
 
 def write_collaborations(location, src):
@@ -21,6 +25,11 @@ def write_collaborations(location, src):
 
     # Find all CO's in SBS
     collaborations = src.collaborations()
+
+    file = os.path.realpath(os.path.join(location, "collaborations/all"))
+    with open(file, "w") as f:
+        print(f"write {file}")
+        f.write(json.dumps(collaborations, indent=2))
 
     for collaboration in collaborations:
         id = collaboration['id']
