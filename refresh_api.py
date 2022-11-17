@@ -24,7 +24,7 @@ def write_collaborations(location, src):
     os.mkdir(f"{location}/collaborations")
 
     # Find all CO's in SBS
-    collaborations = src.collaborations()
+    collaborations = src.api('api/collaborations/all')
 
     file = os.path.realpath(os.path.join(location, "collaborations/all"))
     with open(file, "w") as f:
@@ -33,8 +33,8 @@ def write_collaborations(location, src):
 
     for collaboration in collaborations:
         id = collaboration['id']
-        co = src.collaboration(id)
-        file = os.path.realpath(os.path.join(location, "collaborations/" + str(id)))
+        co = src.api(f"api/collaborations/{id}")
+        file = os.path.realpath(os.path.join(location, f"collaborations/{id}"))
         with open(file, "w") as f:
             print(f"write {file}")
             f.write(json.dumps(co, indent=2))
