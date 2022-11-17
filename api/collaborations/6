@@ -1,5 +1,6 @@
 {
   "accepted_user_policy": null,
+  "collaboration_memberships": [],
   "collaboration_memberships_count": 0,
   "created_at": 1668692534,
   "created_by": "urn:admin",
@@ -9,9 +10,12 @@
   "disclose_member_information": false,
   "expiry_date": null,
   "global_urn": "uva:uu_short",
+  "groups": [],
   "id": 6,
   "identifier": "0b4a9136-c7cd-472e-85e8-aa6c2812f847",
+  "invitations": [],
   "invitations_count": 0,
+  "join_requests": [],
   "last_activity_date": 1668692534,
   "logo": "https://sbs.scz-vm.net/api/images/collaborations/6cad9234-63db-4b95-94c6-f35c2697fe4c",
   "name": "UU",
@@ -38,12 +42,15 @@
         "updated_by": "urn:admin"
       }
     ],
+    "services": [],
     "services_restricted": false,
     "short_name": "uva",
     "updated_by": "urn:admin",
     "uuid4": "6c33366d-a04d-4411-94e9-2d6324297c2d"
   },
   "organisation_id": 4,
+  "service_connection_requests": [],
+  "services": [],
   "short_name": "uu_short",
   "status": "active",
   "tags": [],

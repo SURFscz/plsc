@@ -33,10 +33,11 @@ def write_collaborations(location, src):
 
     for collaboration in collaborations:
         id = collaboration['id']
+        co = src.collaboration(id)
         file = os.path.realpath(os.path.join(location, "collaborations/" + str(id)))
         with open(file, "w") as f:
             print(f"write {file}")
-            f.write(json.dumps(collaboration, indent=2))
+            f.write(json.dumps(co, indent=2))
 
 
 def write_plsc(location, src):
