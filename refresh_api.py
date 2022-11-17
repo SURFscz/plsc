@@ -53,7 +53,6 @@ def write_plsc(location, src):
 
 
 def main():
-
     if len(sys.argv) < 2:
         sys.exit(sys.argv[0] + "  <conf.yml>")
 
