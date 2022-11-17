@@ -168,7 +168,7 @@ class SBS(object):
         data = self.api("api/plsc/sync")
 
         services = {}
-        for s in data.get('services', {}):
+        for s in data.get('services', []):
             services[s['id']] = s
 
         users = {}

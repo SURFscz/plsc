@@ -1,1522 +1,3791 @@
-[
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "john@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 7,
-    "last_login_date": "None",
-    "name": "John Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
-    ],
-    "uid": "urn:john",
-    "user_ip_networks": [],
-    "username": "john"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "mary@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 8,
-    "last_login_date": "None",
-    "name": "Mary Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:mary",
-    "user_ip_networks": [],
-    "username": "mdoe"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "peter@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 9,
-    "last_login_date": "None",
-    "name": "Peter Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:peter",
-    "user_ip_networks": [],
-    "username": "peter"
-  },
-  {
-    "accepted_aups": [
-      {
-        "agreed_at": "2022-11-17 13:42:15",
-        "service_id": 3,
-        "url": "https://google.nl"
-      },
-      {
-        "agreed_at": "2022-11-17 13:42:15",
-        "service_id": 8,
-        "url": "https://aup.org"
-      }
-    ],
-    "eduperson_principal_name": null,
-    "email": "boss@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 10,
-    "last_login_date": "None",
-    "name": "The Boss",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:admin",
-    "user_ip_networks": [],
-    "username": "admin"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "roger@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 11,
-    "last_login_date": "None",
-    "name": "Roger Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:roger",
-    "user_ip_networks": [],
-    "username": "roger"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "harry@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 12,
-    "last_login_date": "None",
-    "name": "Harry Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:harry",
-    "user_ip_networks": [],
-    "username": "harry"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "james@example.org",
-    "family_name": null,
-    "given_name": "James",
-    "id": 13,
-    "last_login_date": "None",
-    "name": "James Byrd",
-    "scoped_affiliation": null,
-    "ssh_keys": [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
-    ],
-    "uid": "urn:james",
-    "user_ip_networks": [],
-    "username": "james"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "sarah@uva.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 14,
-    "last_login_date": "None",
-    "name": "Sarah Cross",
-    "scoped_affiliation": null,
-    "ssh_keys": [
-      "some-lame-key"
-    ],
-    "uid": "urn:sarah",
-    "user_ip_networks": [
-      "255.0.0.1/32",
-      "255.0.0.9/24"
-    ],
-    "username": "sarah"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "betty@uuc.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 15,
-    "last_login_date": "None",
-    "name": "betty",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:betty",
-    "user_ip_networks": [],
-    "username": "betty"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "jane@ucc.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 16,
-    "last_login_date": "None",
-    "name": "Jane Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:jane",
-    "user_ip_networks": [],
-    "username": "jane"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "inactive@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 17,
-    "last_login_date": "1749-02-01 13:42:13",
-    "name": "inactive",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:inactive",
-    "user_ip_networks": [],
-    "username": "inacative"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "one_suspend@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 18,
-    "last_login_date": "1749-02-01 13:42:13",
-    "name": "one_suspend",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:one_suspend",
-    "user_ip_networks": [],
-    "username": "1suspend"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "two_suspend@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 19,
-    "last_login_date": "1749-02-01 13:42:13",
-    "name": "two_suspend",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:two_suspend",
-    "user_ip_networks": [],
-    "username": "2suspend"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "suspended@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 20,
-    "last_login_date": "1749-01-03 13:42:13",
-    "name": "suspended",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:suspended",
-    "user_ip_networks": [],
-    "username": "suspended"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "to_be_deleted@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 21,
-    "last_login_date": "2022-07-20 13:42:13",
-    "name": "to_be_deleted",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:to_be_deleted",
-    "user_ip_networks": [],
-    "username": "deleted"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "paul@ucc.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 22,
-    "last_login_date": "None",
-    "name": "Paul Doe",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:paul",
-    "user_ip_networks": [],
-    "username": "paul"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "service_admin@ucc.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 23,
-    "last_login_date": "None",
-    "name": "Service Admin",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:service_admin",
-    "user_ip_networks": [],
-    "username": "service_admin"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe1@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 24,
-    "last_login_date": "None",
-    "name": "Piet Doe de 1de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero001",
-    "user_ip_networks": [],
-    "username": "pietdoe1"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe2@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 25,
-    "last_login_date": "None",
-    "name": "Piet Doe de 2de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero002",
-    "user_ip_networks": [],
-    "username": "pietdoe2"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe3@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 26,
-    "last_login_date": "None",
-    "name": "Piet Doe de 3de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero003",
-    "user_ip_networks": [],
-    "username": "pietdoe3"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe4@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 27,
-    "last_login_date": "None",
-    "name": "Piet Doe de 4de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero004",
-    "user_ip_networks": [],
-    "username": "pietdoe4"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe5@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 28,
-    "last_login_date": "None",
-    "name": "Piet Doe de 5de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero005",
-    "user_ip_networks": [],
-    "username": "pietdoe5"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe6@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 29,
-    "last_login_date": "None",
-    "name": "Piet Doe de 6de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero006",
-    "user_ip_networks": [],
-    "username": "pietdoe6"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe7@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 30,
-    "last_login_date": "None",
-    "name": "Piet Doe de 7de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero007",
-    "user_ip_networks": [],
-    "username": "pietdoe7"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe8@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 31,
-    "last_login_date": "None",
-    "name": "Piet Doe de 8de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero008",
-    "user_ip_networks": [],
-    "username": "pietdoe8"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe9@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 32,
-    "last_login_date": "None",
-    "name": "Piet Doe de 9de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero009",
-    "user_ip_networks": [],
-    "username": "pietdoe9"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe10@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 33,
-    "last_login_date": "None",
-    "name": "Piet Doe de 10de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero010",
-    "user_ip_networks": [],
-    "username": "pietdoe10"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe11@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 34,
-    "last_login_date": "None",
-    "name": "Piet Doe de 11de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero011",
-    "user_ip_networks": [],
-    "username": "pietdoe11"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe12@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 35,
-    "last_login_date": "None",
-    "name": "Piet Doe de 12de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero012",
-    "user_ip_networks": [],
-    "username": "pietdoe12"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe13@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 36,
-    "last_login_date": "None",
-    "name": "Piet Doe de 13de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero013",
-    "user_ip_networks": [],
-    "username": "pietdoe13"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe14@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 37,
-    "last_login_date": "None",
-    "name": "Piet Doe de 14de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero014",
-    "user_ip_networks": [],
-    "username": "pietdoe14"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe15@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 38,
-    "last_login_date": "None",
-    "name": "Piet Doe de 15de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero015",
-    "user_ip_networks": [],
-    "username": "pietdoe15"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe16@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 39,
-    "last_login_date": "None",
-    "name": "Piet Doe de 16de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero016",
-    "user_ip_networks": [],
-    "username": "pietdoe16"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe17@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 40,
-    "last_login_date": "None",
-    "name": "Piet Doe de 17de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero017",
-    "user_ip_networks": [],
-    "username": "pietdoe17"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe18@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 41,
-    "last_login_date": "None",
-    "name": "Piet Doe de 18de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero018",
-    "user_ip_networks": [],
-    "username": "pietdoe18"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe19@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 42,
-    "last_login_date": "None",
-    "name": "Piet Doe de 19de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero019",
-    "user_ip_networks": [],
-    "username": "pietdoe19"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe20@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 43,
-    "last_login_date": "None",
-    "name": "Piet Doe de 20de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero020",
-    "user_ip_networks": [],
-    "username": "pietdoe20"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe21@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 44,
-    "last_login_date": "None",
-    "name": "Piet Doe de 21de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero021",
-    "user_ip_networks": [],
-    "username": "pietdoe21"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe22@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 45,
-    "last_login_date": "None",
-    "name": "Piet Doe de 22de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero022",
-    "user_ip_networks": [],
-    "username": "pietdoe22"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe23@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 46,
-    "last_login_date": "None",
-    "name": "Piet Doe de 23de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero023",
-    "user_ip_networks": [],
-    "username": "pietdoe23"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe24@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 47,
-    "last_login_date": "None",
-    "name": "Piet Doe de 24de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero024",
-    "user_ip_networks": [],
-    "username": "pietdoe24"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe25@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 48,
-    "last_login_date": "None",
-    "name": "Piet Doe de 25de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero025",
-    "user_ip_networks": [],
-    "username": "pietdoe25"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe26@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 49,
-    "last_login_date": "None",
-    "name": "Piet Doe de 26de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero026",
-    "user_ip_networks": [],
-    "username": "pietdoe26"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe27@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 50,
-    "last_login_date": "None",
-    "name": "Piet Doe de 27de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero027",
-    "user_ip_networks": [],
-    "username": "pietdoe27"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe28@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 51,
-    "last_login_date": "None",
-    "name": "Piet Doe de 28de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero028",
-    "user_ip_networks": [],
-    "username": "pietdoe28"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe29@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 52,
-    "last_login_date": "None",
-    "name": "Piet Doe de 29de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero029",
-    "user_ip_networks": [],
-    "username": "pietdoe29"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe30@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 53,
-    "last_login_date": "None",
-    "name": "Piet Doe de 30de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero030",
-    "user_ip_networks": [],
-    "username": "pietdoe30"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe31@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 54,
-    "last_login_date": "None",
-    "name": "Piet Doe de 31de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero031",
-    "user_ip_networks": [],
-    "username": "pietdoe31"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe32@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 55,
-    "last_login_date": "None",
-    "name": "Piet Doe de 32de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero032",
-    "user_ip_networks": [],
-    "username": "pietdoe32"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe33@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 56,
-    "last_login_date": "None",
-    "name": "Piet Doe de 33de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero033",
-    "user_ip_networks": [],
-    "username": "pietdoe33"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe34@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 57,
-    "last_login_date": "None",
-    "name": "Piet Doe de 34de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero034",
-    "user_ip_networks": [],
-    "username": "pietdoe34"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe35@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 58,
-    "last_login_date": "None",
-    "name": "Piet Doe de 35de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero035",
-    "user_ip_networks": [],
-    "username": "pietdoe35"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe36@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 59,
-    "last_login_date": "None",
-    "name": "Piet Doe de 36de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero036",
-    "user_ip_networks": [],
-    "username": "pietdoe36"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe37@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 60,
-    "last_login_date": "None",
-    "name": "Piet Doe de 37de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero037",
-    "user_ip_networks": [],
-    "username": "pietdoe37"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe38@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 61,
-    "last_login_date": "None",
-    "name": "Piet Doe de 38de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero038",
-    "user_ip_networks": [],
-    "username": "pietdoe38"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe39@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 62,
-    "last_login_date": "None",
-    "name": "Piet Doe de 39de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero039",
-    "user_ip_networks": [],
-    "username": "pietdoe39"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe40@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 63,
-    "last_login_date": "None",
-    "name": "Piet Doe de 40de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero040",
-    "user_ip_networks": [],
-    "username": "pietdoe40"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe41@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 64,
-    "last_login_date": "None",
-    "name": "Piet Doe de 41de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero041",
-    "user_ip_networks": [],
-    "username": "pietdoe41"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe42@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 65,
-    "last_login_date": "None",
-    "name": "Piet Doe de 42de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero042",
-    "user_ip_networks": [],
-    "username": "pietdoe42"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe43@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 66,
-    "last_login_date": "None",
-    "name": "Piet Doe de 43de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero043",
-    "user_ip_networks": [],
-    "username": "pietdoe43"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe44@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 67,
-    "last_login_date": "None",
-    "name": "Piet Doe de 44de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero044",
-    "user_ip_networks": [],
-    "username": "pietdoe44"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe45@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 68,
-    "last_login_date": "None",
-    "name": "Piet Doe de 45de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero045",
-    "user_ip_networks": [],
-    "username": "pietdoe45"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe46@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 69,
-    "last_login_date": "None",
-    "name": "Piet Doe de 46de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero046",
-    "user_ip_networks": [],
-    "username": "pietdoe46"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe47@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 70,
-    "last_login_date": "None",
-    "name": "Piet Doe de 47de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero047",
-    "user_ip_networks": [],
-    "username": "pietdoe47"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe48@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 71,
-    "last_login_date": "None",
-    "name": "Piet Doe de 48de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero048",
-    "user_ip_networks": [],
-    "username": "pietdoe48"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe49@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 72,
-    "last_login_date": "None",
-    "name": "Piet Doe de 49de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero049",
-    "user_ip_networks": [],
-    "username": "pietdoe49"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe50@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 73,
-    "last_login_date": "None",
-    "name": "Piet Doe de 50de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero050",
-    "user_ip_networks": [],
-    "username": "pietdoe50"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe51@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 74,
-    "last_login_date": "None",
-    "name": "Piet Doe de 51de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero051",
-    "user_ip_networks": [],
-    "username": "pietdoe51"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe52@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 75,
-    "last_login_date": "None",
-    "name": "Piet Doe de 52de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero052",
-    "user_ip_networks": [],
-    "username": "pietdoe52"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe53@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 76,
-    "last_login_date": "None",
-    "name": "Piet Doe de 53de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero053",
-    "user_ip_networks": [],
-    "username": "pietdoe53"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe54@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 77,
-    "last_login_date": "None",
-    "name": "Piet Doe de 54de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero054",
-    "user_ip_networks": [],
-    "username": "pietdoe54"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe55@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 78,
-    "last_login_date": "None",
-    "name": "Piet Doe de 55de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero055",
-    "user_ip_networks": [],
-    "username": "pietdoe55"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe56@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 79,
-    "last_login_date": "None",
-    "name": "Piet Doe de 56de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero056",
-    "user_ip_networks": [],
-    "username": "pietdoe56"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe57@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 80,
-    "last_login_date": "None",
-    "name": "Piet Doe de 57de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero057",
-    "user_ip_networks": [],
-    "username": "pietdoe57"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe58@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 81,
-    "last_login_date": "None",
-    "name": "Piet Doe de 58de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero058",
-    "user_ip_networks": [],
-    "username": "pietdoe58"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe59@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 82,
-    "last_login_date": "None",
-    "name": "Piet Doe de 59de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero059",
-    "user_ip_networks": [],
-    "username": "pietdoe59"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe60@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 83,
-    "last_login_date": "None",
-    "name": "Piet Doe de 60de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero060",
-    "user_ip_networks": [],
-    "username": "pietdoe60"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe61@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 84,
-    "last_login_date": "None",
-    "name": "Piet Doe de 61de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero061",
-    "user_ip_networks": [],
-    "username": "pietdoe61"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe62@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 85,
-    "last_login_date": "None",
-    "name": "Piet Doe de 62de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero062",
-    "user_ip_networks": [],
-    "username": "pietdoe62"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe63@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 86,
-    "last_login_date": "None",
-    "name": "Piet Doe de 63de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero063",
-    "user_ip_networks": [],
-    "username": "pietdoe63"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe64@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 87,
-    "last_login_date": "None",
-    "name": "Piet Doe de 64de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero064",
-    "user_ip_networks": [],
-    "username": "pietdoe64"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe65@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 88,
-    "last_login_date": "None",
-    "name": "Piet Doe de 65de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero065",
-    "user_ip_networks": [],
-    "username": "pietdoe65"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe66@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 89,
-    "last_login_date": "None",
-    "name": "Piet Doe de 66de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero066",
-    "user_ip_networks": [],
-    "username": "pietdoe66"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe67@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 90,
-    "last_login_date": "None",
-    "name": "Piet Doe de 67de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero067",
-    "user_ip_networks": [],
-    "username": "pietdoe67"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe68@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 91,
-    "last_login_date": "None",
-    "name": "Piet Doe de 68de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero068",
-    "user_ip_networks": [],
-    "username": "pietdoe68"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe69@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 92,
-    "last_login_date": "None",
-    "name": "Piet Doe de 69de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero069",
-    "user_ip_networks": [],
-    "username": "pietdoe69"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe70@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 93,
-    "last_login_date": "None",
-    "name": "Piet Doe de 70de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero070",
-    "user_ip_networks": [],
-    "username": "pietdoe70"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe71@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 94,
-    "last_login_date": "None",
-    "name": "Piet Doe de 71de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero071",
-    "user_ip_networks": [],
-    "username": "pietdoe71"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe72@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 95,
-    "last_login_date": "None",
-    "name": "Piet Doe de 72de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero072",
-    "user_ip_networks": [],
-    "username": "pietdoe72"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe73@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 96,
-    "last_login_date": "None",
-    "name": "Piet Doe de 73de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero073",
-    "user_ip_networks": [],
-    "username": "pietdoe73"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe74@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 97,
-    "last_login_date": "None",
-    "name": "Piet Doe de 74de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero074",
-    "user_ip_networks": [],
-    "username": "pietdoe74"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe75@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 98,
-    "last_login_date": "None",
-    "name": "Piet Doe de 75de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero075",
-    "user_ip_networks": [],
-    "username": "pietdoe75"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe76@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 99,
-    "last_login_date": "None",
-    "name": "Piet Doe de 76de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero076",
-    "user_ip_networks": [],
-    "username": "pietdoe76"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe77@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 100,
-    "last_login_date": "None",
-    "name": "Piet Doe de 77de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero077",
-    "user_ip_networks": [],
-    "username": "pietdoe77"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe78@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 101,
-    "last_login_date": "None",
-    "name": "Piet Doe de 78de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero078",
-    "user_ip_networks": [],
-    "username": "pietdoe78"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe79@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 102,
-    "last_login_date": "None",
-    "name": "Piet Doe de 79de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero079",
-    "user_ip_networks": [],
-    "username": "pietdoe79"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe80@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 103,
-    "last_login_date": "None",
-    "name": "Piet Doe de 80de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero080",
-    "user_ip_networks": [],
-    "username": "pietdoe80"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe81@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 104,
-    "last_login_date": "None",
-    "name": "Piet Doe de 81de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero081",
-    "user_ip_networks": [],
-    "username": "pietdoe81"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe82@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 105,
-    "last_login_date": "None",
-    "name": "Piet Doe de 82de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero082",
-    "user_ip_networks": [],
-    "username": "pietdoe82"
-  },
-  {
-    "accepted_aups": [],
-    "eduperson_principal_name": null,
-    "email": "pietdoe83@example.org",
-    "family_name": null,
-    "given_name": null,
-    "id": 106,
-    "last_login_date": "None",
-    "name": "Piet Doe de 83de",
-    "scoped_affiliation": null,
-    "ssh_keys": [],
-    "uid": "urn:persoon:numero083",
-    "user_ip_networks": [],
-    "username": "pietdoe83"
-  }
-]
+{
+  "organisations": [
+    {
+      "collaborations": [
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 3,
+              "id": 5,
+              "role": "member",
+              "status": "active",
+              "user_id": 7
+            },
+            {
+              "collaboration_id": 3,
+              "id": 6,
+              "role": "admin",
+              "status": "active",
+              "user_id": 10
+            },
+            {
+              "collaboration_id": 3,
+              "id": 7,
+              "role": "member",
+              "status": "active",
+              "user_id": 16
+            },
+            {
+              "collaboration_id": 3,
+              "id": 8,
+              "role": "member",
+              "status": "active",
+              "user_id": 14
+            },
+            {
+              "collaboration_id": 3,
+              "id": 10,
+              "role": "member",
+              "status": "active",
+              "user_id": 15
+            }
+          ],
+          "description": "Artifical Intelligence computing for the Unincorporated Urban Community",
+          "global_urn": "ucc:ai_computing",
+          "groups": [
+            {
+              "collaboration_id": 3,
+              "collaboration_memberships": [
+                {
+                  "collaboration_membership_id": 7,
+                  "group_id": 2,
+                  "user_id": 16
+                },
+                {
+                  "collaboration_membership_id": 5,
+                  "group_id": 2,
+                  "user_id": 7
+                }
+              ],
+              "description": "Artifical computing researchers",
+              "global_urn": "uuc:ai_computing:ai_res",
+              "id": 2,
+              "identifier": "54b4cb3c-e5f8-41b7-8ee2-ac969c7751fd",
+              "name": "AI researchers",
+              "short_name": "ai_res"
+            },
+            {
+              "collaboration_id": 3,
+              "collaboration_memberships": [
+                {
+                  "collaboration_membership_id": 5,
+                  "group_id": 3,
+                  "user_id": 7
+                }
+              ],
+              "description": "Artifical computing developers",
+              "global_urn": "uuc:ai_computing:ai_dev",
+              "id": 3,
+              "identifier": "55a8da12-e6d9-45f4-b37a-3506758d21de",
+              "name": "AI developers",
+              "short_name": "ai_dev"
+            }
+          ],
+          "id": 3,
+          "identifier": "6889e913-314f-4d1d-9a35-b17ce21b7eff",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/9eb225ac-e5cb-4bea-a937-9f628e0bb61a",
+          "name": "AI computing",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "ai_computing",
+          "status": "active",
+          "tags": [
+            "tag_uuc"
+          ],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 5,
+              "id": 9,
+              "role": "member",
+              "status": "active",
+              "user_id": 15
+            }
+          ],
+          "description": "UUC Teachers",
+          "global_urn": "ucc:UUC Teachers",
+          "groups": [],
+          "id": 5,
+          "identifier": "e6b4a734-bbc0-407e-9517-6e5d64eec913",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/607492ed-86dd-4cbb-bdaf-1f63527c6ab8",
+          "name": "UUC Teachers",
+          "organisation_id": 3,
+          "services": [],
+          "short_name": "uuc_teachers_short_name",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 7,
+              "id": 15,
+              "role": "admin",
+              "status": "active",
+              "user_id": 26
+            },
+            {
+              "collaboration_id": 7,
+              "id": 16,
+              "role": "member",
+              "status": "active",
+              "user_id": 27
+            },
+            {
+              "collaboration_id": 7,
+              "id": 17,
+              "role": "member",
+              "status": "active",
+              "user_id": 28
+            },
+            {
+              "collaboration_id": 7,
+              "id": 18,
+              "role": "member",
+              "status": "active",
+              "user_id": 29
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_001",
+          "groups": [],
+          "id": 7,
+          "identifier": "d0fcced3-58d0-4ab3-9e52-93de78e5d2f4",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/1f2c2e75-fef4-4ddd-a3b6-b98f9c741026",
+          "name": "Samenwerking Numero 1",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_001",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 8,
+              "id": 19,
+              "role": "admin",
+              "status": "active",
+              "user_id": 28
+            },
+            {
+              "collaboration_id": 8,
+              "id": 20,
+              "role": "member",
+              "status": "active",
+              "user_id": 29
+            },
+            {
+              "collaboration_id": 8,
+              "id": 21,
+              "role": "member",
+              "status": "active",
+              "user_id": 30
+            },
+            {
+              "collaboration_id": 8,
+              "id": 22,
+              "role": "member",
+              "status": "active",
+              "user_id": 31
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_002",
+          "groups": [],
+          "id": 8,
+          "identifier": "9f644cce-a56c-49ad-b4ea-b1dae9700aaa",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/f3bf2454-6b86-4349-9b3b-518716a91ff8",
+          "name": "Samenwerking Numero 2",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_002",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 9,
+              "id": 23,
+              "role": "admin",
+              "status": "active",
+              "user_id": 30
+            },
+            {
+              "collaboration_id": 9,
+              "id": 24,
+              "role": "member",
+              "status": "active",
+              "user_id": 31
+            },
+            {
+              "collaboration_id": 9,
+              "id": 25,
+              "role": "member",
+              "status": "active",
+              "user_id": 32
+            },
+            {
+              "collaboration_id": 9,
+              "id": 26,
+              "role": "member",
+              "status": "active",
+              "user_id": 33
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_003",
+          "groups": [],
+          "id": 9,
+          "identifier": "b06f827e-d759-4682-b7f3-b470f9b55418",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/98f2305c-fd00-4558-a164-3ee29af17c54",
+          "name": "Samenwerking Numero 3",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_003",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 10,
+              "id": 27,
+              "role": "admin",
+              "status": "active",
+              "user_id": 32
+            },
+            {
+              "collaboration_id": 10,
+              "id": 28,
+              "role": "member",
+              "status": "active",
+              "user_id": 33
+            },
+            {
+              "collaboration_id": 10,
+              "id": 29,
+              "role": "member",
+              "status": "active",
+              "user_id": 34
+            },
+            {
+              "collaboration_id": 10,
+              "id": 30,
+              "role": "member",
+              "status": "active",
+              "user_id": 35
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_004",
+          "groups": [],
+          "id": 10,
+          "identifier": "37418314-19ee-4a83-888f-1bc1cc049a01",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/e470015d-b4c5-429c-a3db-2962c0c487a0",
+          "name": "Samenwerking Numero 4",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_004",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 11,
+              "id": 31,
+              "role": "admin",
+              "status": "active",
+              "user_id": 34
+            },
+            {
+              "collaboration_id": 11,
+              "id": 32,
+              "role": "member",
+              "status": "active",
+              "user_id": 35
+            },
+            {
+              "collaboration_id": 11,
+              "id": 33,
+              "role": "member",
+              "status": "active",
+              "user_id": 36
+            },
+            {
+              "collaboration_id": 11,
+              "id": 34,
+              "role": "member",
+              "status": "active",
+              "user_id": 37
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_005",
+          "groups": [],
+          "id": 11,
+          "identifier": "dc3e9c2c-582e-4773-9a00-b2c532998dda",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/3f81592d-c4d4-48cf-8961-146b52e13ce8",
+          "name": "Samenwerking Numero 5",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_005",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 12,
+              "id": 35,
+              "role": "admin",
+              "status": "active",
+              "user_id": 36
+            },
+            {
+              "collaboration_id": 12,
+              "id": 36,
+              "role": "member",
+              "status": "active",
+              "user_id": 37
+            },
+            {
+              "collaboration_id": 12,
+              "id": 37,
+              "role": "member",
+              "status": "active",
+              "user_id": 38
+            },
+            {
+              "collaboration_id": 12,
+              "id": 38,
+              "role": "member",
+              "status": "active",
+              "user_id": 39
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_006",
+          "groups": [],
+          "id": 12,
+          "identifier": "46924155-9a24-4058-9058-e86f35b38eec",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/74e49f8c-cc16-4bd5-9743-25a561ec55d5",
+          "name": "Samenwerking Numero 6",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_006",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 13,
+              "id": 39,
+              "role": "admin",
+              "status": "active",
+              "user_id": 38
+            },
+            {
+              "collaboration_id": 13,
+              "id": 40,
+              "role": "member",
+              "status": "active",
+              "user_id": 39
+            },
+            {
+              "collaboration_id": 13,
+              "id": 41,
+              "role": "member",
+              "status": "active",
+              "user_id": 40
+            },
+            {
+              "collaboration_id": 13,
+              "id": 42,
+              "role": "member",
+              "status": "active",
+              "user_id": 41
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_007",
+          "groups": [],
+          "id": 13,
+          "identifier": "050a6061-a553-467d-967f-3add3f35504a",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/03186983-358a-4feb-b170-38b09d4ed4e1",
+          "name": "Samenwerking Numero 7",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_007",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 14,
+              "id": 43,
+              "role": "admin",
+              "status": "active",
+              "user_id": 40
+            },
+            {
+              "collaboration_id": 14,
+              "id": 44,
+              "role": "member",
+              "status": "active",
+              "user_id": 41
+            },
+            {
+              "collaboration_id": 14,
+              "id": 45,
+              "role": "member",
+              "status": "active",
+              "user_id": 42
+            },
+            {
+              "collaboration_id": 14,
+              "id": 46,
+              "role": "member",
+              "status": "active",
+              "user_id": 43
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_008",
+          "groups": [],
+          "id": 14,
+          "identifier": "17233783-88b2-46c7-bffc-8120d1845424",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/cdd61371-753d-476e-9b2b-b896c16afbcc",
+          "name": "Samenwerking Numero 8",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_008",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 15,
+              "id": 47,
+              "role": "admin",
+              "status": "active",
+              "user_id": 42
+            },
+            {
+              "collaboration_id": 15,
+              "id": 48,
+              "role": "member",
+              "status": "active",
+              "user_id": 43
+            },
+            {
+              "collaboration_id": 15,
+              "id": 49,
+              "role": "member",
+              "status": "active",
+              "user_id": 44
+            },
+            {
+              "collaboration_id": 15,
+              "id": 50,
+              "role": "member",
+              "status": "active",
+              "user_id": 45
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_009",
+          "groups": [],
+          "id": 15,
+          "identifier": "a7301f8a-d1ed-4076-b1dd-55d1f0a473d8",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/c8bfd9e0-d7a0-4f2d-862f-7402f83d3cd6",
+          "name": "Samenwerking Numero 9",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_009",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 16,
+              "id": 51,
+              "role": "admin",
+              "status": "active",
+              "user_id": 44
+            },
+            {
+              "collaboration_id": 16,
+              "id": 52,
+              "role": "member",
+              "status": "active",
+              "user_id": 45
+            },
+            {
+              "collaboration_id": 16,
+              "id": 53,
+              "role": "member",
+              "status": "active",
+              "user_id": 46
+            },
+            {
+              "collaboration_id": 16,
+              "id": 54,
+              "role": "member",
+              "status": "active",
+              "user_id": 47
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_010",
+          "groups": [],
+          "id": 16,
+          "identifier": "22a6baca-31e9-40aa-b2f0-8853cc6b8b8f",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/4e170792-920c-411a-86a0-881e4a795b2d",
+          "name": "Samenwerking Numero 10",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_010",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 17,
+              "id": 55,
+              "role": "admin",
+              "status": "active",
+              "user_id": 46
+            },
+            {
+              "collaboration_id": 17,
+              "id": 56,
+              "role": "member",
+              "status": "active",
+              "user_id": 47
+            },
+            {
+              "collaboration_id": 17,
+              "id": 57,
+              "role": "member",
+              "status": "active",
+              "user_id": 48
+            },
+            {
+              "collaboration_id": 17,
+              "id": 58,
+              "role": "member",
+              "status": "active",
+              "user_id": 49
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_011",
+          "groups": [],
+          "id": 17,
+          "identifier": "3bc7f5b0-2eb5-42b3-a096-a816e1d803f1",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/d3329e01-ad4a-43e7-8f98-51f1b07989e0",
+          "name": "Samenwerking Numero 11",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_011",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 18,
+              "id": 59,
+              "role": "admin",
+              "status": "active",
+              "user_id": 48
+            },
+            {
+              "collaboration_id": 18,
+              "id": 60,
+              "role": "member",
+              "status": "active",
+              "user_id": 49
+            },
+            {
+              "collaboration_id": 18,
+              "id": 61,
+              "role": "member",
+              "status": "active",
+              "user_id": 50
+            },
+            {
+              "collaboration_id": 18,
+              "id": 62,
+              "role": "member",
+              "status": "active",
+              "user_id": 51
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_012",
+          "groups": [],
+          "id": 18,
+          "identifier": "a00caeb2-b6ad-41da-95df-1e90ea1f329f",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/5cfe674c-fb6f-46e2-a00b-9d9fa029d26f",
+          "name": "Samenwerking Numero 12",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_012",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 19,
+              "id": 63,
+              "role": "admin",
+              "status": "active",
+              "user_id": 50
+            },
+            {
+              "collaboration_id": 19,
+              "id": 64,
+              "role": "member",
+              "status": "active",
+              "user_id": 51
+            },
+            {
+              "collaboration_id": 19,
+              "id": 65,
+              "role": "member",
+              "status": "active",
+              "user_id": 52
+            },
+            {
+              "collaboration_id": 19,
+              "id": 66,
+              "role": "member",
+              "status": "active",
+              "user_id": 53
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_013",
+          "groups": [],
+          "id": 19,
+          "identifier": "cefe4330-5003-4fcc-ab0f-41db4eecf7cc",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/6aa1309b-874c-494f-ba19-95edc9a2b5f7",
+          "name": "Samenwerking Numero 13",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_013",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 20,
+              "id": 67,
+              "role": "admin",
+              "status": "active",
+              "user_id": 52
+            },
+            {
+              "collaboration_id": 20,
+              "id": 68,
+              "role": "member",
+              "status": "active",
+              "user_id": 53
+            },
+            {
+              "collaboration_id": 20,
+              "id": 69,
+              "role": "member",
+              "status": "active",
+              "user_id": 54
+            },
+            {
+              "collaboration_id": 20,
+              "id": 70,
+              "role": "member",
+              "status": "active",
+              "user_id": 55
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_014",
+          "groups": [],
+          "id": 20,
+          "identifier": "4bd2aba1-9d05-4acf-a83f-82e6a067549f",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/b9043696-3a7b-4d58-b14c-5ce89e70832b",
+          "name": "Samenwerking Numero 14",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_014",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 21,
+              "id": 71,
+              "role": "admin",
+              "status": "active",
+              "user_id": 54
+            },
+            {
+              "collaboration_id": 21,
+              "id": 72,
+              "role": "member",
+              "status": "active",
+              "user_id": 55
+            },
+            {
+              "collaboration_id": 21,
+              "id": 73,
+              "role": "member",
+              "status": "active",
+              "user_id": 56
+            },
+            {
+              "collaboration_id": 21,
+              "id": 74,
+              "role": "member",
+              "status": "active",
+              "user_id": 57
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_015",
+          "groups": [],
+          "id": 21,
+          "identifier": "f7f657bc-d885-4a2a-999c-d5cd87f26e20",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/33a82f2b-529a-4cf8-8012-293dedcca153",
+          "name": "Samenwerking Numero 15",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_015",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 22,
+              "id": 75,
+              "role": "admin",
+              "status": "active",
+              "user_id": 56
+            },
+            {
+              "collaboration_id": 22,
+              "id": 76,
+              "role": "member",
+              "status": "active",
+              "user_id": 57
+            },
+            {
+              "collaboration_id": 22,
+              "id": 77,
+              "role": "member",
+              "status": "active",
+              "user_id": 58
+            },
+            {
+              "collaboration_id": 22,
+              "id": 78,
+              "role": "member",
+              "status": "active",
+              "user_id": 59
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_016",
+          "groups": [],
+          "id": 22,
+          "identifier": "3a85731b-22dd-4a4e-837e-3ca4c929a590",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/143b4407-483b-4041-a931-1cfe861c49e6",
+          "name": "Samenwerking Numero 16",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_016",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 23,
+              "id": 79,
+              "role": "admin",
+              "status": "active",
+              "user_id": 58
+            },
+            {
+              "collaboration_id": 23,
+              "id": 80,
+              "role": "member",
+              "status": "active",
+              "user_id": 59
+            },
+            {
+              "collaboration_id": 23,
+              "id": 81,
+              "role": "member",
+              "status": "active",
+              "user_id": 60
+            },
+            {
+              "collaboration_id": 23,
+              "id": 82,
+              "role": "member",
+              "status": "active",
+              "user_id": 61
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_017",
+          "groups": [],
+          "id": 23,
+          "identifier": "0b8dfca8-17c8-48df-a14f-3d2b7bd2ce55",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/e0c9905b-8e8c-415c-b0ea-dd8aaefa2dc6",
+          "name": "Samenwerking Numero 17",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_017",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 24,
+              "id": 83,
+              "role": "admin",
+              "status": "active",
+              "user_id": 60
+            },
+            {
+              "collaboration_id": 24,
+              "id": 84,
+              "role": "member",
+              "status": "active",
+              "user_id": 61
+            },
+            {
+              "collaboration_id": 24,
+              "id": 85,
+              "role": "member",
+              "status": "active",
+              "user_id": 62
+            },
+            {
+              "collaboration_id": 24,
+              "id": 86,
+              "role": "member",
+              "status": "active",
+              "user_id": 63
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_018",
+          "groups": [],
+          "id": 24,
+          "identifier": "4d03fbc1-6104-4edd-952b-9a4322f7733f",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/b6549b82-fefe-463c-9665-999f0205c856",
+          "name": "Samenwerking Numero 18",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_018",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 25,
+              "id": 87,
+              "role": "admin",
+              "status": "active",
+              "user_id": 62
+            },
+            {
+              "collaboration_id": 25,
+              "id": 88,
+              "role": "member",
+              "status": "active",
+              "user_id": 63
+            },
+            {
+              "collaboration_id": 25,
+              "id": 89,
+              "role": "member",
+              "status": "active",
+              "user_id": 64
+            },
+            {
+              "collaboration_id": 25,
+              "id": 90,
+              "role": "member",
+              "status": "active",
+              "user_id": 65
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_019",
+          "groups": [],
+          "id": 25,
+          "identifier": "ab2b7e5f-8052-4555-a67d-21a666a97a79",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/fe9dc2bc-61ec-4bfd-86e4-7127f5f8c8a9",
+          "name": "Samenwerking Numero 19",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_019",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 26,
+              "id": 91,
+              "role": "admin",
+              "status": "active",
+              "user_id": 64
+            },
+            {
+              "collaboration_id": 26,
+              "id": 92,
+              "role": "member",
+              "status": "active",
+              "user_id": 65
+            },
+            {
+              "collaboration_id": 26,
+              "id": 93,
+              "role": "member",
+              "status": "active",
+              "user_id": 66
+            },
+            {
+              "collaboration_id": 26,
+              "id": 94,
+              "role": "member",
+              "status": "active",
+              "user_id": 67
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_020",
+          "groups": [],
+          "id": 26,
+          "identifier": "aad90bd2-b213-49ba-83bc-87bc3b88c642",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/2cf588d2-baad-4d0c-aebd-357d81cd05b8",
+          "name": "Samenwerking Numero 20",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_020",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 27,
+              "id": 95,
+              "role": "admin",
+              "status": "active",
+              "user_id": 66
+            },
+            {
+              "collaboration_id": 27,
+              "id": 96,
+              "role": "member",
+              "status": "active",
+              "user_id": 67
+            },
+            {
+              "collaboration_id": 27,
+              "id": 97,
+              "role": "member",
+              "status": "active",
+              "user_id": 68
+            },
+            {
+              "collaboration_id": 27,
+              "id": 98,
+              "role": "member",
+              "status": "active",
+              "user_id": 69
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_021",
+          "groups": [],
+          "id": 27,
+          "identifier": "be674389-7ed4-4001-9e0e-70340db1b392",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/50f0ff09-9969-4dc1-8a4e-c837bf114f55",
+          "name": "Samenwerking Numero 21",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_021",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 28,
+              "id": 99,
+              "role": "admin",
+              "status": "active",
+              "user_id": 68
+            },
+            {
+              "collaboration_id": 28,
+              "id": 100,
+              "role": "member",
+              "status": "active",
+              "user_id": 69
+            },
+            {
+              "collaboration_id": 28,
+              "id": 101,
+              "role": "member",
+              "status": "active",
+              "user_id": 70
+            },
+            {
+              "collaboration_id": 28,
+              "id": 102,
+              "role": "member",
+              "status": "active",
+              "user_id": 71
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_022",
+          "groups": [],
+          "id": 28,
+          "identifier": "e2176a9f-22d1-45b5-8edb-589909827106",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/9efcc47f-816c-4fb7-96c1-57ae6a758bbc",
+          "name": "Samenwerking Numero 22",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_022",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 29,
+              "id": 103,
+              "role": "admin",
+              "status": "active",
+              "user_id": 70
+            },
+            {
+              "collaboration_id": 29,
+              "id": 104,
+              "role": "member",
+              "status": "active",
+              "user_id": 71
+            },
+            {
+              "collaboration_id": 29,
+              "id": 105,
+              "role": "member",
+              "status": "active",
+              "user_id": 72
+            },
+            {
+              "collaboration_id": 29,
+              "id": 106,
+              "role": "member",
+              "status": "active",
+              "user_id": 73
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_023",
+          "groups": [],
+          "id": 29,
+          "identifier": "8e273302-56e4-4531-b452-bb342b5c0625",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/b0a3fc9a-4a53-4de3-bd80-e5c6b5785a19",
+          "name": "Samenwerking Numero 23",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_023",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 30,
+              "id": 107,
+              "role": "admin",
+              "status": "active",
+              "user_id": 72
+            },
+            {
+              "collaboration_id": 30,
+              "id": 108,
+              "role": "member",
+              "status": "active",
+              "user_id": 73
+            },
+            {
+              "collaboration_id": 30,
+              "id": 109,
+              "role": "member",
+              "status": "active",
+              "user_id": 74
+            },
+            {
+              "collaboration_id": 30,
+              "id": 110,
+              "role": "member",
+              "status": "active",
+              "user_id": 75
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_024",
+          "groups": [],
+          "id": 30,
+          "identifier": "bfa7506f-e9f3-4b03-b67c-3e9e7e73cc1c",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/186fd689-b516-4185-8620-1ea03e076370",
+          "name": "Samenwerking Numero 24",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_024",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 31,
+              "id": 111,
+              "role": "admin",
+              "status": "active",
+              "user_id": 74
+            },
+            {
+              "collaboration_id": 31,
+              "id": 112,
+              "role": "member",
+              "status": "active",
+              "user_id": 75
+            },
+            {
+              "collaboration_id": 31,
+              "id": 113,
+              "role": "member",
+              "status": "active",
+              "user_id": 76
+            },
+            {
+              "collaboration_id": 31,
+              "id": 114,
+              "role": "member",
+              "status": "active",
+              "user_id": 77
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_025",
+          "groups": [],
+          "id": 31,
+          "identifier": "71c5e815-a585-42e7-a5fb-60d31a46ed47",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/83ad99bd-601f-402a-8098-4f2f4a2b3108",
+          "name": "Samenwerking Numero 25",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_025",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 32,
+              "id": 115,
+              "role": "admin",
+              "status": "active",
+              "user_id": 76
+            },
+            {
+              "collaboration_id": 32,
+              "id": 116,
+              "role": "member",
+              "status": "active",
+              "user_id": 77
+            },
+            {
+              "collaboration_id": 32,
+              "id": 117,
+              "role": "member",
+              "status": "active",
+              "user_id": 78
+            },
+            {
+              "collaboration_id": 32,
+              "id": 118,
+              "role": "member",
+              "status": "active",
+              "user_id": 79
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_026",
+          "groups": [],
+          "id": 32,
+          "identifier": "ca832d7d-7053-4bba-bebf-ae71bd76135b",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/1e9742eb-709f-4e82-890f-de87910541cd",
+          "name": "Samenwerking Numero 26",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_026",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 33,
+              "id": 119,
+              "role": "admin",
+              "status": "active",
+              "user_id": 78
+            },
+            {
+              "collaboration_id": 33,
+              "id": 120,
+              "role": "member",
+              "status": "active",
+              "user_id": 79
+            },
+            {
+              "collaboration_id": 33,
+              "id": 121,
+              "role": "member",
+              "status": "active",
+              "user_id": 80
+            },
+            {
+              "collaboration_id": 33,
+              "id": 122,
+              "role": "member",
+              "status": "active",
+              "user_id": 81
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_027",
+          "groups": [],
+          "id": 33,
+          "identifier": "ee1dbbff-d417-4097-98be-eb3aa96dca1e",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/f5f9940f-1f29-4624-8be2-b76ddadc70c6",
+          "name": "Samenwerking Numero 27",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_027",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 34,
+              "id": 123,
+              "role": "admin",
+              "status": "active",
+              "user_id": 80
+            },
+            {
+              "collaboration_id": 34,
+              "id": 124,
+              "role": "member",
+              "status": "active",
+              "user_id": 81
+            },
+            {
+              "collaboration_id": 34,
+              "id": 125,
+              "role": "member",
+              "status": "active",
+              "user_id": 82
+            },
+            {
+              "collaboration_id": 34,
+              "id": 126,
+              "role": "member",
+              "status": "active",
+              "user_id": 83
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_028",
+          "groups": [],
+          "id": 34,
+          "identifier": "de360d3a-f802-40ed-8e5d-ee997a5f5bcf",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/5974f54c-8030-4d7e-b4c6-dd733b36672f",
+          "name": "Samenwerking Numero 28",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_028",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 35,
+              "id": 127,
+              "role": "admin",
+              "status": "active",
+              "user_id": 82
+            },
+            {
+              "collaboration_id": 35,
+              "id": 128,
+              "role": "member",
+              "status": "active",
+              "user_id": 83
+            },
+            {
+              "collaboration_id": 35,
+              "id": 129,
+              "role": "member",
+              "status": "active",
+              "user_id": 84
+            },
+            {
+              "collaboration_id": 35,
+              "id": 130,
+              "role": "member",
+              "status": "active",
+              "user_id": 85
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_029",
+          "groups": [],
+          "id": 35,
+          "identifier": "53e79c35-70ec-4693-9718-d08d7577a1af",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/72918513-2976-4c58-bcaf-3ce0004fb149",
+          "name": "Samenwerking Numero 29",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_029",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 36,
+              "id": 131,
+              "role": "admin",
+              "status": "active",
+              "user_id": 84
+            },
+            {
+              "collaboration_id": 36,
+              "id": 132,
+              "role": "member",
+              "status": "active",
+              "user_id": 85
+            },
+            {
+              "collaboration_id": 36,
+              "id": 133,
+              "role": "member",
+              "status": "active",
+              "user_id": 86
+            },
+            {
+              "collaboration_id": 36,
+              "id": 134,
+              "role": "member",
+              "status": "active",
+              "user_id": 87
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_030",
+          "groups": [],
+          "id": 36,
+          "identifier": "dd9687bf-22b2-461b-bffb-a5bf40f371d1",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/c194615c-300d-4402-8650-33175ecaef8c",
+          "name": "Samenwerking Numero 30",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_030",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 37,
+              "id": 135,
+              "role": "admin",
+              "status": "active",
+              "user_id": 86
+            },
+            {
+              "collaboration_id": 37,
+              "id": 136,
+              "role": "member",
+              "status": "active",
+              "user_id": 87
+            },
+            {
+              "collaboration_id": 37,
+              "id": 137,
+              "role": "member",
+              "status": "active",
+              "user_id": 88
+            },
+            {
+              "collaboration_id": 37,
+              "id": 138,
+              "role": "member",
+              "status": "active",
+              "user_id": 89
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_031",
+          "groups": [],
+          "id": 37,
+          "identifier": "f149439e-29cd-4451-b68b-a77d6fc157bc",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/9dd5dd6d-d7c6-46a1-9739-685fb30ad2ba",
+          "name": "Samenwerking Numero 31",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_031",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 38,
+              "id": 139,
+              "role": "admin",
+              "status": "active",
+              "user_id": 88
+            },
+            {
+              "collaboration_id": 38,
+              "id": 140,
+              "role": "member",
+              "status": "active",
+              "user_id": 89
+            },
+            {
+              "collaboration_id": 38,
+              "id": 141,
+              "role": "member",
+              "status": "active",
+              "user_id": 90
+            },
+            {
+              "collaboration_id": 38,
+              "id": 142,
+              "role": "member",
+              "status": "active",
+              "user_id": 91
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_032",
+          "groups": [],
+          "id": 38,
+          "identifier": "a26a3382-ebf1-42df-8c3d-77a07c7f98d0",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/86e2f9f8-55e9-414f-9b33-c58c28945bd4",
+          "name": "Samenwerking Numero 32",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_032",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 39,
+              "id": 143,
+              "role": "admin",
+              "status": "active",
+              "user_id": 90
+            },
+            {
+              "collaboration_id": 39,
+              "id": 144,
+              "role": "member",
+              "status": "active",
+              "user_id": 91
+            },
+            {
+              "collaboration_id": 39,
+              "id": 145,
+              "role": "member",
+              "status": "active",
+              "user_id": 92
+            },
+            {
+              "collaboration_id": 39,
+              "id": 146,
+              "role": "member",
+              "status": "active",
+              "user_id": 93
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_033",
+          "groups": [],
+          "id": 39,
+          "identifier": "9b444a26-f6f1-48b0-b22a-3d7a22d871b6",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/3b6c6c44-aebd-4265-9f86-66abc7bd39a5",
+          "name": "Samenwerking Numero 33",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_033",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 40,
+              "id": 147,
+              "role": "admin",
+              "status": "active",
+              "user_id": 92
+            },
+            {
+              "collaboration_id": 40,
+              "id": 148,
+              "role": "member",
+              "status": "active",
+              "user_id": 93
+            },
+            {
+              "collaboration_id": 40,
+              "id": 149,
+              "role": "member",
+              "status": "active",
+              "user_id": 94
+            },
+            {
+              "collaboration_id": 40,
+              "id": 150,
+              "role": "member",
+              "status": "active",
+              "user_id": 95
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_034",
+          "groups": [],
+          "id": 40,
+          "identifier": "259fe464-c9a2-4207-b66a-1be7d70a06e3",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/98d6e55d-603d-4b81-b908-7cb4bd40b042",
+          "name": "Samenwerking Numero 34",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_034",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 41,
+              "id": 151,
+              "role": "admin",
+              "status": "active",
+              "user_id": 94
+            },
+            {
+              "collaboration_id": 41,
+              "id": 152,
+              "role": "member",
+              "status": "active",
+              "user_id": 95
+            },
+            {
+              "collaboration_id": 41,
+              "id": 153,
+              "role": "member",
+              "status": "active",
+              "user_id": 96
+            },
+            {
+              "collaboration_id": 41,
+              "id": 154,
+              "role": "member",
+              "status": "active",
+              "user_id": 97
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_035",
+          "groups": [],
+          "id": 41,
+          "identifier": "511622a9-77ce-46d9-82ea-522ec41ff235",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/70a1ab3e-a834-43ff-bfda-9e072487509e",
+          "name": "Samenwerking Numero 35",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_035",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 42,
+              "id": 155,
+              "role": "admin",
+              "status": "active",
+              "user_id": 96
+            },
+            {
+              "collaboration_id": 42,
+              "id": 156,
+              "role": "member",
+              "status": "active",
+              "user_id": 97
+            },
+            {
+              "collaboration_id": 42,
+              "id": 157,
+              "role": "member",
+              "status": "active",
+              "user_id": 98
+            },
+            {
+              "collaboration_id": 42,
+              "id": 158,
+              "role": "member",
+              "status": "active",
+              "user_id": 99
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_036",
+          "groups": [],
+          "id": 42,
+          "identifier": "90c36030-b849-4eb2-9794-58e7cf0abecd",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/d33834a6-73bc-46d9-b1c6-5aeb4d652c5b",
+          "name": "Samenwerking Numero 36",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_036",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 43,
+              "id": 159,
+              "role": "admin",
+              "status": "active",
+              "user_id": 98
+            },
+            {
+              "collaboration_id": 43,
+              "id": 160,
+              "role": "member",
+              "status": "active",
+              "user_id": 99
+            },
+            {
+              "collaboration_id": 43,
+              "id": 161,
+              "role": "member",
+              "status": "active",
+              "user_id": 100
+            },
+            {
+              "collaboration_id": 43,
+              "id": 162,
+              "role": "member",
+              "status": "active",
+              "user_id": 101
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_037",
+          "groups": [],
+          "id": 43,
+          "identifier": "b9705db6-6456-427a-90a3-f0b295895a01",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/59b02f87-abb4-4e83-b11a-56ee479dbd80",
+          "name": "Samenwerking Numero 37",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_037",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 44,
+              "id": 163,
+              "role": "admin",
+              "status": "active",
+              "user_id": 100
+            },
+            {
+              "collaboration_id": 44,
+              "id": 164,
+              "role": "member",
+              "status": "active",
+              "user_id": 101
+            },
+            {
+              "collaboration_id": 44,
+              "id": 165,
+              "role": "member",
+              "status": "active",
+              "user_id": 102
+            },
+            {
+              "collaboration_id": 44,
+              "id": 166,
+              "role": "member",
+              "status": "active",
+              "user_id": 103
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_038",
+          "groups": [],
+          "id": 44,
+          "identifier": "1c6d866d-b294-4d87-8446-7ccd047cbced",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/494d0368-39e0-4fe3-bd0b-8dc7a3945c58",
+          "name": "Samenwerking Numero 38",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_038",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 45,
+              "id": 167,
+              "role": "admin",
+              "status": "active",
+              "user_id": 102
+            },
+            {
+              "collaboration_id": 45,
+              "id": 168,
+              "role": "member",
+              "status": "active",
+              "user_id": 103
+            },
+            {
+              "collaboration_id": 45,
+              "id": 169,
+              "role": "member",
+              "status": "active",
+              "user_id": 104
+            },
+            {
+              "collaboration_id": 45,
+              "id": 170,
+              "role": "member",
+              "status": "active",
+              "user_id": 105
+            }
+          ],
+          "description": "Een van vele COs",
+          "global_urn": "ucc:co_nr_039",
+          "groups": [],
+          "id": 45,
+          "identifier": "cccfe8f3-0b28-4d82-8bf0-e5d11816c237",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/0624127d-7f15-4f99-8b11-ebfe250591e6",
+          "name": "Samenwerking Numero 39",
+          "organisation_id": 3,
+          "services": [
+            3,
+            8
+          ],
+          "short_name": "co_nr_039",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        }
+      ],
+      "id": 3,
+      "identifier": "3e0b2543-d348-437b-91e3-f01c3b102fa0",
+      "logo": "https://sbs.scz-vm.net/api/images/organisations/29f580a9-b96f-4698-8362-5e0382b60616",
+      "name": "UUC",
+      "organisation_memberships": [
+        {
+          "organisation_id": 3,
+          "role": "admin",
+          "user_id": 7
+        },
+        {
+          "organisation_id": 3,
+          "role": "admin",
+          "user_id": 8
+        },
+        {
+          "organisation_id": 3,
+          "role": "manager",
+          "user_id": 12
+        },
+        {
+          "organisation_id": 3,
+          "role": "manager",
+          "user_id": 22
+        }
+      ],
+      "schac_home_organisations": [
+        {
+          "name": "rug.nl",
+          "organisation_id": 3
+        }
+      ],
+      "services": [
+        7,
+        10
+      ],
+      "short_name": "uuc"
+    },
+    {
+      "collaborations": [
+        {
+          "collaboration_memberships": [
+            {
+              "collaboration_id": 4,
+              "id": 11,
+              "role": "member",
+              "status": "active",
+              "user_id": 11
+            },
+            {
+              "collaboration_id": 4,
+              "id": 12,
+              "role": "member",
+              "status": "active",
+              "user_id": 9
+            },
+            {
+              "collaboration_id": 4,
+              "id": 13,
+              "role": "admin",
+              "status": "active",
+              "user_id": 14
+            },
+            {
+              "collaboration_id": 4,
+              "id": 14,
+              "role": "member",
+              "status": "active",
+              "user_id": 19
+            }
+          ],
+          "description": "University of Amsterdam Research - Urban Crowd Control",
+          "global_urn": "uva:research",
+          "groups": [
+            {
+              "collaboration_id": 4,
+              "collaboration_memberships": [
+                {
+                  "collaboration_membership_id": 11,
+                  "group_id": 4,
+                  "user_id": 11
+                }
+              ],
+              "description": "Science",
+              "global_urn": "uva:research:science",
+              "id": 4,
+              "identifier": "91476721-bd6b-4415-a55e-f55613712369",
+              "name": "Science",
+              "short_name": "science"
+            }
+          ],
+          "id": 4,
+          "identifier": "0e8b535f-b01c-442b-85e2-8a74e30f36c7",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/eccf4079-3bcd-46da-899a-cdcf6153c204",
+          "name": "UVA UCC research",
+          "organisation_id": 4,
+          "services": [
+            5,
+            6,
+            7
+          ],
+          "short_name": "research",
+          "status": "active",
+          "tags": [
+            "tag_uva"
+          ],
+          "website_url": "https://www.google.nl"
+        },
+        {
+          "collaboration_memberships": [],
+          "description": "UU",
+          "global_urn": "uva:uu_short",
+          "groups": [],
+          "id": 6,
+          "identifier": "0b4a9136-c7cd-472e-85e8-aa6c2812f847",
+          "logo": "https://sbs.scz-vm.net/api/images/collaborations/6cad9234-63db-4b95-94c6-f35c2697fe4c",
+          "name": "UU",
+          "organisation_id": 4,
+          "services": [],
+          "short_name": "uu_short",
+          "status": "active",
+          "tags": [],
+          "website_url": "https://www.google.nl"
+        }
+      ],
+      "id": 4,
+      "identifier": "b844f34b-81e5-4cb5-86df-333048a367f3",
+      "logo": "https://sbs.scz-vm.net/api/images/organisations/6c33366d-a04d-4411-94e9-2d6324297c2d",
+      "name": "Amsterdam UVA",
+      "organisation_memberships": [
+        {
+          "organisation_id": 4,
+          "role": "admin",
+          "user_id": 16
+        },
+        {
+          "organisation_id": 4,
+          "role": "manager",
+          "user_id": 22
+        }
+      ],
+      "schac_home_organisations": [
+        {
+          "name": "example.org",
+          "organisation_id": 4
+        }
+      ],
+      "services": [],
+      "short_name": "uva"
+    },
+    {
+      "collaborations": [],
+      "id": 5,
+      "identifier": "bc08878f-35b7-426d-a081-60f32168d25e",
+      "logo": "https://sbs.scz-vm.net/api/images/organisations/f247a3eb-d207-4ab8-8825-ea0cd22a10c1",
+      "name": "TUE",
+      "organisation_memberships": [],
+      "schac_home_organisations": [],
+      "services": [],
+      "short_name": "tue"
+    }
+  ],
+  "services": [
+    {
+      "accepted_user_policy": "https://google.nl",
+      "contact_email": "john@example.org",
+      "entity_id": "https://mail",
+      "id": 3,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/16b2ae1f-3aaf-48a3-a5d5-7522c916ab08",
+      "name": "Mail Services",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": "https://google.nl",
+      "contact_email": "john@example.org",
+      "entity_id": "https://wireless",
+      "id": 4,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/538ae7b5-391f-4cd5-b411-08acb6cca255",
+      "name": "Wireless",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": null,
+      "contact_email": "james@example.org",
+      "entity_id": "https://cloud",
+      "id": 5,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/508b66f1-9468-4796-a379-4728382ae878",
+      "name": "Cloud",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": "https://google.nl",
+      "contact_email": "service_admin@ucc.org",
+      "entity_id": "https://storage",
+      "id": 6,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/24c38bfe-731f-4dec-83b1-1ab46de587b0",
+      "name": "Storage",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": "support@storage.net"
+    },
+    {
+      "accepted_user_policy": "https://google.nl",
+      "contact_email": "help@wiki.com",
+      "entity_id": "https://wiki",
+      "id": 7,
+      "ldap_password": "$6$rounds=100000$bFyBZD0Fim7BCAqt$BSq4u2IqhyT2khkCMILpaEceMnvYIKvxyxttA8.IddqWdPB.AEH2MBb1sggk8pDlrW/Xb00f8xa67cC0nfkuX.",
+      "logo": "https://sbs.scz-vm.net/api/images/services/112c2097-3a02-4fa5-a137-2c56f61367e1",
+      "name": "Wiki",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": "https://aup.org",
+      "contact_email": "help@network.com",
+      "entity_id": "https://network",
+      "id": 8,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/2b47171e-60eb-47fe-bc13-423c7768ad74",
+      "name": "Network Services",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": "https://ssh",
+      "contact_email": "help@ssh.com",
+      "entity_id": "service_ssh_uva",
+      "id": 9,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/4b7122ba-b1a9-4439-a4f7-60dc50b4a30d",
+      "name": "SSH UvA",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": "https://google.nl",
+      "contact_email": null,
+      "entity_id": "uuc_scheduler_entity_id",
+      "id": 10,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/622270a6-f0ee-43c5-89b5-3724b5546218",
+      "name": "uuc_scheduler_name",
+      "privacy_policy": "https://privacy.org",
+      "security_email": "sec@org.nl",
+      "support_email": null
+    },
+    {
+      "accepted_user_policy": null,
+      "contact_email": "sram-beheer@surf.nl",
+      "entity_id": "https://demo-sp.sram.surf.nl/saml/module.php/saml/sp/metadata.php/test",
+      "id": 11,
+      "ldap_password": null,
+      "logo": "https://sbs.scz-vm.net/api/images/services/88d45c30-f7ac-4539-8745-2db2cdb60fc7",
+      "name": "SRAM Demo SP",
+      "privacy_policy": "https://wiki.surfnet.nl/display/SRAM/Privacy+Policy",
+      "security_email": "sram-beheer@surf.nl",
+      "support_email": null
+    }
+  ],
+  "users": [
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "john@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 7,
+      "last_login_date": "None",
+      "name": "John Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
+      ],
+      "uid": "urn:john",
+      "user_ip_networks": [],
+      "username": "john"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "mary@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 8,
+      "last_login_date": "None",
+      "name": "Mary Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:mary",
+      "user_ip_networks": [],
+      "username": "mdoe"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "peter@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 9,
+      "last_login_date": "None",
+      "name": "Peter Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:peter",
+      "user_ip_networks": [],
+      "username": "peter"
+    },
+    {
+      "accepted_aups": [
+        {
+          "agreed_at": "2022-11-17 13:42:15",
+          "service_id": 3,
+          "url": "https://google.nl"
+        },
+        {
+          "agreed_at": "2022-11-17 13:42:15",
+          "service_id": 8,
+          "url": "https://aup.org"
+        }
+      ],
+      "eduperson_principal_name": null,
+      "email": "boss@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 10,
+      "last_login_date": "None",
+      "name": "The Boss",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:admin",
+      "user_ip_networks": [],
+      "username": "admin"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "roger@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 11,
+      "last_login_date": "None",
+      "name": "Roger Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:roger",
+      "user_ip_networks": [],
+      "username": "roger"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "harry@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 12,
+      "last_login_date": "None",
+      "name": "Harry Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:harry",
+      "user_ip_networks": [],
+      "username": "harry"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "james@example.org",
+      "family_name": null,
+      "given_name": "James",
+      "id": 13,
+      "last_login_date": "None",
+      "name": "James Byrd",
+      "scoped_affiliation": null,
+      "ssh_keys": [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
+      ],
+      "uid": "urn:james",
+      "user_ip_networks": [],
+      "username": "james"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "sarah@uva.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 14,
+      "last_login_date": "None",
+      "name": "Sarah Cross",
+      "scoped_affiliation": null,
+      "ssh_keys": [
+        "some-lame-key"
+      ],
+      "uid": "urn:sarah",
+      "user_ip_networks": [
+        "255.0.0.1/32",
+        "255.0.0.9/24"
+      ],
+      "username": "sarah"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "betty@uuc.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 15,
+      "last_login_date": "None",
+      "name": "betty",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:betty",
+      "user_ip_networks": [],
+      "username": "betty"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "jane@ucc.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 16,
+      "last_login_date": "None",
+      "name": "Jane Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:jane",
+      "user_ip_networks": [],
+      "username": "jane"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "inactive@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 17,
+      "last_login_date": "1749-02-01 13:42:13",
+      "name": "inactive",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:inactive",
+      "user_ip_networks": [],
+      "username": "inacative"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "one_suspend@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 18,
+      "last_login_date": "1749-02-01 13:42:13",
+      "name": "one_suspend",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:one_suspend",
+      "user_ip_networks": [],
+      "username": "1suspend"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "two_suspend@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 19,
+      "last_login_date": "1749-02-01 13:42:13",
+      "name": "two_suspend",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:two_suspend",
+      "user_ip_networks": [],
+      "username": "2suspend"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "suspended@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 20,
+      "last_login_date": "1749-01-03 13:42:13",
+      "name": "suspended",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:suspended",
+      "user_ip_networks": [],
+      "username": "suspended"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "to_be_deleted@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 21,
+      "last_login_date": "2022-07-20 13:42:13",
+      "name": "to_be_deleted",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:to_be_deleted",
+      "user_ip_networks": [],
+      "username": "deleted"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "paul@ucc.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 22,
+      "last_login_date": "None",
+      "name": "Paul Doe",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:paul",
+      "user_ip_networks": [],
+      "username": "paul"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "service_admin@ucc.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 23,
+      "last_login_date": "None",
+      "name": "Service Admin",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:service_admin",
+      "user_ip_networks": [],
+      "username": "service_admin"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe1@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 24,
+      "last_login_date": "None",
+      "name": "Piet Doe de 1de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero001",
+      "user_ip_networks": [],
+      "username": "pietdoe1"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe2@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 25,
+      "last_login_date": "None",
+      "name": "Piet Doe de 2de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero002",
+      "user_ip_networks": [],
+      "username": "pietdoe2"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe3@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 26,
+      "last_login_date": "None",
+      "name": "Piet Doe de 3de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero003",
+      "user_ip_networks": [],
+      "username": "pietdoe3"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe4@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 27,
+      "last_login_date": "None",
+      "name": "Piet Doe de 4de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero004",
+      "user_ip_networks": [],
+      "username": "pietdoe4"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe5@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 28,
+      "last_login_date": "None",
+      "name": "Piet Doe de 5de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero005",
+      "user_ip_networks": [],
+      "username": "pietdoe5"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe6@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 29,
+      "last_login_date": "None",
+      "name": "Piet Doe de 6de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero006",
+      "user_ip_networks": [],
+      "username": "pietdoe6"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe7@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 30,
+      "last_login_date": "None",
+      "name": "Piet Doe de 7de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero007",
+      "user_ip_networks": [],
+      "username": "pietdoe7"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe8@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 31,
+      "last_login_date": "None",
+      "name": "Piet Doe de 8de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero008",
+      "user_ip_networks": [],
+      "username": "pietdoe8"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe9@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 32,
+      "last_login_date": "None",
+      "name": "Piet Doe de 9de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero009",
+      "user_ip_networks": [],
+      "username": "pietdoe9"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe10@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 33,
+      "last_login_date": "None",
+      "name": "Piet Doe de 10de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero010",
+      "user_ip_networks": [],
+      "username": "pietdoe10"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe11@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 34,
+      "last_login_date": "None",
+      "name": "Piet Doe de 11de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero011",
+      "user_ip_networks": [],
+      "username": "pietdoe11"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe12@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 35,
+      "last_login_date": "None",
+      "name": "Piet Doe de 12de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero012",
+      "user_ip_networks": [],
+      "username": "pietdoe12"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe13@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 36,
+      "last_login_date": "None",
+      "name": "Piet Doe de 13de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero013",
+      "user_ip_networks": [],
+      "username": "pietdoe13"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe14@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 37,
+      "last_login_date": "None",
+      "name": "Piet Doe de 14de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero014",
+      "user_ip_networks": [],
+      "username": "pietdoe14"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe15@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 38,
+      "last_login_date": "None",
+      "name": "Piet Doe de 15de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero015",
+      "user_ip_networks": [],
+      "username": "pietdoe15"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe16@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 39,
+      "last_login_date": "None",
+      "name": "Piet Doe de 16de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero016",
+      "user_ip_networks": [],
+      "username": "pietdoe16"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe17@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 40,
+      "last_login_date": "None",
+      "name": "Piet Doe de 17de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero017",
+      "user_ip_networks": [],
+      "username": "pietdoe17"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe18@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 41,
+      "last_login_date": "None",
+      "name": "Piet Doe de 18de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero018",
+      "user_ip_networks": [],
+      "username": "pietdoe18"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe19@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 42,
+      "last_login_date": "None",
+      "name": "Piet Doe de 19de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero019",
+      "user_ip_networks": [],
+      "username": "pietdoe19"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe20@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 43,
+      "last_login_date": "None",
+      "name": "Piet Doe de 20de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero020",
+      "user_ip_networks": [],
+      "username": "pietdoe20"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe21@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 44,
+      "last_login_date": "None",
+      "name": "Piet Doe de 21de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero021",
+      "user_ip_networks": [],
+      "username": "pietdoe21"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe22@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 45,
+      "last_login_date": "None",
+      "name": "Piet Doe de 22de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero022",
+      "user_ip_networks": [],
+      "username": "pietdoe22"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe23@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 46,
+      "last_login_date": "None",
+      "name": "Piet Doe de 23de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero023",
+      "user_ip_networks": [],
+      "username": "pietdoe23"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe24@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 47,
+      "last_login_date": "None",
+      "name": "Piet Doe de 24de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero024",
+      "user_ip_networks": [],
+      "username": "pietdoe24"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe25@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 48,
+      "last_login_date": "None",
+      "name": "Piet Doe de 25de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero025",
+      "user_ip_networks": [],
+      "username": "pietdoe25"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe26@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 49,
+      "last_login_date": "None",
+      "name": "Piet Doe de 26de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero026",
+      "user_ip_networks": [],
+      "username": "pietdoe26"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe27@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 50,
+      "last_login_date": "None",
+      "name": "Piet Doe de 27de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero027",
+      "user_ip_networks": [],
+      "username": "pietdoe27"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe28@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 51,
+      "last_login_date": "None",
+      "name": "Piet Doe de 28de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero028",
+      "user_ip_networks": [],
+      "username": "pietdoe28"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe29@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 52,
+      "last_login_date": "None",
+      "name": "Piet Doe de 29de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero029",
+      "user_ip_networks": [],
+      "username": "pietdoe29"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe30@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 53,
+      "last_login_date": "None",
+      "name": "Piet Doe de 30de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero030",
+      "user_ip_networks": [],
+      "username": "pietdoe30"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe31@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 54,
+      "last_login_date": "None",
+      "name": "Piet Doe de 31de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero031",
+      "user_ip_networks": [],
+      "username": "pietdoe31"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe32@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 55,
+      "last_login_date": "None",
+      "name": "Piet Doe de 32de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero032",
+      "user_ip_networks": [],
+      "username": "pietdoe32"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe33@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 56,
+      "last_login_date": "None",
+      "name": "Piet Doe de 33de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero033",
+      "user_ip_networks": [],
+      "username": "pietdoe33"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe34@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 57,
+      "last_login_date": "None",
+      "name": "Piet Doe de 34de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero034",
+      "user_ip_networks": [],
+      "username": "pietdoe34"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe35@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 58,
+      "last_login_date": "None",
+      "name": "Piet Doe de 35de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero035",
+      "user_ip_networks": [],
+      "username": "pietdoe35"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe36@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 59,
+      "last_login_date": "None",
+      "name": "Piet Doe de 36de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero036",
+      "user_ip_networks": [],
+      "username": "pietdoe36"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe37@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 60,
+      "last_login_date": "None",
+      "name": "Piet Doe de 37de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero037",
+      "user_ip_networks": [],
+      "username": "pietdoe37"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe38@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 61,
+      "last_login_date": "None",
+      "name": "Piet Doe de 38de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero038",
+      "user_ip_networks": [],
+      "username": "pietdoe38"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe39@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 62,
+      "last_login_date": "None",
+      "name": "Piet Doe de 39de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero039",
+      "user_ip_networks": [],
+      "username": "pietdoe39"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe40@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 63,
+      "last_login_date": "None",
+      "name": "Piet Doe de 40de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero040",
+      "user_ip_networks": [],
+      "username": "pietdoe40"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe41@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 64,
+      "last_login_date": "None",
+      "name": "Piet Doe de 41de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero041",
+      "user_ip_networks": [],
+      "username": "pietdoe41"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe42@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 65,
+      "last_login_date": "None",
+      "name": "Piet Doe de 42de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero042",
+      "user_ip_networks": [],
+      "username": "pietdoe42"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe43@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 66,
+      "last_login_date": "None",
+      "name": "Piet Doe de 43de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero043",
+      "user_ip_networks": [],
+      "username": "pietdoe43"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe44@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 67,
+      "last_login_date": "None",
+      "name": "Piet Doe de 44de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero044",
+      "user_ip_networks": [],
+      "username": "pietdoe44"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe45@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 68,
+      "last_login_date": "None",
+      "name": "Piet Doe de 45de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero045",
+      "user_ip_networks": [],
+      "username": "pietdoe45"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe46@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 69,
+      "last_login_date": "None",
+      "name": "Piet Doe de 46de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero046",
+      "user_ip_networks": [],
+      "username": "pietdoe46"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe47@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 70,
+      "last_login_date": "None",
+      "name": "Piet Doe de 47de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero047",
+      "user_ip_networks": [],
+      "username": "pietdoe47"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe48@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 71,
+      "last_login_date": "None",
+      "name": "Piet Doe de 48de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero048",
+      "user_ip_networks": [],
+      "username": "pietdoe48"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe49@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 72,
+      "last_login_date": "None",
+      "name": "Piet Doe de 49de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero049",
+      "user_ip_networks": [],
+      "username": "pietdoe49"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe50@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 73,
+      "last_login_date": "None",
+      "name": "Piet Doe de 50de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero050",
+      "user_ip_networks": [],
+      "username": "pietdoe50"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe51@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 74,
+      "last_login_date": "None",
+      "name": "Piet Doe de 51de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero051",
+      "user_ip_networks": [],
+      "username": "pietdoe51"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe52@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 75,
+      "last_login_date": "None",
+      "name": "Piet Doe de 52de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero052",
+      "user_ip_networks": [],
+      "username": "pietdoe52"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe53@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 76,
+      "last_login_date": "None",
+      "name": "Piet Doe de 53de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero053",
+      "user_ip_networks": [],
+      "username": "pietdoe53"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe54@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 77,
+      "last_login_date": "None",
+      "name": "Piet Doe de 54de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero054",
+      "user_ip_networks": [],
+      "username": "pietdoe54"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe55@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 78,
+      "last_login_date": "None",
+      "name": "Piet Doe de 55de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero055",
+      "user_ip_networks": [],
+      "username": "pietdoe55"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe56@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 79,
+      "last_login_date": "None",
+      "name": "Piet Doe de 56de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero056",
+      "user_ip_networks": [],
+      "username": "pietdoe56"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe57@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 80,
+      "last_login_date": "None",
+      "name": "Piet Doe de 57de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero057",
+      "user_ip_networks": [],
+      "username": "pietdoe57"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe58@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 81,
+      "last_login_date": "None",
+      "name": "Piet Doe de 58de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero058",
+      "user_ip_networks": [],
+      "username": "pietdoe58"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe59@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 82,
+      "last_login_date": "None",
+      "name": "Piet Doe de 59de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero059",
+      "user_ip_networks": [],
+      "username": "pietdoe59"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe60@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 83,
+      "last_login_date": "None",
+      "name": "Piet Doe de 60de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero060",
+      "user_ip_networks": [],
+      "username": "pietdoe60"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe61@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 84,
+      "last_login_date": "None",
+      "name": "Piet Doe de 61de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero061",
+      "user_ip_networks": [],
+      "username": "pietdoe61"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe62@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 85,
+      "last_login_date": "None",
+      "name": "Piet Doe de 62de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero062",
+      "user_ip_networks": [],
+      "username": "pietdoe62"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe63@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 86,
+      "last_login_date": "None",
+      "name": "Piet Doe de 63de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero063",
+      "user_ip_networks": [],
+      "username": "pietdoe63"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe64@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 87,
+      "last_login_date": "None",
+      "name": "Piet Doe de 64de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero064",
+      "user_ip_networks": [],
+      "username": "pietdoe64"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe65@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 88,
+      "last_login_date": "None",
+      "name": "Piet Doe de 65de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero065",
+      "user_ip_networks": [],
+      "username": "pietdoe65"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe66@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 89,
+      "last_login_date": "None",
+      "name": "Piet Doe de 66de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero066",
+      "user_ip_networks": [],
+      "username": "pietdoe66"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe67@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 90,
+      "last_login_date": "None",
+      "name": "Piet Doe de 67de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero067",
+      "user_ip_networks": [],
+      "username": "pietdoe67"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe68@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 91,
+      "last_login_date": "None",
+      "name": "Piet Doe de 68de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero068",
+      "user_ip_networks": [],
+      "username": "pietdoe68"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe69@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 92,
+      "last_login_date": "None",
+      "name": "Piet Doe de 69de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero069",
+      "user_ip_networks": [],
+      "username": "pietdoe69"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe70@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 93,
+      "last_login_date": "None",
+      "name": "Piet Doe de 70de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero070",
+      "user_ip_networks": [],
+      "username": "pietdoe70"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe71@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 94,
+      "last_login_date": "None",
+      "name": "Piet Doe de 71de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero071",
+      "user_ip_networks": [],
+      "username": "pietdoe71"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe72@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 95,
+      "last_login_date": "None",
+      "name": "Piet Doe de 72de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero072",
+      "user_ip_networks": [],
+      "username": "pietdoe72"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe73@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 96,
+      "last_login_date": "None",
+      "name": "Piet Doe de 73de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero073",
+      "user_ip_networks": [],
+      "username": "pietdoe73"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe74@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 97,
+      "last_login_date": "None",
+      "name": "Piet Doe de 74de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero074",
+      "user_ip_networks": [],
+      "username": "pietdoe74"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe75@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 98,
+      "last_login_date": "None",
+      "name": "Piet Doe de 75de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero075",
+      "user_ip_networks": [],
+      "username": "pietdoe75"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe76@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 99,
+      "last_login_date": "None",
+      "name": "Piet Doe de 76de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero076",
+      "user_ip_networks": [],
+      "username": "pietdoe76"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe77@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 100,
+      "last_login_date": "None",
+      "name": "Piet Doe de 77de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero077",
+      "user_ip_networks": [],
+      "username": "pietdoe77"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe78@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 101,
+      "last_login_date": "None",
+      "name": "Piet Doe de 78de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero078",
+      "user_ip_networks": [],
+      "username": "pietdoe78"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe79@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 102,
+      "last_login_date": "None",
+      "name": "Piet Doe de 79de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero079",
+      "user_ip_networks": [],
+      "username": "pietdoe79"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe80@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 103,
+      "last_login_date": "None",
+      "name": "Piet Doe de 80de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero080",
+      "user_ip_networks": [],
+      "username": "pietdoe80"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe81@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 104,
+      "last_login_date": "None",
+      "name": "Piet Doe de 81de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero081",
+      "user_ip_networks": [],
+      "username": "pietdoe81"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe82@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 105,
+      "last_login_date": "None",
+      "name": "Piet Doe de 82de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero082",
+      "user_ip_networks": [],
+      "username": "pietdoe82"
+    },
+    {
+      "accepted_aups": [],
+      "eduperson_principal_name": null,
+      "email": "pietdoe83@example.org",
+      "family_name": null,
+      "given_name": null,
+      "id": 106,
+      "last_login_date": "None",
+      "name": "Piet Doe de 83de",
+      "scoped_affiliation": null,
+      "ssh_keys": [],
+      "uid": "urn:persoon:numero083",
+      "user_ip_networks": [],
+      "username": "pietdoe83"
+    }
+  ]
+}

@@ -43,7 +43,7 @@ def write_plsc(location, src):
     os.mkdir(f"{location}/plsc")
 
     # Find all CO's in SBS
-    sync = src.all_users()
+    sync = src.api("api/plsc/sync")
 
     file = os.path.realpath(os.path.join(location, "plsc/sync"))
     with open(file, "w") as f:
