@@ -100,7 +100,7 @@ class TestAll(BaseTest):
             logger.info(f"* Checking collaboration: {c['name']}")
 
             detail = self.src.collaboration(c['id'])
-            for s in detail.get('services', {}):
+            for s in detail['services']:
 
                 def check_ordered_person_expiry(person, _):
                     # When CO is expired, the person in de Ordered Subtree should mut be expired as well
