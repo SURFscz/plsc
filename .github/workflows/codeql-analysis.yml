@@ -7,6 +7,9 @@ on:
 jobs:
   analyze:
     name: Analyze
+    if: >
+      github.actor!='dependabot[bot]'
+
     runs-on: ubuntu-latest
 
     strategy:
