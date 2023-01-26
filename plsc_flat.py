@@ -57,9 +57,6 @@ def create(src, dst):
                     ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
                     dst.add(ou_dn, ou_entry)
 
-            src_dn = src.rfind(f"o={co_id},dc=ordered,dc={service}", '(ObjectClass=organization)')
-            logging.debug(f"src_dn: {src_dn}")
-
             logging.debug("  - People")
             src_dns = src.rfind(f"ou=People,o={co_id},dc=ordered,dc={service}", '(ObjectClass=person)')
 
