@@ -39,6 +39,11 @@ def create(src, dst):
         for co_id in cos:
             logging.debug(f"- co: {co_id}")
 
+            src_dn = src.rfind(f"o={co_id},dc=ordered,dc={service}", '(ObjectClass=organization)')
+            src_co = src_dn.get(f"o={co_id},dc=ordered,dc={service},{src.basedn}", {})
+            src_mail = src_co.get('mail', [])
+            logging.debug(f"src_mail: {src_mail}")
+
             co_dn = f"dc=flat,dc={service},{dst.basedn}"
 
             # Create flat dn if it doesn't exist
@@ -99,6 +104,7 @@ def create(src, dst):
                 new_entry = copy.deepcopy(grp_entry)
                 new_entry['cn'] = [grp_cn]
                 new_entry['member'] = members
+                new_entry['mail'] = src_mail
 
                 dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
 

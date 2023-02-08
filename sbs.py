@@ -181,12 +181,15 @@ class SBS(object):
                 if not c.get('global_urn', None):
                     c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
 
+                c['admins'] = []
                 for m in c.get('collaboration_memberships', []):
                     status = c.get('status', 'active')
                     if status == 'active':
                         status = m['status']
 
                     m['user'] = {**users[m['user_id']], **{'status': status}}
+                    if m['role'] == 'admin':
+                        c['admins'].append(m['user'])
 
                 for g in c.get('groups', []):
                     for m in g.get('collaboration_memberships', []):
