@@ -28,7 +28,7 @@ vc = {}
 def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[List[str]]:
     if values is None:
         return None
-    return [f"{scope}{sep}{v}" for v in values]
+    return set(f"{scope}{sep}{v}" for v in values)
 
 
 # Here's the magic: Build the new person entry
