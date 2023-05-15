@@ -150,12 +150,13 @@ class SLdap(object):
             logger.error("{}\n  {}".format(dn, e))
             raise e
 
-    def rdelete(self, dn):
+    def rdelete(self, dn, self_delete=True):
         children = self.find(dn, scope=ldap.SCOPE_ONELEVEL)
         if len(children):
             for child_dn in children:
                 self.rdelete(child_dn)
-        self.delete(dn)
+        if self_delete:
+            self.delete(dn)
 
     def get_sequence(self, dn) -> int:
         seq = 1000
