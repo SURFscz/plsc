@@ -426,9 +426,8 @@ def cleanup(dst):
         service = s['dc'][0]
         logging.debug(f"service: {service}")
         if vc.get(service, None) is None:
-            logging.debug(f"- {service} not found in our services, deleting")
-            # service_dn = f"dc={service},{dst.basedn}"
-            dst.rdelete(service_dn)
+            logging.debug(f"- {service} not found in our services, cleaning up")
+            dst.rdelete(f"dc=ordered,{service_dn}", False)
             continue
 
         organizations = dst.rfind(f"dc=ordered,dc={service}",
