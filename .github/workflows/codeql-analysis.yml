@@ -39,10 +39,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@0225834cc549ee0ca93cb085b92954821a145866
+        uses: github/codeql-action/init@cdcdbb579706841c47f7063dda365e292e5cad7a
         with:
           languages: "${{ matrix.language }}"
           setup-python-dependencies: false
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@0225834cc549ee0ca93cb085b92954821a145866
+        uses: github/codeql-action/analyze@cdcdbb579706841c47f7063dda365e292e5cad7a
