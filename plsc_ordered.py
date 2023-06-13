@@ -157,15 +157,19 @@ def create(src, dst):
 
         # Adjust admin userPassword with ldap_password if given in SBS.
         # https://github.com/SURFscz/plsc/issues/24
-        ldap_password = details.get('ldap_password', None)
-        if ldap_password:
-            current_admin = dst.find(admin_dn, "(&(objectClass=simpleSecurityObject)(cn=admin))")
-
-            dst.modify(admin_dn, list(current_admin.values())[0], {
-                'objectClass': ['organizationalRole', 'simpleSecurityObject'],
-                'cn': ['admin'],
-                'userPassword': ["{CRYPT}" + ldap_password]
-            })
+        if 'ldap_password' not in details:
+            raise Exception('ldap_password not found')
+        ldap_password = details['ldap_password']
+        current_admin = dst.find(admin_dn, "(&(objectClass=simpleSecurityObject)(cn=admin))")
+        if ldap_password is None:
+            # Effectively disable password
+            ldap_password = '!'
+        new_admin = {
+            'objectClass': ['organizationalRole', 'simpleSecurityObject'],
+            'cn': ['admin'],
+            'userPassword': ["{CRYPT}" + ldap_password]
+        }
+        dst.modify(admin_dn, list(current_admin.values())[0], new_admin)
 
         # check if dc=ordered subtree exists and create it if necessary
         ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
