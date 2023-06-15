@@ -8,7 +8,7 @@ permissions:
   security-events: write
   actions: read
   contents: read
-\
+
 jobs:
   analyze:
     name: Analyze
