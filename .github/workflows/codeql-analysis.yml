@@ -4,7 +4,14 @@ name: "CodeQL"
 on:
   - push
 
-permissions: {}
+permissions:
+  actions: read
+  checks: write
+  contents: read
+  metadata: read
+  packages: read
+  security-events: write
+  statuses: write
 
 jobs:
   analyze:
