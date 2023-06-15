@@ -5,14 +5,10 @@ on:
   - push
 
 permissions:
-  actions: read
-  checks: write
-  contents: read
-  metadata: read
-  packages: read
   security-events: write
-  statuses: write
-
+  actions: read
+  contents: read
+\
 jobs:
   analyze:
     name: Analyze
