@@ -1,9 +1,12 @@
 name: CI
 
-on: 
+on:
  push:
  schedule:
-  - cron: "0 5  * * mon" 
+  - cron: "0 5  * * mon"
+
+permissions:
+  contents: "read"
 
 jobs:
   plsc-test:

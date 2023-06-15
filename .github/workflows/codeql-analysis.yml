@@ -4,6 +4,10 @@ name: "CodeQL"
 on:
   - push
 
+permissions:
+  contents: "read"
+  security-events: "write"
+
 jobs:
   analyze:
     name: Analyze
