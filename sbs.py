@@ -208,7 +208,7 @@ class SBS(object):
                         }
                     )['cos'][c['id']] = c
 
-                c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['id'])
+                c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['identifier'])
 
         return result
 

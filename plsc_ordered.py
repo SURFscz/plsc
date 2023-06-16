@@ -412,8 +412,17 @@ def create(src, dst):
                     'description': ['All CO members'],
                     'displayName': [f'All Members of {vc[service][co_identifier]["name"]}']
                 }
+
+                # Add tags
                 if vc[service][co_identifier]["tags"]:
                     grp_entry['businessCategory'] = vc[service][co_identifier]["tags"]
+
+                # Add labeledURI
+                for labeledURI in ['sbs_url', 'logo']:
+                    if labeledURI in co and co[labeledURI]:
+                        grp_entry.setdefault('labeledURI', []).append(
+                            co[labeledURI].strip().replace(' ', '%20') + " " + labeledURI
+                        )
 
                 ldif = dst.store(grp_dn, grp_entry)
                 logging.debug("      - store: {}".format(ldif))
