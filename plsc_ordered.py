@@ -170,6 +170,8 @@ def create(src, dst):
             'userPassword': ["{CRYPT}" + ldap_password]
         }
         dst.modify(admin_dn, list(current_admin.values())[0], new_admin)
+        if not details['enabled']:
+           continue
 
         # check if dc=ordered subtree exists and create it if necessary
         ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
