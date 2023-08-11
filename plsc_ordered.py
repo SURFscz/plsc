@@ -171,7 +171,9 @@ def create(src, dst):
         }
         dst.modify(admin_dn, list(current_admin.values())[0], new_admin)
         if not details['enabled']:
+           vc[service]['enabled'] = False
            continue
+        vc[service]['enabled'] = True
 
         # check if dc=ordered subtree exists and create it if necessary
         ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
@@ -442,6 +444,10 @@ def cleanup(dst):
         logging.debug(f"service: {service}")
         if vc.get(service, None) is None:
             logging.debug(f"- {service} not found in our services, cleaning up")
+            dst.rdelete(f"{service_dn}")
+            continue
+        if not vc[service]['enabled']:
+            logging.debug(f"- {service} LDAP disabled, cleaning up")
             dst.rdelete(f"dc=ordered,{service_dn}", False)
             continue
 
