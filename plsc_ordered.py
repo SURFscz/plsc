@@ -171,8 +171,8 @@ def create(src, dst):
         }
         dst.modify(admin_dn, list(current_admin.values())[0], new_admin)
         if not details['enabled']:
-           vc[service]['enabled'] = False
-           continue
+            vc[service]['enabled'] = False
+            continue
         vc[service]['enabled'] = True
 
         # check if dc=ordered subtree exists and create it if necessary
