@@ -42,6 +42,10 @@ class TestAll(BaseTest):
             check_object(rdn)
 
             for u in people:
+                # Suspended users don't appear in LDAP
+                if u['user']['suspended'] is True:
+                    continue
+
                 user_object = check_object(f"uid={u['user']['username']},{rdn}")
 
                 # Specify as much of tests to see that all LDAP entries are correct
@@ -71,7 +75,7 @@ class TestAll(BaseTest):
             active_members = []
             for m in members:
                 logger.debug(f"member: {m['user']['username']}, status: {m['status']}")
-                if m['status'] == 'active':
+                if m['status'] == 'active' and m['user']['suspended'] is not True:
                     active_members.append(m)
 
             if len(active_members) > 0:
