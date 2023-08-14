@@ -2,12 +2,13 @@
 
 import sys
 import csv
+from io import TextIOBase
+
 import yaml
 import argparse
 from typing import List, Dict, Set
 from datetime import datetime
 from sbs import SBS
-
 
 contacts_type = List[Dict[str, str]]
 
@@ -27,7 +28,9 @@ def parse_args() -> argparse.Namespace:
     srvc_group.add_argument('--service', default=True, action='store_true', help='Fetch service contacts (default)')
     srvc_group.add_argument('--no-service', dest='service', action='store_false', help=argparse.SUPPRESS)
 
-    parser.add_argument('--output', choices=["csv", "email_list"], default="csv",
+    parser.add_argument('--format', choices=["csv", "email_list"], default="csv",
+                        help="Type of output to produce (default: csv)")
+    parser.add_argument('-o', '--output', default=sys.stdout, type=argparse.FileType('w'),
                         help="Type of output to produce (default: csv)")
 
     args = parser.parse_args()
@@ -92,8 +95,8 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
     return contacts
 
 
-def write_csv(contacts: contacts_type) -> None:
-    w = csv.writer(sys.stdout, dialect="excel")
+def write_csv(contacts: contacts_type, fd: TextIOBase = sys.stdout) -> None:
+    w = csv.writer(fd, dialect="excel")
     w.writerow(["SRAM prod contacts generated " + datetime.now().isoformat()])
     columns = ("type", "id", "name", "role", "mail")
     w.writerow(columns)
@@ -106,12 +109,12 @@ def main() -> None:
     sbs = open_sbs(args.sbs)
     contacts = fetch_contacts(sbs, org=args.org, co=args.co, service=args.service)
 
-    if args.output == 'csv':
-        write_csv(contacts)
-    elif args.output == 'email_list':
+    if args.format == 'csv':
+        write_csv(contacts, fd=args.output)
+    elif args.format == 'email_list':
         # uniquify list of emails
         emails: Set[str] = set(c['mail'].lower() for c in contacts if c['mail'])
-        print(*sorted(emails), sep="\n")
+        print(args.output, *sorted(emails), sep="\n")
 
 
 if __name__ == "__main__":
