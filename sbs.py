@@ -46,7 +46,7 @@ class SBS(object):
         self.session = requests.Session()
         retries = Retry(
             total=config.get('retry', 1),
-            backoff_factor=0.1,
+            backoff_factor=0.5,
             status_forcelist=[503, 504]
         )
 
