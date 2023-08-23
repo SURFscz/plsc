@@ -5,5 +5,6 @@ pyasn1-modules
 python-ldap
 pytest
 pytest-dotenv
-json-server.py
 aiohttp
+PyYAML
+xlsxwriter

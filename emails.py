@@ -32,7 +32,7 @@ def parse_args() -> argparse.Namespace:
     srvc_group.add_argument('--no-service', dest='service', action='store_false', help=argparse.SUPPRESS)
 
     parser.add_argument('--debug', default=False, action='store_true', help='Show debug information (default: false)')
-    parser.add_argument('--format', choices=["csv", "email_list"], default="csv",
+    parser.add_argument('--format', choices=["csv", "xlsx", "email_list"], default="csv",
                         help="Type of output to produce (default: csv)")
     parser.add_argument('-o', '--output', default=sys.stdout, type=argparse.FileType('w'),
                         help="Type of output to produce (default: csv)")
@@ -107,6 +107,47 @@ def write_csv(contacts: contacts_type, fd: TextIOBase = sys.stdout) -> None:
     w.writerows([[c[key] for key in columns] for c in contacts])
 
 
+def write_xls(contacts: contacts_type, fd: TextIOBase) -> None:
+    try:
+        import xlsxwriter
+    except ImportError:
+        print("Please install xlsxwriter: pip install xlsxwriter")
+        sys.exit(1)
+
+    # raw (binary) file buffer:
+    raw_fd = fd.buffer
+
+    workbook = xlsxwriter.Workbook(raw_fd, {'in_memory': True})
+    worksheet = workbook.add_worksheet()
+
+    columns       = ("type", "id", "name", "role", "mail")
+    columns_width = (     8,    6,     30,     20,     30)
+
+    row_max = len(contacts) + 1 - 1
+    col_max = len(columns) - 1
+
+
+    # write header
+    for col_num, col_name in enumerate(columns):
+        worksheet.write(0, col_num, col_name)
+        # set column width
+        worksheet.set_column(col_num, col_num, columns_width[col_num])
+
+    # write data
+    for row_num, data in enumerate(contacts):
+        for col_num, col_name in enumerate(columns):
+            logging.debug(f"{row_num + 1} {col_num} {col_name} {data[col_name]}")
+            worksheet.write(row_num + 1, col_num, data[col_name] or "")
+    logging.debug("Data written")
+
+    # autofilter
+    worksheet.autofilter(0, 0, row_max, col_max)
+
+    logging.debug("Done!")
+
+    workbook.close()
+
+
 def main() -> None:
     args = parse_args()
 
@@ -120,6 +161,8 @@ def main() -> None:
 
     if args.format == 'csv':
         write_csv(contacts, fd=args.output)
+    elif args.format == 'xlsx':
+        write_xls(contacts, fd=args.output)
     elif args.format == 'email_list':
         # uniquify list of emails
         emails: Set[str] = set(c['mail'].lower() for c in contacts if c['mail'])
