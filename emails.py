@@ -2,12 +2,13 @@
 
 import sys
 import csv
+import logging
 from io import TextIOBase
 
 import yaml
 import argparse
-from typing import List, Dict, Set
 from datetime import datetime
+from typing import List, Dict, Set
 from sbs import SBS
 
 contacts_type = List[Dict[str, str]]
@@ -21,13 +22,16 @@ def parse_args() -> argparse.Namespace:
     org_group = parser.add_mutually_exclusive_group()
     org_group.add_argument('--org', default=True, action='store_true', help='Fetch org admins/managers (default: true)')
     org_group.add_argument('--no-org', dest='org', action='store_false', help=argparse.SUPPRESS)
+
     co_group = parser.add_mutually_exclusive_group()
     co_group.add_argument('--co', default=False, action='store_true', help='Fetch co admins (default: false)')
     co_group.add_argument('--no-co', dest='co', action='store_false', help=argparse.SUPPRESS)
+
     srvc_group = parser.add_mutually_exclusive_group()
     srvc_group.add_argument('--service', default=True, action='store_true', help='Fetch service contacts (default)')
     srvc_group.add_argument('--no-service', dest='service', action='store_false', help=argparse.SUPPRESS)
 
+    parser.add_argument('--debug', default=False, action='store_true', help='Show debug information (default: false)')
     parser.add_argument('--format', choices=["csv", "email_list"], default="csv",
                         help="Type of output to produce (default: csv)")
     parser.add_argument('-o', '--output', default=sys.stdout, type=argparse.FileType('w'),
@@ -105,6 +109,11 @@ def write_csv(contacts: contacts_type, fd: TextIOBase = sys.stdout) -> None:
 
 def main() -> None:
     args = parse_args()
+
+    if args.debug:
+        logging.basicConfig(level="DEBUG")
+    else:
+        logging.basicConfig(level="INFO")
 
     sbs = open_sbs(args.sbs)
     contacts = fetch_contacts(sbs, org=args.org, co=args.co, service=args.service)
