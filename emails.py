@@ -96,6 +96,9 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
                         "mail": user['user']['email']
                     })
 
+    # sort contacts by type, id, role, name
+    contacts.sort(key=lambda c: (c['type'], c['id'], c['role'], c['name']))
+
     return contacts
 
 
