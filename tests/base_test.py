@@ -2,8 +2,6 @@ from unittest import TestCase
 
 from aiohttp import web
 
-from gera2ld.pyserve import run_forever, start_server_aiohttp
-
 from sldap import SLdap
 from sbs import SBS
 
@@ -47,6 +45,7 @@ class APIHandler:
             return web.json_response({}, status=404)
 
 
+DEFAULT_LOCAL_HOST = '127.0.0.1'
 DEFAULT_LOCAL_PORT = 3333
 
 
@@ -71,16 +70,41 @@ class BaseTest(TestCase):
     @classmethod
     def setUpClass(cls):
         def start_server(loop):
+
+            async def init_web_server(handle, host, port):
+                server = web.ServerRunner(web.Server(handle))
+                await server.setup()
+
+                site = web.TCPSite(
+                    server,
+                    host=host,
+                    port=port
+                )
+                await site.start()
+
+                return server 
+        
             logger.debug("BaseTest start_server")
             handle = APIHandler()
             asyncio.set_event_loop(loop)
-            run_forever(start_server_aiohttp(handle, ':{}'.format(DEFAULT_LOCAL_PORT)))
+
+            server = init_web_server(
+                handle,
+                DEFAULT_LOCAL_HOST,
+                DEFAULT_LOCAL_PORT
+            )
+
+            loop.run_until_complete(server)
+            loop.run_forever()
+
 
         def check_server():
             logger.debug("BaseTest check_server")
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
-            while sock.connect_ex(('127.0.0.1', DEFAULT_LOCAL_PORT)) == 111:
+            while sock.connect_ex(
+                (DEFAULT_LOCAL_HOST, DEFAULT_LOCAL_PORT)
+            ) == 111:
                 time.sleep(0.1)
 
         if not os.environ.get("SBS_URL", None):
