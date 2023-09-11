@@ -86,7 +86,6 @@ class BaseTest(TestCase):
 
             logger.debug("BaseTest start_server")
             handle = APIHandler()
-            asyncio.set_event_loop(loop)
 
             server = init_web_server(
                 handle,
