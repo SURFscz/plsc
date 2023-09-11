@@ -16,3 +16,5 @@ ldap_stop:
 
 pytest: image ldap_start
 	docker run --rm -ti --network host -v ${PWD}:/app plsc pytest
+
+clean: ldap_stop
