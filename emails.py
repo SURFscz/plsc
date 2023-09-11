@@ -120,12 +120,11 @@ def write_xls(contacts: contacts_type, fd: TextIOBase) -> None:
     workbook = xlsxwriter.Workbook(raw_fd, {'in_memory': True})
     worksheet = workbook.add_worksheet()
 
-    columns       = ("type", "id", "name", "role", "mail")
-    columns_width = (     8,    6,     30,     20,     30)
+    columns = ("type", "id", "name", "role", "mail")
+    columns_width = (8, 6, 30, 20, 30)
 
     row_max = len(contacts) + 1 - 1
     col_max = len(columns) - 1
-
 
     # write header
     for col_num, col_name in enumerate(columns):

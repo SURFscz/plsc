@@ -82,8 +82,8 @@ class BaseTest(TestCase):
                 )
                 await site.start()
 
-                return server 
-        
+                return server
+
             logger.debug("BaseTest start_server")
             handle = APIHandler()
             asyncio.set_event_loop(loop)
@@ -96,7 +96,6 @@ class BaseTest(TestCase):
 
             loop.run_until_complete(server)
             loop.run_forever()
-
 
         def check_server():
             logger.debug("BaseTest check_server")
