@@ -85,16 +85,18 @@ class BaseTest(TestCase):
                 return server
 
             logger.debug("BaseTest start_server")
-            handle = APIHandler()
 
             server = init_web_server(
-                handle,
+                APIHandler(),
                 DEFAULT_LOCAL_HOST,
                 DEFAULT_LOCAL_PORT
             )
 
-            loop.run_until_complete(server)
-            loop.run_forever()
+            try:
+                loop.run_until_complete(server)
+                loop.run_forever()
+            finally:
+                loop.close()
 
         def check_server():
             logger.debug("BaseTest check_server")
@@ -118,6 +120,8 @@ class BaseTest(TestCase):
     def tearDownClass(cls):
         if cls.loop:
             logger.debug("BaseTest tearDownClass")
+            for task in asyncio.all_tasks(cls.loop):
+                task.cancel()
             cls.loop.call_soon_threadsafe(cls.loop.stop)
             cls.x.join()
 
