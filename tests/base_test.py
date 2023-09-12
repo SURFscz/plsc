@@ -71,7 +71,7 @@ class BaseTest(TestCase):
     def setUpClass(cls):
         def start_server(loop):
 
-            async def init_web_server(handle, host, port):
+            async def init_api_server(handle, host, port):
                 server = web.ServerRunner(web.Server(handle))
                 await server.setup()
 
@@ -86,14 +86,14 @@ class BaseTest(TestCase):
 
             logger.debug("BaseTest start_server")
 
-            server = init_web_server(
+            api_server = init_api_server(
                 APIHandler(),
                 DEFAULT_LOCAL_HOST,
                 DEFAULT_LOCAL_PORT
             )
 
             try:
-                loop.run_until_complete(server)
+                loop.run_until_complete(api_server)
                 loop.run_forever()
             finally:
                 loop.close()
@@ -110,8 +110,9 @@ class BaseTest(TestCase):
         if not os.environ.get("SBS_URL", None):
             logger.debug("BaseTest setUpClass")
             cls.loop = asyncio.new_event_loop()
-            cls.x = threading.Thread(target=start_server, args=(cls.loop,), )
-            cls.x.start()
+            cls.api = threading.Thread(target=start_server, args=(cls.loop,), )
+            cls.api.start()
+
             check_server()
         else:
             cls.loop = None
@@ -123,7 +124,7 @@ class BaseTest(TestCase):
             for task in asyncio.all_tasks(cls.loop):
                 task.cancel()
             cls.loop.call_soon_threadsafe(cls.loop.stop)
-            cls.x.join()
+            cls.api.join()
 
     def setUp(self):
         """ Run a complete PLSC cycle, 1st ordered structure, 2nd flat structure...
