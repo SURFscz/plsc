@@ -19,3 +19,5 @@ config.d/
 tests/api/
 .vscode/
 .theia/
+Pipfile
+.python-version
