@@ -11,7 +11,7 @@ For local development we advice to make use of Python Virtual Environment. The i
 This is an example of what we need to specify source and destination.
 [ More complex examples will follow ]
 
-```
+```bash
 ---
 ldap:
   src:
@@ -34,7 +34,8 @@ src:
 ### Local development
 
 Create a virtual environment and install the required python packages:
-```
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
@@ -42,10 +43,12 @@ pip install -r requirements.txt
 ```
 
 ### Use
-```sync_services``` will look for all ```labeledURI``` attributes in the source and create ```dc=<labeledURI>``` branches on the destination containing all CO's that are linked to these services with bare ```People```, ```Groups``` and ```uid/gidNumberSequence``` structures.
 
-```plsc``` will then mirror all ```People``` and ```Groups``` to the corresponding CO's in the destination LDAP, optionally converting attributes and dn's as defined in the code on the way:
-```
+`sync_services` will look for all `labeledURI` attributes in the source and create `dc=<labeledURI>` branches on the destination containing all CO's that are linked to these services with bare `People`, `Groups` and `uid/gidNumberSequence` structures.
+
+`plsc` will then mirror all `People` and `Groups` to the corresponding CO's in the destination LDAP, optionally converting attributes and dn's as defined in the code on the way:
+
+```bash
             # Here's the magic: Build the new person entry
             dst_entry = {}
             dst_entry['objectClass'] = ['inetOrgPerson', 'person', 'posixAccount']
@@ -56,7 +59,8 @@ pip install -r requirements.txt
 ```
 
 And for groups:
-```
+
+```bash
             # Here's the magic: Build the new group entry
             m = re.search('^(?:GRP)?(?:CO)?(?:COU)?:(.*?)$', src_cn)
             dst_cn = src_type + "_" + m.group(1) if m.group(1) else ""
@@ -72,7 +76,7 @@ And for groups:
 For local testing, you need a local LDAP to be started before running tests.
 When you have docker installed on your local machine, you can simple run:
 
-```
+```bash
 etc/ldap_start.sh
 ```
 
@@ -82,7 +86,7 @@ If you do not have docker installed or wish to use an existing running LDAP serv
 
 You can specify LDAP connection and access constants in a local **.env** file, for exanple:
 
-```
+```bash
 LDAP_URL="ldap://localhost:389"
 LDAP_ADMIN_PASSWORD="secret"
 LDAP_CONFIG_PASSWORD="config"
@@ -105,20 +109,50 @@ When you omit the **SBS_URL** variable, the tests will run API requests agains t
 
 When all these preperations are completed, you can now run the tests:
 
-```
+```bash
 pytest -v
 ```
 
 After each Test cycle the contents of the LDAP can be inspected, for that run this command:
 
-```
+```bash
 etc/ldap_show.sh
 ```
 
 When finished you can tear down the local running LDAP instance, by:
 
-```
+```bash
 etc/ldap_stop.sh
 
 ```
 
+# Using Make
+
+A Makefile is added to make life easier. Now you can run:
+
+```bash
+make pytest
+```
+
+Or just make. This will build the docker image and run pytest next.
+
+```bash
+make
+```
+
+# Docker
+
+A Dockerfile is added to produce an image that is capable of running PLSC. Since PLSC depends on an input YAML file holding the source and destionatination details, you have to provide sucan YANL file.
+Using Docker you can do the following:
+
+Suppose you have prepared you YAML file (inspired by plsc.yml.example) and this file is 'my-plsc.yml'
+
+You have to mount this file into the container and then run **run.sh** with that file as parameter.
+
+Example:
+
+```bash
+docker run -v ${pwd}/my-plsc.yml:/tmp/plsc.yaml plsc ./run.sh /tmp/plsc.yml
+```
+
+**run.sh** is the existing script that runs both _plsc_ordered.py_ and _plsc_flat_

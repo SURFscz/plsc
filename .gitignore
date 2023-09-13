@@ -21,3 +21,4 @@ tests/api/
 .theia/
 Pipfile
 .python-version
+plsc.yaml
