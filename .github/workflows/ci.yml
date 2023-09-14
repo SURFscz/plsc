@@ -16,9 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - '3.7'
           - '3.9'
           - '3.10'
+          - '3.11'
 
     services:
       ldap:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip flake8
+          python3 -m pip install --upgrade pip flake8 gera2ld-pyserve
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
