@@ -16,6 +16,13 @@ class TestAll(BaseTest):
         that all relevant components are registered as expected in LDAP
         """
 
+        def object_count(rdn):
+            """ Return the nur of objects that exists under this rdn
+            """
+
+            logger.info(f"*** Object count LDAP: {rdn}")
+            return len(self.dst.find(rdn))
+
         def check_object(rdn, expected_count=None):
             """ Check for LDAP rdn entry
             return object if found, raise assertion if not
@@ -95,7 +102,8 @@ class TestAll(BaseTest):
             check_object(rdn)
 
             check_people(f"ou=people,{rdn}", people, context_checks)
-            check_group(f"ou=groups,{rdn}", group_name_function("@all"), people)
+            if len(people) > 0:
+                check_group(f"ou=groups,{rdn}", group_name_function("@all"), people)
 
             for g in groups:
                 check_group(f"ou=groups,{rdn}", group_name_function(g['short_name']), g['collaboration_memberships'])
@@ -153,30 +161,47 @@ class TestAll(BaseTest):
                 def group_name_flat(g):
                     return f"{org_sname}.{c['short_name']}.{g}"
 
-                logger.info(f"** Checking Service: {s['entity_id']}")
+                logger.info(f"** Checking Service: {s['entity_id']}, Enabled: {s['ldap_enabled']}")
 
-                check_ldap(
-                    f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
-                    detail['collaboration_memberships'],
-                    detail['groups'],
-                    group_name_ordered,
-                    context_checks=[
-                        check_ordered_person_expiry,
-                        check_accepted_policy_agreement
-                    ]
-                )
+                if s['ldap_enabled']:
+                    check_ldap(
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        detail['collaboration_memberships'],
+                        detail['groups'],
+                        group_name_ordered,
+                        context_checks=[
+                            check_ordered_person_expiry,
+                            check_accepted_policy_agreement
+                        ]
+                    )
 
-                check_ldap(
-                    f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
-                    detail['collaboration_memberships'],
-                    detail['groups'],
-                    group_name_flat
-                )
+                    check_ldap(
+                        f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        detail['collaboration_memberships'],
+                        detail['groups'],
+                        group_name_flat
+                    )
+                elif object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
+                    # in case the service 'exists' in LDAP but is not enabled, make sure
+                    # people and group are 'empty'
+                    check_ldap(
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        [],
+                        [],
+                        group_name_ordered
+                    )
+                    check_ldap(
+                        f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        [],
+                        [],
+                        group_name_flat
+                    )
 
-                logger.info(f"*** Checking Admin account: {s['entity_id']}")
-                self.assertTrue('ldap_password' in s)
-                admin_object = check_object(f"cn=admin,dc={s['entity_id']},{self.dst_conf['basedn']}", expected_count=1)
-                ldap_password = s['ldap_password']
-                if ldap_password:
-                    userPassword = admin_object[list(admin_object)[0]]['userPassword']
-                    self.assertEqual(userPassword, '{CRYPT}' + ldap_password)
+                if object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
+                    logger.info(f"*** Checking Admin account: {s['entity_id']}")
+                    self.assertTrue('ldap_password' in s)
+                    admin_object = check_object(f"cn=admin,dc={s['entity_id']},{self.dst_conf['basedn']}", expected_count=1)
+                    ldap_password = s['ldap_password']
+                    if ldap_password:
+                        userPassword = admin_object[list(admin_object)[0]]['userPassword']
+                        self.assertEqual(userPassword, '{CRYPT}' + ldap_password)

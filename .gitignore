@@ -19,3 +19,6 @@ config.d/
 tests/api/
 .vscode/
 .theia/
+plsc.yaml
+.python-version
+Pipfile

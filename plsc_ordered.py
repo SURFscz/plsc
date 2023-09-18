@@ -112,6 +112,14 @@ def create(src, dst):
         # find existing services
         service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
 
+        # Pivotal 106: If Service does not (yet) exists in LDAP and is not enable for LDAP
+        # in SBS, do not create it at all. If it does exists in LDAP, that means that
+        # it has been enabled beforem, and now it is disabled in SBS, then clean
+        # people & group entries, but leave structure in place !
+        # That situation is handled later below...
+        if len(service_dns) == 0 and not details['enabled']:
+            continue
+
         # Define service entry
         service_entry = {
             'objectClass': ['dcObject', 'organization'],
@@ -170,10 +178,6 @@ def create(src, dst):
             'userPassword': ["{CRYPT}" + ldap_password]
         }
         dst.modify(admin_dn, list(current_admin.values())[0], new_admin)
-        if not details['enabled']:
-            vc[service]['enabled'] = False
-            continue
-        vc[service]['enabled'] = True
 
         # check if dc=ordered subtree exists and create it if necessary
         ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
@@ -233,6 +237,12 @@ def create(src, dst):
                 dst.modify(co_dn, current_entry, co_entry)
             else:
                 raise Exception(f"Found multiple COs for o={co_identifier}")
+
+            if not details['enabled']:
+                # Pivotal 106: If not 'ldap_enabled' do not populate actual people / groups
+                # This is case when this service has been provisioned earlier, but now is
+                # disable in SBS, just stop populating any further !
+                continue
 
             users = src.users(co)
             # logging.debug(f"users: {users}")
@@ -376,7 +386,7 @@ def create(src, dst):
                     ldif = dst.store(grp_dn, grp_entry)
                     logging.debug("      - store: {}".format(ldif))
 
-            if True:
+            if details['enabled']:
                 logging.debug("  - Group all")
                 # global_urn isn't always filled, so fall back to generating it ourselves
                 grp_name = "@all"
@@ -445,10 +455,6 @@ def cleanup(dst):
         if vc.get(service, None) is None:
             logging.debug(f"- {service} not found in our services, cleaning up")
             dst.rdelete(f"{service_dn}")
-            continue
-        if not vc[service]['enabled']:
-            logging.debug(f"- {service} LDAP disabled, cleaning up")
-            dst.rdelete(f"dc=ordered,{service_dn}", False)
             continue
 
         organizations = dst.rfind(f"dc=ordered,dc={service}",
