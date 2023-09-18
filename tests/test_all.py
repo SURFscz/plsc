@@ -200,7 +200,8 @@ class TestAll(BaseTest):
                 if object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
                     logger.info(f"*** Checking Admin account: {s['entity_id']}")
                     self.assertTrue('ldap_password' in s)
-                    admin_object = check_object(f"cn=admin,dc={s['entity_id']},{self.dst_conf['basedn']}", expected_count=1)
+                    admin_object = check_object(f"cn=admin,dc={s['entity_id']},"
+                                                f"{self.dst_conf['basedn']}", expected_count=1)
                     ldap_password = s['ldap_password']
                     if ldap_password:
                         userPassword = admin_object[list(admin_object)[0]]['userPassword']
