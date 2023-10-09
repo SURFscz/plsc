@@ -98,6 +98,7 @@ SBS_URL=https://sbs.example.com
 SBS_USER=sysread
 SBS_PASS=secret
 SBS_API_RECORDING=Yes
+SBS_VERIFY_SSL=Yes
 ```
 
 You have the option to run against an operational instance of SBS by specifing the **SBS_URL** and **SBS_USER** /**SBS_PASS** constants as shown above. If you do not want to access an SBS instance, just leave these constant out.

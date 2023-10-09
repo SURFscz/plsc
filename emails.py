@@ -7,7 +7,7 @@ from io import TextIOBase
 
 import yaml
 import argparse
-from datetime import datetime
+import datetime
 from typing import List, Dict, Set
 from sbs import SBS
 
@@ -96,12 +96,14 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
                         "mail": user['user']['email']
                     })
 
+    # sort contacts by type, id, role, name
+    contacts.sort(key=lambda c: (c['type'], c['id'], c['role'], c['name']))
+
     return contacts
 
 
 def write_csv(contacts: contacts_type, fd: TextIOBase = sys.stdout) -> None:
     w = csv.writer(fd, dialect="excel")
-    w.writerow(["SRAM prod contacts generated " + datetime.now().isoformat()])
     columns = ("type", "id", "name", "role", "mail")
     w.writerow(columns)
     w.writerows([[c[key] for key in columns] for c in contacts])
@@ -118,6 +120,7 @@ def write_xls(contacts: contacts_type, fd: TextIOBase) -> None:
     raw_fd = fd.buffer
 
     workbook = xlsxwriter.Workbook(raw_fd, {'in_memory': True})
+    workbook.set_properties({'created': datetime.date(2015, 10, 21)})
     worksheet = workbook.add_worksheet()
 
     columns = ("type", "id", "name", "role", "mail")

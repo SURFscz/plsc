@@ -16,9 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - '3.7'
           - '3.9'
           - '3.10'
+          - '3.11'
 
     services:
       ldap:
@@ -34,7 +34,7 @@ jobs:
           LDAP_TLS: true
 
     steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libsasl2-dev libldap2-dev ldap-utils
@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip flake8
+          python3 -m pip install --upgrade pip flake8 gera2ld-pyserve
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 

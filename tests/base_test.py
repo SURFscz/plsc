@@ -56,6 +56,7 @@ class BaseTest(TestCase):
         'host': os.environ.get("SBS_URL", "http://localhost:{}".format(DEFAULT_LOCAL_PORT)),
         'user': os.environ.get("SBS_USER", "sysread"),
         'passwd': os.environ.get("SBS_PASS", "secret"),
+        'verify_ssl': (os.environ.get("SBS_VERIFY_SSL", "NO").upper() == "YES"),
         'ipv4_only': True
     }
 
