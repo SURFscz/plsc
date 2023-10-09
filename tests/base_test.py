@@ -2,8 +2,6 @@ from unittest import TestCase
 
 from aiohttp import web
 
-from gera2ld.pyserve import run_forever, start_server_aiohttp
-
 from sldap import SLdap
 from sbs import SBS
 
@@ -47,6 +45,7 @@ class APIHandler:
             return web.json_response({}, status=404)
 
 
+DEFAULT_LOCAL_HOST = '127.0.0.1'
 DEFAULT_LOCAL_PORT = 3333
 
 
@@ -72,23 +71,49 @@ class BaseTest(TestCase):
     @classmethod
     def setUpClass(cls):
         def start_server(loop):
+
+            async def init_api_server(handle, host, port):
+                server = web.ServerRunner(web.Server(handle))
+                await server.setup()
+
+                site = web.TCPSite(
+                    server,
+                    host=host,
+                    port=port
+                )
+                await site.start()
+
+                return server
+
             logger.debug("BaseTest start_server")
-            handle = APIHandler()
-            asyncio.set_event_loop(loop)
-            run_forever(start_server_aiohttp(handle, ':{}'.format(DEFAULT_LOCAL_PORT)))
+
+            api_server = init_api_server(
+                APIHandler(),
+                DEFAULT_LOCAL_HOST,
+                DEFAULT_LOCAL_PORT
+            )
+
+            try:
+                loop.run_until_complete(api_server)
+                loop.run_forever()
+            finally:
+                loop.close()
 
         def check_server():
             logger.debug("BaseTest check_server")
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
-            while sock.connect_ex(('127.0.0.1', DEFAULT_LOCAL_PORT)) == 111:
+            while sock.connect_ex(
+                (DEFAULT_LOCAL_HOST, DEFAULT_LOCAL_PORT)
+            ) == 111:
                 time.sleep(0.1)
 
         if not os.environ.get("SBS_URL", None):
             logger.debug("BaseTest setUpClass")
             cls.loop = asyncio.new_event_loop()
-            cls.x = threading.Thread(target=start_server, args=(cls.loop,), )
-            cls.x.start()
+            cls.api = threading.Thread(target=start_server, args=(cls.loop,), )
+            cls.api.start()
+
             check_server()
         else:
             cls.loop = None
@@ -97,8 +122,10 @@ class BaseTest(TestCase):
     def tearDownClass(cls):
         if cls.loop:
             logger.debug("BaseTest tearDownClass")
+            for task in asyncio.all_tasks(cls.loop):
+                task.cancel()
             cls.loop.call_soon_threadsafe(cls.loop.stop)
-            cls.x.join()
+            cls.api.join()
 
     def setUp(self):
         """ Run a complete PLSC cycle, 1st ordered structure, 2nd flat structure...

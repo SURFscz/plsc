@@ -1,0 +1,8 @@
+.vscode
+.editorignore
+.flake*
+.git*
+.python*
+Dockerfile
+Makefile
+etc
