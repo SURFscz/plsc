@@ -14,7 +14,7 @@ from sldap import SLdap
 from sbs import SBS
 
 from typing import Tuple, List, Dict, Union, Optional
-from util import escape_dn_chars
+from util import escape_dn_chars, escape_filter_chars
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
@@ -111,7 +111,10 @@ def create(src, dst):
         admin_dn = 'cn=admin,' + service_dn
 
         # find existing services
-        service_dns = dst.find(dst.basedn, f"(&(objectClass=dcObject)(dc={service}))")
+        service_dns = dst.find(
+            dst.basedn,
+            f"(&(objectClass=dcObject)(dc={escape_filter_chars(escape_dn_chars(service))}))"
+        )
 
         # Pivotal 106: If Service does not (yet) exists in LDAP and is not enable for LDAP
         # in SBS, do not create it at all. If it does exists in LDAP, that means that
@@ -477,7 +480,7 @@ def cleanup(dst):
         logging.debug(f"service: {service}")
         if vc.get(service, None) is None:
             logging.debug(f"- {service} not found in our services, cleaning up")
-            dst.rdelete(f"{escape_dn_chars(service_dn)}")
+            dst.rdelete(service_dn)
             continue
 
         organizations = dst.rfind(f"dc=ordered,dc={escape_dn_chars(service)}",

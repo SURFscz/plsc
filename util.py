@@ -12,24 +12,41 @@ def make_secret(password):
     return '{SSHA}' + crypted.decode('ascii')
 
 
+SPECIAL_DN_CHARACTERS = "\\,+<>;\"=#"
+SPECIAL_FILTER_CHARACTERS = "*()"
+
+
+def escape_special_characters(s, special_characters):
+    """
+    Escape dn characters to prevent injection according to RFC 4514.
+    """
+
+    for c in special_characters:
+        s = s.replace(c, "\\" + hex(ord(c))[2:].upper())
+
+    return s
+
+
 def escape_dn_chars(s):
     """
     Escape dn characters to prevent injection according to RFC 4514.
     Refer: https://ldapwiki.com/wiki/Wiki.jsp?page=DN%20Escape%20Values
+
+    PS. Explicitly do not use below method, that one is failing
+    return ldap.dn.escape_dn_chars(s)
     """
 
-    s = s.replace('\\', r'\5C')
-    s = s.replace(r',', r'\2C')
-    s = s.replace(r'#', r'\23')
-    s = s.replace(r'+', r'\2B')
-    s = s.replace(r'<', r'\3C')
-    s = s.replace(r'>', r'\3E')
-    s = s.replace(r';', r'\3B')
-    s = s.replace(r'"', r'\22')
-    s = s.replace(r'=', r'\3D')
-    s = s.replace('\x00', r'\00')
+    return escape_special_characters(s, SPECIAL_DN_CHARACTERS)
 
-    return s
+
+def escape_filter_chars(s):
+    """
+    Escape filter characters to prevent injection according to RFC 4514.
+    Refer: https://social.technet.microsoft.com/wiki/
+    contents/articles/5392.active-directory-ldap-syntax-filters.aspx#Special_Characters
+    """
+
+    return escape_special_characters(s, SPECIAL_FILTER_CHARACTERS)
 
 
 def dn2rdns(dn):
@@ -43,8 +60,15 @@ def dn2rdns(dn):
 
 def find_cos(c, service):
     cos = {}
-    r = c.find(None, "(&(objectClass=organization)(labeledURI={}))".format(service),
-               ['o', 'dnQualifier', 'description'])
+
+    r = c.find(
+        None,
+        "(&(objectClass=organization)(labeledURI={}))".format(
+            escape_filter_chars(escape_dn_chars(service))
+        ),
+        ['o', 'dnQualifier', 'description']
+    )
+
     for dn, entry in r.items():
         rdns = dn2rdns(dn)
         j = entry.get('description', None)
@@ -98,7 +122,11 @@ def find_ordered_collaborations(c, services):
     col = {}
     for service in services:
         col[service] = []
-        cos = c.rfind(f"dc=ordered,dc={service}", "(objectClass=organization)", ['o'], scope=ldap.SCOPE_ONELEVEL)
+        cos = c.rfind(
+            f"dc=ordered,dc={escape_dn_chars(service)}",
+            "(objectClass=organization)", ['o'],
+            scope=ldap.SCOPE_ONELEVEL
+        )
         for co, entry in cos.items():
             col[service].append(entry['o'][0])
 
