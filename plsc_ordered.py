@@ -501,7 +501,10 @@ def cleanup(dst):
                 logging.info("  - People")
                 src_members = vc.get(dc, {}).get(co, {}).get('members', [])
                 dst_dns = dst.rfind(
-                    "ou=people,o={},dc=ordered,dc={}".format(co, escape_dn_chars(service)),
+                    "ou=people,o={},dc=ordered,dc={}".format(
+                        co,
+                        escape_dn_chars(service)
+                    ),
                     '(objectClass=person)'
                 )
                 for dst_dn, dst_entry in dst_dns.items():
@@ -509,7 +512,7 @@ def cleanup(dst):
                     if dst_entry.get('eduPersonUniqueId', None):
                         dst_uid = dst_entry['eduPersonUniqueId'][0]
                         if dst_uid not in src_members:
-                            logging.debug("      dst_uid not found in src_members, deleting {}".format(dst_dn))
+                            logging.info("      dst_uid not found in {}, deleting {}".format(src_members, dst_dn))
                             dst.delete(dst_dn)
                         else:
                             # verify that rdn uid is indeed (still) valid registered user, if not delete entry
@@ -517,8 +520,13 @@ def cleanup(dst):
                                 dst.delete(dst_dn)
 
                 logging.info("  - Groups")
-                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, escape_dn_chars(service)),
-                                    '(objectClass=groupOfMembers)')
+                dst_dns = dst.rfind(
+                    "ou=Groups,o={},dc=ordered,dc={}".format(
+                        co,
+                        escape_dn_chars(service)
+                    ),
+                    '(objectClass=groupOfMembers)'
+                )
                 for dst_dn, dst_entry in dst_dns.items():
                     grp_name = dst_entry['cn'][0]
                     if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):

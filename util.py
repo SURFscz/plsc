@@ -12,7 +12,7 @@ def make_secret(password):
     return '{SSHA}' + crypted.decode('ascii')
 
 
-SPECIAL_DN_CHARACTERS = "\\,+<>;\"=#"
+SPECIAL_DN_CHARACTERS = "\\,+<>;\"= "
 SPECIAL_FILTER_CHARACTERS = "*()"
 
 
