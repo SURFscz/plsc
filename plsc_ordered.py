@@ -136,7 +136,6 @@ def create(src, dst):
             service_entry.setdefault('labeledURI', []).append(f"{pp} pp")
 
         if len(service_dns) == 0:  # no existing service found
-            service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
 
             # Initialize with admin object
@@ -357,10 +356,9 @@ def create(src, dst):
                     grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
                                         f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
 
-                    # ipdb.set_trace()
                     if len(grp_dns) == 1:
                         old_dn, old_entry = list(grp_dns.items())[0]
-                        members = old_entry.get('member', [])
+                        members = [util.unescape_dn_chars(m) for m in old_entry.get('member', [])]
                         if dst_dn not in members:
                             members.append(dst_dn)
                     elif len(grp_dns) == 0:
@@ -476,6 +474,7 @@ def cleanup(dst):
                 src_members = vc.get(dc, {}).get(co, {}).get('members', [])
                 dst_dns = dst.rfind("ou=people,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
                 for dst_dn, dst_entry in dst_dns.items():
+                    dst_dn = util.unescape_dn_chars(dst_dn)
                     logging.debug("    - dest_dn: {}".format(dst_dn))
                     if dst_entry.get('eduPersonUniqueId', None):
                         dst_uid = dst_entry['eduPersonUniqueId'][0]
@@ -491,6 +490,7 @@ def cleanup(dst):
                 dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service),
                                     '(objectClass=groupOfMembers)')
                 for dst_dn, dst_entry in dst_dns.items():
+                    dst_dn = util.unescape_dn_chars(dst_dn)
                     grp_name = dst_entry['cn'][0]
                     if grp_name not in vc.get(dc, {}).get(co, {}).get('groups', []):
                         logging.debug(f"        {grp_name} not found, deleting {dst_dn}")
@@ -513,6 +513,7 @@ def cleanup(dst):
                         removed = False  # TODO: rename this to is_modified
                         # ipdb.set_trace()
                         for dst_member in dst_members:
+                            dst_member = util.unescape_dn_chars(dst_member)
                             dst_rdn = util.dn2rdns(dst_member)["uid"][0]
                             #dst_rdn = util.dn2rdns(dst_member)['cn'][0]
                             logging.debug("      - dst_member: {}".format(dst_rdn))

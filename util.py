@@ -8,6 +8,20 @@ def make_secret(password):
     return '{SSHA}' + crypted.decode('ascii')
 
 
+def unescape_dn_chars(s):
+    s = s.replace(r'\5C', '\\')
+    s = s.replace(r'\2C', r',')
+    s = s.replace(r'\23', r'#')
+    s = s.replace(r'\2B', r'+')
+    s = s.replace(r'\3C', r'<')
+    s = s.replace(r'\3E', r'>')
+    s = s.replace(r'\3B', r';')
+    s = s.replace(r'\22', r'"')
+    s = s.replace(r'\3D', r'=')
+    s = s.replace(r'\00', '\x00')
+    return s
+
+
 def dn2rdns(dn):
     rdns = {}
     r = ldap.dn.str2dn(dn)

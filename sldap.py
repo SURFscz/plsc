@@ -1,6 +1,7 @@
 import ldap
 import ldap.modlist
 import logging
+import util
 
 logger = logging.getLogger()
 
@@ -38,7 +39,7 @@ class SLdap(object):
         for k, v in entry.items():
             rv = []
             for ev in v:
-                rv.append(str(ev).encode('UTF-8'))
+                rv.append(str(util.unescape_dn_chars(ev)).encode('UTF-8'))
             r[k] = rv
         return r
 
