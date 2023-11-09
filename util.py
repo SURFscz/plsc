@@ -1,11 +1,35 @@
 import json
 import ldap
 
+import logging
+
+logger = logging.getLogger()
+
 
 def make_secret(password):
     import passlib.hash
     crypted = passlib.hash.sha512_crypt.hash(password)
     return '{SSHA}' + crypted.decode('ascii')
+
+
+def escape_dn_chars(s):
+    """
+    Escape dn characters to prevent injection according to RFC 4514.
+    Refer: https://ldapwiki.com/wiki/Wiki.jsp?page=DN%20Escape%20Values
+    """
+
+    s = s.replace('\\', r'\5C')
+    s = s.replace(r',', r'\2C')
+    s = s.replace(r'#', r'\23')
+    s = s.replace(r'+', r'\2B')
+    s = s.replace(r'<', r'\3C')
+    s = s.replace(r'>', r'\3E')
+    s = s.replace(r';', r'\3B')
+    s = s.replace(r'"', r'\22')
+    s = s.replace(r'=', r'\3D')
+    s = s.replace('\x00', r'\00')
+
+    return s
 
 
 def dn2rdns(dn):

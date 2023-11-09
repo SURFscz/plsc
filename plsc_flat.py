@@ -10,6 +10,7 @@ import os
 import util
 
 from sldap import SLdap
+from util import escape_dn_chars
 
 # import ipdb
 # ipdb.set_trace()
@@ -39,17 +40,17 @@ def create(src, dst):
         for co_id in cos:
             logging.debug(f"- co: {co_id}")
 
-            src_dn = src.rfind(f"o={co_id},dc=ordered,dc={service}", '(ObjectClass=organization)')
-            src_co = src_dn.get(f"o={co_id},dc=ordered,dc={service},{src.basedn}", {})
+            src_dn = src.rfind(f"o={co_id},dc=ordered,dc={escape_dn_chars(service)}", '(ObjectClass=organization)')
+            src_co = src_dn.get(f"o={co_id},dc=ordered,dc={escape_dn_chars(service)},{src.basedn}", {})
             src_mail = src_co.get('mail', [])
             logging.debug(f"src_mail: {src_mail}")
 
-            co_dn = f"dc=flat,dc={service},{dst.basedn}"
+            co_dn = f"dc=flat,dc={escape_dn_chars(service)},{dst.basedn}"
 
             # Create flat dn if it doesn't exist
-            flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
+            flat_dns = dst.rfind(f"dc={escape_dn_chars(service)}", "(&(objectClass=dcObject)(dc=flat))")
             if len(flat_dns) == 0:
-                flat_dn = f"dc=flat,dc={service},{dst.basedn}"
+                flat_dn = f"dc=flat,dc={escape_dn_chars(service)},{dst.basedn}"
                 flat_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['flat'], 'ou': ['flat']}
                 dst.add(flat_dn, flat_entry)
                 for ou in ['Groups', 'People']:
@@ -58,7 +59,7 @@ def create(src, dst):
                     dst.add(ou_dn, ou_entry)
 
             logging.debug("  - People")
-            src_dns = src.rfind(f"ou=People,o={co_id},dc=ordered,dc={service}", '(ObjectClass=person)')
+            src_dns = src.rfind(f"ou=People,o={co_id},dc=ordered,dc={escape_dn_chars(service)}", '(ObjectClass=person)')
 
             for src_dn, src_entry in src_dns.items():
                 logging.debug("  - srcdn: {}".format(src_dn))
@@ -73,7 +74,10 @@ def create(src, dst):
                 dst_entries[dst_dn] = src_entry
 
             logging.debug("  - Groups")
-            grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
+            grp_dns = src.rfind(
+                f"ou=Groups,o={co_id},dc=ordered,dc={escape_dn_chars(service)}",
+                '(objectClass=groupOfMembers)'
+            )
 
             for grp_dn, grp_entry in grp_dns.items():
                 logging.debug("  - group_dn: {}".format(grp_dn))
@@ -126,21 +130,21 @@ def cleanup(src, dst):
         logging.debug("service: {}".format(service))
 
         logging.debug("  - People")
-        dst_dns = dst.rfind(f"ou=People,dc=flat,dc={service}", "(objectClass=person)")
+        dst_dns = dst.rfind(f"ou=People,dc=flat,dc={escape_dn_chars(service)}", "(objectClass=person)")
         for dst_dn, dst_entry in dst_dns.items():
             #logging.debug("  - dstdn: {}".format(dst_dn))
             #logging.debug("    entry: {}".format(dst_entry))
 
             if dst_entry.get('uid', None):
                 src_uid = dst_entry['uid'][0]
-                src_dns = src.rfind(f"dc=ordered,dc={service}", f"(uid={src_uid})")
+                src_dns = src.rfind(f"dc=ordered,dc={escape_dn_chars(service)}", f"(uid={src_uid})")
                 if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
                     logging.debug("      srcdn not found, deleting {}".format(dst_dn))
                     dst.delete(dst_dn)
 
         logging.debug("  - Groups")
-        dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={service}", "(objectClass=groupOfMembers)")
+        dst_dns = dst.rfind(f"ou=Groups,dc=flat,dc={escape_dn_chars(service)}", "(objectClass=groupOfMembers)")
         for dst_dn, dst_entry in dst_dns.items():
             #logging.debug("  - dstdn: {}".format(dst_dn))
             #logging.debug("    entry: {}".format(dst_entry))
@@ -154,7 +158,7 @@ def cleanup(src, dst):
                 # If not, remove this object.
                 logging.debug(f"CHECKING CO : {org}.{co}...")
                 src_dns = src.rfind(
-                    f"dc=ordered,dc={service}",
+                    f"dc=ordered,dc={escape_dn_chars(service)}",
                     f"(&(objectClass=organization)(o={org}.{co}))")
                 if len(src_dns) == 0:
                     logging.debug("    - dstdn: {}".format(dst_dn))
@@ -163,7 +167,7 @@ def cleanup(src, dst):
                 else:
                     # Verify that group still valid group within referenced CO...
                     src_dns = src.rfind(
-                        f"o={org}.{co},dc=ordered,dc={service}",
+                        f"o={org}.{co},dc=ordered,dc={escape_dn_chars(service)}",
                         f"(&(objectClass=groupOfMembers)(cn={src_cn}))")
                     #if len(src_dns):
                     #    for src_dn, src_entry in src_dns.items():

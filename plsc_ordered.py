@@ -14,6 +14,7 @@ from sldap import SLdap
 from sbs import SBS
 
 from typing import Tuple, List, Dict, Union, Optional
+from util import escape_dn_chars
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
@@ -106,7 +107,7 @@ def create(src, dst):
         logging.debug("service: {}".format(service))
 
         # check if service exists and create it if necessary
-        service_dn = f"dc={service},{dst.basedn}"
+        service_dn = f"dc={escape_dn_chars(service)},{dst.basedn}"
         admin_dn = 'cn=admin,' + service_dn
 
         # find existing services
@@ -180,9 +181,9 @@ def create(src, dst):
         dst.modify(admin_dn, list(current_admin.values())[0], new_admin)
 
         # check if dc=ordered subtree exists and create it if necessary
-        ordered_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=ordered))")
+        ordered_dns = dst.rfind(f"dc={escape_dn_chars(service)}", "(&(objectClass=dcObject)(dc=ordered))")
         if len(ordered_dns) == 0:
-            ordered_dn = f"dc=ordered,dc={service},{dst.basedn}"
+            ordered_dn = f"dc=ordered,dc={escape_dn_chars(service)},{dst.basedn}"
             ordered_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['ordered'], 'ou': ['ordered']}
             dst.store(ordered_dn, ordered_entry)
 
@@ -202,7 +203,7 @@ def create(src, dst):
                                                            scope=co['organisation']['short_name'])
 
             # Create CO if necessary
-            co_dn = f"o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+            co_dn = f"o={co_identifier},dc=ordered,dc={escape_dn_chars(service)},{dst.basedn}"
             co_entry = {
                 'objectClass': ['top', 'organization', 'extensibleObject'],
                 'o': [co_identifier],
@@ -225,7 +226,10 @@ def create(src, dst):
                                                          scope=co['organisation']['short_name'])
             co_entry['mail'] = list(set(admin.get('email') for admin in co.get('admins')))
 
-            co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
+            co_dns = dst.rfind(
+                f"dc=ordered,dc={escape_dn_chars(service)}",
+                f"(&(objectClass=organization)(o={co_identifier}))"
+            )
             if len(co_dns) == 0:
                 dst.add(co_dn, co_entry)
                 for ou in ['Groups', 'People']:
@@ -261,8 +265,11 @@ def create(src, dst):
                 logging.debug("      - grp: {}/{}".format(group['id'], grp_urn))
                 vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
-                grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-                grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                grp_dn = f"cn={grp_name},ou=Groups,"\
+                    f"o={co_identifier},dc=ordered,"\
+                    f"dc={escape_dn_chars(service)},{dst.basedn}"
+
+                grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={escape_dn_chars(service)}",
                                     f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
                 if len(grp_dns) == 1:
                     old_dn, old_entry = list(grp_dns.items())[0]
@@ -274,7 +281,8 @@ def create(src, dst):
                     raise Exception(f"Found multiple groups for dn={grp_dn}")
 
                 #if not gidNumber:
-                #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+                #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,"\
+                #       f"ou=Sequence,dc={escape_dn_chars(service)},{dst.basedn}")
 
                 # Here's the magic: Build the new group entry
                 grp_entry = {
@@ -306,7 +314,9 @@ def create(src, dst):
 
                 # convert the BS data to an LDAP record
                 dst_rdn, dst_entry = sbs2ldap_record(src_uid, src_user)
-                dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                dst_dn = f"{dst_rdn},ou=People,"\
+                    f"o={co_identifier},dc=ordered,"\
+                    f"dc={escape_dn_chars(service)},{dst.basedn}"
 
                 # Pivotal #181218689
                 accepted_aups = src_user.get("accepted_aups", [])
@@ -353,9 +363,14 @@ def create(src, dst):
                     #vc[service][co_identifier].setdefault('groups', []).append(grp_urn)
                     vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
-                    grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
-                    grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={service}",
+                    grp_dn = f"cn={grp_name},ou=Groups,"\
+                        f"o={co_identifier},dc=ordered,"\
+                        f"dc={escape_dn_chars(service)},{dst.basedn}"
+
+                    grp_dns = dst.rfind(f"ou=Groups,o={co_identifier},dc=ordered,dc={escape_dn_chars(service)}",
                                         f"(&(objectClass=groupOfMembers)(cn={grp_name}))")
+
+                    logging.info(grp_dns)
 
                     # ipdb.set_trace()
                     if len(grp_dns) == 1:
@@ -384,7 +399,7 @@ def create(src, dst):
 
                     # TODO: Why are we always updating?  Shouldn't this be conditional on an actual change happening?
                     ldif = dst.store(grp_dn, grp_entry)
-                    logging.debug("      - store: {}".format(ldif))
+                    logging.info("      - store: {}".format(ldif))
 
             if details['enabled']:
                 logging.debug("  - Group all")
@@ -395,7 +410,9 @@ def create(src, dst):
                 logging.debug("      - grp: {}".format(grp_name))
                 vc[service][co_identifier].setdefault('groups', []).append(grp_name)
 
-                grp_dn = f"cn={grp_name},ou=Groups,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                grp_dn = f"cn={grp_name},ou=Groups,"\
+                    f"o={co_identifier},dc=ordered,"\
+                    f"dc={escape_dn_chars(service)},{dst.basedn}"
 
                 members = []
                 for src_id, src_detail in users.items():
@@ -408,12 +425,18 @@ def create(src, dst):
                         logging.debug(f"User {dst_rdn} is not participating @ALL group because of expiration !")
                         continue
 
-                    dst_dn = f"{dst_rdn},ou=People,o={co_identifier},dc=ordered,dc={service},{dst.basedn}"
+                    dst_dn = f"{dst_rdn},ou=People,"\
+                        f"o={co_identifier},"\
+                        f"dc=ordered,dc={escape_dn_chars(service)},"\
+                        f"{dst.basedn}"
+
                     members.append(dst_dn)
                     vc[service][co_identifier]['roles'].setdefault(grp_id, []).append(dst_dn)
 
                 #if not gidNumber:
-                #    gidNumber = dst.get_sequence(f"cn=gidNumberSequence,ou=Sequence,dc={service},{dst.basedn}")
+                #    gidNumber = dst.get_sequence(
+                #       f"cn=gidNumberSequence,ou=Sequence,dc={escape_dn_chars(service)},{dst.basedn}"
+                #    )
 
                 # Here's the magic: Build the new group entry
                 grp_entry = {
@@ -454,10 +477,10 @@ def cleanup(dst):
         logging.debug(f"service: {service}")
         if vc.get(service, None) is None:
             logging.debug(f"- {service} not found in our services, cleaning up")
-            dst.rdelete(f"{service_dn}")
+            dst.rdelete(f"{escape_dn_chars(service_dn)}")
             continue
 
-        organizations = dst.rfind(f"dc=ordered,dc={service}",
+        organizations = dst.rfind(f"dc=ordered,dc={escape_dn_chars(service)}",
                                   '(&(objectClass=organization)(objectClass=extensibleObject))')
         for o_dn, o_entry in organizations.items():
             if o_entry.get('o'):
@@ -472,11 +495,14 @@ def cleanup(dst):
                     dst.rdelete(o_dn)
                     continue
 
-                logging.debug("  - People")
+                logging.info("  - People")
                 src_members = vc.get(dc, {}).get(co, {}).get('members', [])
-                dst_dns = dst.rfind("ou=people,o={},dc=ordered,dc={}".format(co, service), '(objectClass=person)')
+                dst_dns = dst.rfind(
+                    "ou=people,o={},dc=ordered,dc={}".format(co, escape_dn_chars(service)),
+                    '(objectClass=person)'
+                )
                 for dst_dn, dst_entry in dst_dns.items():
-                    logging.debug("    - dest_dn: {}".format(dst_dn))
+                    logging.info("    - dest_dn: {}".format(dst_dn))
                     if dst_entry.get('eduPersonUniqueId', None):
                         dst_uid = dst_entry['eduPersonUniqueId'][0]
                         if dst_uid not in src_members:
@@ -487,8 +513,8 @@ def cleanup(dst):
                             if dst_dn not in registered_users:
                                 dst.delete(dst_dn)
 
-                logging.debug("  - Groups")
-                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, service),
+                logging.info("  - Groups")
+                dst_dns = dst.rfind("ou=Groups,o={},dc=ordered,dc={}".format(co, escape_dn_chars(service)),
                                     '(objectClass=groupOfMembers)')
                 for dst_dn, dst_entry in dst_dns.items():
                     grp_name = dst_entry['cn'][0]
@@ -498,7 +524,7 @@ def cleanup(dst):
                         continue
 
                     #grp_urn = dst_entry['labeledURI'][0]
-                    logging.debug("    - dest_dn: {}".format(dst_dn))
+                    logging.info("    - dest_dn: {}".format(dst_dn))
                     # TODO: rework this to use the short_name uri-like cn attribute instead of the sbs id
                     src_id = dst_entry.get('uniqueIdentifier')
                     if src_id is None:
@@ -515,7 +541,7 @@ def cleanup(dst):
                         for dst_member in dst_members:
                             dst_rdn = util.dn2rdns(dst_member)["uid"][0]
                             #dst_rdn = util.dn2rdns(dst_member)['cn'][0]
-                            logging.debug("      - dst_member: {}".format(dst_rdn))
+                            logging.info("      - dst_member: {}".format(dst_rdn))
                             if dst_member not in src_members:
                                 logging.debug("        dst_member not found, deleting {}".format(dst_rdn))
                                 dst_members.remove(dst_member)
