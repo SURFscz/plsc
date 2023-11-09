@@ -13,7 +13,7 @@ def make_secret(password):
 
 
 SPECIAL_DN_CHARACTERS = "\\,+<>;\"= "
-SPECIAL_FILTER_CHARACTERS = "*()"
+SPECIAL_FILTER_CHARACTERS = "\\*()"
 
 
 def escape_special_characters(s, special_characters):
