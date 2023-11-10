@@ -1,6 +1,9 @@
 import json
 import ldap
 
+SPECIAL_DN_CHARACTERS = "\\,+<>;\"= "
+SPECIAL_FILTER_CHARACTERS = "\\*()"
+
 
 def make_secret(password):
     import passlib.hash
@@ -9,16 +12,14 @@ def make_secret(password):
 
 
 def unescape_dn_chars(s):
-    s = s.replace(r'\5C', '\\')
-    s = s.replace(r'\2C', r',')
-    s = s.replace(r'\23', r'#')
-    s = s.replace(r'\2B', r'+')
-    s = s.replace(r'\3C', r'<')
-    s = s.replace(r'\3E', r'>')
-    s = s.replace(r'\3B', r';')
-    s = s.replace(r'\22', r'"')
-    s = s.replace(r'\3D', r'=')
-    s = s.replace(r'\00', '\x00')
+    for c in SPECIAL_DN_CHARACTERS:
+        s = s.replace("\\" + hex(ord(c))[2:].upper(), c)
+    return s
+
+
+def escape_filter_chars(s):
+    for c in SPECIAL_FILTER_CHARACTERS:
+        s = s.replace(c, "\\" + hex(ord(c))[2:].upper())
     return s
 
 
