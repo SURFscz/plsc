@@ -242,6 +242,8 @@ def create(src, dst):
                 # Pivotal 106: If not 'ldap_enabled' do not populate actual people / groups
                 # This is case when this service has been provisioned earlier, but now is
                 # disable in SBS, just stop populating any further !
+                for co_dn in co_dns:
+                    dst.rdelete(co_dn)
                 continue
 
             users = src.users(co)
