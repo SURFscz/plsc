@@ -171,13 +171,26 @@ class SBS(object):
         for s in data.get('services', []):
             services[s['id']] = s
 
+        for s in services:
+            logger.debug(f"SBS service: {services[s]['entity_id']}")
+            result[services[s]['entity_id']] = {
+                'service_id': s,
+                'cos': {},
+                'ldap_password': services[s]['ldap_password'],
+                'aup': services[s].get('accepted_user_policy', None),
+                'pp': services[s].get('privacy_policy', None),
+                'enabled': services[s].get('ldap_enabled', False),
+            }
+
         users = {}
         for u in data.get('users', []):
             users[u['id']] = u
 
         for o in data.get('organisations', []):
+            logger.debug(f"SBS org: {o['short_name']}")
 
             for c in o.get('collaborations', []):
+                logger.debug(f"SBS co: {c['short_name']}")
                 if not c.get('global_urn', None):
                     c['global_urn'] = "{}:{}".format(o['short_name'], c['short_name'])
 
@@ -198,16 +211,7 @@ class SBS(object):
                 c.setdefault('organisation', {})['short_name'] = o['short_name']
 
                 for s in (o.get('services', []) + c.get('services', [])):
-                    result.setdefault(
-                        services[s]['entity_id'], {
-                            'service_id': s,
-                            'cos': {},
-                            'ldap_password': services[s]['ldap_password'],
-                            'aup': services[s].get('accepted_user_policy', None),
-                            'pp': services[s].get('privacy_policy', None),
-                            'enabled': services[s].get('ldap_enabled', False),
-                        }
-                    )['cos'][c['id']] = c
+                    result[services[s]['entity_id']]['cos'][c['id']] = c
 
                 c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['identifier'])
 
