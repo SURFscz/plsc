@@ -165,7 +165,8 @@ class TestAll(BaseTest):
 
                 if s['ldap_enabled']:
                     check_ldap(
-                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['ldap_identifier']},{self.dst_conf['basedn']}",
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['ldap_identifier']},\
+                        {self.dst_conf['basedn']}",
                         detail['collaboration_memberships'],
                         detail['groups'],
                         group_name_ordered,
@@ -185,7 +186,8 @@ class TestAll(BaseTest):
                     # in case the service 'exists' in LDAP but is not enabled, make sure
                     # people and group are 'empty'
                     check_ldap(
-                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['ldap_identifier']},{self.dst_conf['basedn']}",
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['ldap_identifier']},\
+                        {self.dst_conf['basedn']}",
                         [],
                         [],
                         group_name_ordered
