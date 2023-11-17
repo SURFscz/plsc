@@ -161,11 +161,11 @@ class TestAll(BaseTest):
                 def group_name_flat(g):
                     return f"{org_sname}.{c['short_name']}.{g}"
 
-                logger.info(f"** Checking Service: {s['entity_id']}, Enabled: {s['ldap_enabled']}")
+                logger.info(f"** Checking Service: {s['ldap_identifier']}, Enabled: {s['ldap_enabled']}")
 
                 if s['ldap_enabled']:
                     check_ldap(
-                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['ldap_identifier']},{self.dst_conf['basedn']}",
                         detail['collaboration_memberships'],
                         detail['groups'],
                         group_name_ordered,
@@ -176,31 +176,31 @@ class TestAll(BaseTest):
                     )
 
                     check_ldap(
-                        f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        f"dc=flat,dc={s['ldap_identifier']},{self.dst_conf['basedn']}",
                         detail['collaboration_memberships'],
                         detail['groups'],
                         group_name_flat
                     )
-                elif object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
+                elif object_count(f"dc={s['ldap_identifier']},{self.dst_conf['basedn']}") > 0:
                     # in case the service 'exists' in LDAP but is not enabled, make sure
                     # people and group are 'empty'
                     check_ldap(
-                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['ldap_identifier']},{self.dst_conf['basedn']}",
                         [],
                         [],
                         group_name_ordered
                     )
                     check_ldap(
-                        f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        f"dc=flat,dc={s['ldap_identifier']},{self.dst_conf['basedn']}",
                         [],
                         [],
                         group_name_flat
                     )
 
-                if object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
-                    logger.info(f"*** Checking Admin account: {s['entity_id']}")
+                if object_count(f"dc={s['ldap_identifier']},{self.dst_conf['basedn']}") > 0:
+                    logger.info(f"*** Checking Admin account: {s['ldap_identifier']}")
                     self.assertTrue('ldap_password' in s)
-                    admin_object = check_object(f"cn=admin,dc={s['entity_id']},"
+                    admin_object = check_object(f"cn=admin,dc={s['ldap_identifier']},"
                                                 f"{self.dst_conf['basedn']}", expected_count=1)
                     ldap_password = s['ldap_password']
                     if ldap_password:
