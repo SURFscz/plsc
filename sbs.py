@@ -172,8 +172,9 @@ class SBS(object):
             services[s['id']] = s
 
         for s in services:
-            logger.debug(f"SBS service: {services[s]['entity_id']}")
-            result[services[s]['entity_id']] = {
+            logger.debug(f"SBS service: {services[s]}")
+            result[services[s]['ldap_identifier']] = {
+                'entity_id': services[s]['entity_id'],
                 'service_id': s,
                 'cos': {},
                 'ldap_password': services[s]['ldap_password'],
@@ -211,7 +212,7 @@ class SBS(object):
                 c.setdefault('organisation', {})['short_name'] = o['short_name']
 
                 for s in (o.get('services', []) + c.get('services', [])):
-                    result[services[s]['entity_id']]['cos'][c['id']] = c
+                    result[services[s]['ldap_identifier']]['cos'][c['id']] = c
 
                 c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['identifier'])
 
