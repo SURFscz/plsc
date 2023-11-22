@@ -181,6 +181,9 @@ class SBS(object):
                 'aup': services[s].get('accepted_user_policy', None),
                 'pp': services[s].get('privacy_policy', None),
                 'enabled': services[s].get('ldap_enabled', False),
+                # 'short_name': services[s].get('short_name', None),
+                'short_name': services[s]['entity_id'],
+                'name': services[s].get('name', None),
             }
 
         users = {}

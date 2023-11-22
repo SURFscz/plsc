@@ -122,9 +122,11 @@ def create(src, dst):
 
         # Define service entry
         service_entry = {
-            'objectClass': ['dcObject', 'organization'],
+            'objectClass': ['dcObject', 'organization', 'extensibleObject'],
             'dc': [service],
-            'o': [service]
+            'o': [service],
+            'name': [details['short_name']],
+            'displayName': [details['name']],
         }
         aup = details['aup']
         pp = details['pp']
@@ -136,7 +138,6 @@ def create(src, dst):
             service_entry.setdefault('labeledURI', []).append(f"{pp} pp")
 
         if len(service_dns) == 0:  # no existing service found
-            service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
 
             # Initialize with admin object
