@@ -125,7 +125,7 @@ def create(src, dst):
             'objectClass': ['dcObject', 'organization', 'extensibleObject'],
             'dc': [service],
             'o': [service],
-            'name': [details['short_name']],
+            'name': [details['abbreviation']],
             'displayName': [details['name']],
         }
         aup = details['aup']
