@@ -122,9 +122,11 @@ def create(src, dst):
 
         # Define service entry
         service_entry = {
-            'objectClass': ['dcObject', 'organization'],
+            'objectClass': ['dcObject', 'organization', 'extensibleObject'],
             'dc': [service],
-            'o': [service]
+            'o': [service],
+            'name': [details['short_name']],
+            'displayName': [details['name']],
         }
         aup = details['aup']
         pp = details['pp']
@@ -136,7 +138,6 @@ def create(src, dst):
             service_entry.setdefault('labeledURI', []).append(f"{pp} pp")
 
         if len(service_dns) == 0:  # no existing service found
-            service_entry = {'objectClass': ['dcObject', 'organization'], 'dc': [service], 'o': [service]}
             dst.add(service_dn, service_entry)
 
             # Initialize with admin object
@@ -226,22 +227,28 @@ def create(src, dst):
             co_entry['mail'] = list(set(admin.get('email') for admin in co.get('admins')))
 
             co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
-            if len(co_dns) == 0:
-                dst.add(co_dn, co_entry)
-                for ou in ['Groups', 'People']:
-                    ou_dn = 'ou=' + ou + ',' + co_dn
-                    ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
-                    dst.add(ou_dn, ou_entry)
-            elif len(co_dns) == 1:
-                current_entry = list(co_dns.values())[0]
-                dst.modify(co_dn, current_entry, co_entry)
-            else:
-                raise Exception(f"Found multiple COs for o={co_identifier}")
 
-            if not details['enabled']:
-                # Pivotal 106: If not 'ldap_enabled' do not populate actual people / groups
-                # This is case when this service has been provisioned earlier, but now is
-                # disable in SBS, just stop populating any further !
+            if details['enabled']:
+                logging.debug("- Enabled")
+                if len(co_dns) == 0:
+                    dst.add(co_dn, co_entry)
+                    for ou in ['Groups', 'People']:
+                        ou_dn = 'ou=' + ou + ',' + co_dn
+                        ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
+                        dst.add(ou_dn, ou_entry)
+                elif len(co_dns) == 1:
+                    current_entry = list(co_dns.values())[0]
+                    dst.modify(co_dn, current_entry, co_entry)
+                else:
+                    raise Exception(f"Found multiple COs for o={co_identifier}")
+            else:
+                logging.debug("- Disabled")
+                if len(co_dns):
+                    # Pivotal 106: If not 'ldap_enabled' do not populate actual people / groups
+                    # This is case when this service has been provisioned earlier, but now is
+                    # disable in SBS, just stop populating any further !
+                    for co_dn in co_dns:
+                        dst.rdelete(co_dn)
                 continue
 
             users = src.users(co)

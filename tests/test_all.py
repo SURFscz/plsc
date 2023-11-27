@@ -50,7 +50,7 @@ class TestAll(BaseTest):
 
             for u in people:
                 # Suspended users don't appear in LDAP
-                if u['user']['suspended'] is True:
+                if u['user'].get('suspended') is True:
                     continue
 
                 user_object = check_object(f"uid={u['user']['username']},{rdn}")
@@ -81,9 +81,10 @@ class TestAll(BaseTest):
 
             active_members = []
             for m in members:
-                logger.debug(f"member: {m['user']['username']}, status: {m['status']}")
-                if m['status'] == 'active' and m['user']['suspended'] is not True:
-                    active_members.append(m)
+                # logger.debug(f"member: {m['user']['username']}, status: {m['status']}")
+                logger.debug(f"member: {m['user']['username']}")
+                # if m['status'] == 'active' and m['user'].get('suspended') is not True:
+                active_members.append(m)
 
             if len(active_members) > 0:
                 member_element = group_object[list(group_object)[0]]['member']
@@ -108,15 +109,21 @@ class TestAll(BaseTest):
             for g in groups:
                 check_group(f"ou=groups,{rdn}", group_name_function(g['short_name']), g['collaboration_memberships'])
 
-        for c in self.src.collaborations():
-            logger.info(f"* Checking collaboration: {c['name']}")
+        services = self.src.service_collaborations()
 
-            detail = self.src.collaboration(c['id'])
-            for s in detail['services']:
+        for s_id, s in services.items():
+            logger.info(f"* checking service: {s_id}")
+
+            for co_id, c in s.get('cos', {}).items():
+                logger.info(f"* Checking collaboration: {c['name']}")
+
+                # detail = self.src.collaboration(c['id'])
+                # detail = cos(c['id'])
+                # for s_id, s in services.items():
 
                 def check_ordered_person_expiry(person, _):
                     # When CO is expired, the person in de Ordered Subtree should mut be expired as well
-                    if detail['status'] == 'expired':
+                    if c['status'] == 'expired':
                         logger.debug(f"Checking expiry status of {person['user']['username']}")
                         self.assertEqual([person['status'], 'expired'])
 
@@ -161,13 +168,14 @@ class TestAll(BaseTest):
                 def group_name_flat(g):
                     return f"{org_sname}.{c['short_name']}.{g}"
 
-                logger.info(f"** Checking Service: {s['entity_id']}, Enabled: {s['ldap_enabled']}")
+                logger.info(f"** Checking Service: {s_id}, Enabled: {s['enabled']}")
 
-                if s['ldap_enabled']:
+                if s['enabled']:
                     check_ldap(
-                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
-                        detail['collaboration_memberships'],
-                        detail['groups'],
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s_id},\
+                        {self.dst_conf['basedn']}",
+                        c['collaboration_memberships'],
+                        c['groups'],
                         group_name_ordered,
                         context_checks=[
                             check_ordered_person_expiry,
@@ -176,31 +184,32 @@ class TestAll(BaseTest):
                     )
 
                     check_ldap(
-                        f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
-                        detail['collaboration_memberships'],
-                        detail['groups'],
+                        f"dc=flat,dc={s_id},{self.dst_conf['basedn']}",
+                        c['collaboration_memberships'],
+                        c['groups'],
                         group_name_flat
                     )
-                elif object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
+                elif object_count(f"dc={s_id},{self.dst_conf['basedn']}") > 0:
                     # in case the service 'exists' in LDAP but is not enabled, make sure
                     # people and group are 'empty'
                     check_ldap(
-                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        f"o={org_sname}.{c['short_name']},dc=ordered,dc={s_id},\
+                        {self.dst_conf['basedn']}",
                         [],
                         [],
                         group_name_ordered
                     )
                     check_ldap(
-                        f"dc=flat,dc={s['entity_id']},{self.dst_conf['basedn']}",
+                        f"dc=flat,dc={s_id},{self.dst_conf['basedn']}",
                         [],
                         [],
                         group_name_flat
                     )
 
-                if object_count(f"dc={s['entity_id']},{self.dst_conf['basedn']}") > 0:
-                    logger.info(f"*** Checking Admin account: {s['entity_id']}")
+                if object_count(f"dc={s_id},{self.dst_conf['basedn']}") > 0:
+                    logger.info(f"*** Checking Admin account: {s_id}")
                     self.assertTrue('ldap_password' in s)
-                    admin_object = check_object(f"cn=admin,dc={s['entity_id']},"
+                    admin_object = check_object(f"cn=admin,dc={s_id},"
                                                 f"{self.dst_conf['basedn']}", expected_count=1)
                     ldap_password = s['ldap_password']
                     if ldap_password:
