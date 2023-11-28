@@ -1,23 +1,35 @@
-ARG PYTHON_VERSION=3.11-alpine
+FROM python:3.8-slim-bookworm
 
-FROM python:${PYTHON_VERSION}
+# Do an initial clean up and general upgrade of the distribution
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt clean && apt autoclean && apt update
+RUN apt -y upgrade && apt -y dist-upgrade
 
-RUN apk add py3-virtualenv py3-pytest python3-dev gcc musl-dev openldap-dev bash
+# Install the packages we need
+RUN apt install -y build-essential libldap2-dev libsasl2-dev git
 
-ENV VENV /.venv
-RUN virtualenv ${VENV}
-ENV PATH ${VENV}/bin:$PATH
+# Clean up
+RUN apt autoremove -y && apt clean && apt autoclean && rm -rf /var/lib/apt/lists/*
 
-RUN adduser -D user
+WORKDIR /opt
 
-WORKDIR /app
-
+# Create pyff dir
+#RUN virtualenv /opt/pyff
+# RUN git clone -b main https://github.com/SURFscz/plsc.git /opt/plsc
 ADD . .
-RUN chown -R user:user ${VENV} .
 
-USER user
+# Copy process script
+COPY misc/process.sh /opt/plsc/process.sh
+RUN chmod 755 /opt/plsc/process.sh
 
-RUN pip install --upgrade pip
+# Set the default workdir
+WORKDIR /opt/plsc
+
 RUN pip install -r requirements.txt
 
-CMD ["./run.sh"]
+# Copy entrypoint
+COPY ./conf/entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/opt/plsc/process.sh"]
