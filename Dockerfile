@@ -11,7 +11,10 @@ RUN apt install -y build-essential libldap2-dev libsasl2-dev git
 # Clean up
 RUN apt autoremove -y && apt clean && apt autoclean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /opt
+RUN mkdir -p /opt/plsc
+
+# Set the default workdir
+WORKDIR /opt/plsc
 
 # Create pyff dir
 #RUN virtualenv /opt/pyff
@@ -21,9 +24,6 @@ ADD . .
 # Copy process script
 COPY misc/process.sh /opt/plsc/process.sh
 RUN chmod 755 /opt/plsc/process.sh
-
-# Set the default workdir
-WORKDIR /opt/plsc
 
 RUN pip install -r requirements.txt
 
