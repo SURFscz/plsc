@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: sram-plsc
+  IMAGE_NAME: surfscz/sram-plsc
 
 jobs:
   build-and-push-image:
