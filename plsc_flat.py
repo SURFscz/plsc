@@ -36,6 +36,18 @@ def create(src, dst):
         dst_entries = {}
 
         logging.debug("service: {}".format(service))
+
+        # Create flat dn if it doesn't exist
+        flat_dns = dst.rfind(f"dc={service}", "(&(objectClass=dcObject)(dc=flat))")
+        if len(flat_dns) == 0:
+            flat_dn = f"dc=flat,dc={service},{dst.basedn}"
+            flat_entry = {'objectClass': ['dcObject', 'organizationalUnit'], 'dc': ['flat'], 'ou': ['flat']}
+            dst.add(flat_dn, flat_entry)
+            for ou in ['Groups', 'People']:
+                ou_dn = 'ou=' + ou + ',' + flat_dn
+                ou_entry = {'objectClass': ['top', 'organizationalUnit'], 'ou': [ou]}
+                dst.add(ou_dn, ou_entry)
+
         for co_id in cos:
             logging.debug(f"- co: {co_id}")
 
