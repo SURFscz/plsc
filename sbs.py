@@ -216,7 +216,8 @@ class SBS(object):
                 for s in (o.get('services', []) + c.get('services', [])):
                     result[services[s]['ldap_identifier']]['cos'][c['id']] = c
 
-                c['sbs_url'] = "{}/collaborations/{}".format(self.host, c['identifier'])
+                if not 'sbs_url' in c:
+                    raise SyntaxError(f"Missing sbs_url in CO '{c['id']}'")
 
         return result
 
