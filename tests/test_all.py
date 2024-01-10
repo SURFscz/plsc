@@ -142,7 +142,7 @@ class TestAll(BaseTest):
                             for aup in u['accepted_aups']:
                                 self.assertTrue('service_id' in aup)
 
-                                if aup['service_id'] == s['id']:
+                                if aup['service_id'] == s_id:
                                     aup_found = True
                                     break
 
@@ -214,4 +214,4 @@ class TestAll(BaseTest):
                     ldap_password = s['ldap_password']
                     if ldap_password:
                         userPassword = admin_object[list(admin_object)[0]]['userPassword']
-                        self.assertEqual(userPassword, '{CRYPT}' + ldap_password)
+                        self.assertEqual(userPassword, ['{CRYPT}' + ldap_password])
