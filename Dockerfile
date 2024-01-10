@@ -1,4 +1,4 @@
-FROM python:3.8-slim-bookworm
+FROM python:3.9-slim-bookworm
 
 # Do an initial clean up and general upgrade of the distribution
 ENV DEBIAN_FRONTEND noninteractive
