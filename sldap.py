@@ -1,5 +1,6 @@
 import ldap
-import ldap.modlist, ldap.controls
+import ldap.modlist
+import ldap.controls
 import logging
 
 logger = logging.getLogger()
