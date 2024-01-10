@@ -125,7 +125,7 @@ class TestAll(BaseTest):
                     # When CO is expired, the person in de Ordered Subtree should mut be expired as well
                     if c['status'] == 'expired':
                         logger.debug(f"Checking expiry status of {person['user']['username']}")
-                        self.assertEqual([person['status'], 'expired'])
+                        self.assertEqual(person['status'], 'expired')
 
                 def check_accepted_policy_agreement(person, person_object):
                     # Verify that AUP attribute exists when accepted by user for this service

@@ -1,5 +1,5 @@
 import ldap
-import ldap.modlist
+import ldap.modlist, ldap.controls
 import logging
 
 logger = logging.getLogger()
@@ -74,7 +74,7 @@ class SLdap(object):
             ]
 
             if not controls:
-                logger.errror('The server ignores RFC 2696 control')
+                logger.error('The server ignores RFC 2696 control')
             if not controls[0].cookie:
                 break
 

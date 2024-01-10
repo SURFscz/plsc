@@ -25,7 +25,7 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 vc = {}
 
 
-def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[List[str]]:
+def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[set[str]]:
     if values is None:
         return None
     return set(f"{scope}{sep}{v}" for v in values)

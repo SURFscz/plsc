@@ -2,12 +2,6 @@ import json
 import ldap
 
 
-def make_secret(password):
-    import passlib.hash
-    crypted = passlib.hash.sha512_crypt.hash(password)
-    return '{SSHA}' + crypted.decode('ascii')
-
-
 def dn2rdns(dn):
     rdns = {}
     r = ldap.dn.str2dn(dn)
