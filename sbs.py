@@ -1,5 +1,6 @@
 import json
 import logging
+from time import sleep
 from typing import Dict, List
 
 import requests
@@ -33,6 +34,7 @@ class SBS(object):
         self.password = config.get('passwd', 'changethispassword')
         self.verify_ssl = config.get('verify_ssl', True)
         self.timeout = config.get('timeout', None)
+        self.retry = config.get('retry', 1)
         self.recording_requested = config.get('recorder', False)
 
         if config.get("ipv4_only", False):
@@ -45,7 +47,7 @@ class SBS(object):
 
         self.session = requests.Session()
         retries = Retry(
-            total=int(config.get('retry', 1)),
+            total=self.retry,
             backoff_factor=0.5,
             status_forcelist=[503, 504]
         )
@@ -62,30 +64,44 @@ class SBS(object):
         return json.dumps(data)
 
     def api(self, request, method='GET', headers=None, data=None):
+        class SBSNoContentException(Exception):
+            pass
+
         logger.debug(f"API: {request}...")
 
-        r = self.session.request(
-            method,
-            url=f"{self.host}/{request}",
-            headers=headers,
-            auth=requests.auth.HTTPBasicAuth(self.user, self.password),
-            verify=self.verify_ssl,
-            timeout=self.timeout,
-            data=data
-        )
-        #print('\n'.join(f'{k}: {v}' for k, v in r.headers.items()))
+        # retry the entire process a few times`
+        for i in range(1, self.retry):
+            try:
+                r = self.session.request(
+                    method,
+                    url=f"{self.host}/{request}",
+                    headers=headers,
+                    auth=requests.auth.HTTPBasicAuth(self.user, self.password),
+                    verify=self.verify_ssl,
+                    timeout=self.timeout,
+                    data=data
+                )
 
-        if r.status_code == 200:
-            if self.recording_requested:
-                os.makedirs('/'.join(request.split('/')[:-1]), exist_ok=True)
+                if r.status_code != 200:
+                    # if this happens, session.request has already retried a few times, so no need to retry ourselves
+                    raise SBSException(f"API: {request} returns: {r.status_code}")
+                if r.text == '':
+                    # this is a special case: if SBS takes too long, the gunicorn thread will be killed and SSB
+                    # returns a 200 with no content; in this case, retry a few times
+                    raise SBSNoContentException(f"API: {request} returns {r.status_code} with no content")
+                if self.recording_requested:
+                    os.makedirs('/'.join(request.split('/')[:-1]), exist_ok=True)
 
-                with open(f"./{request}", 'w') as f:
-                    f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))
+                    with open(f"./{request}", 'w') as f:
+                        f.write(json.dumps(json.loads(r.text), indent=4, sort_keys=True))
 
-            return self.__get_json(r.text)
+                return self.__get_json(r.text)
+            except SBSNoContentException as e:
+                logger.warning(f"API: {str(e)}, retrying (try {i})...")
+                sleep(5)
         else:
-            #logger.error(f"API: {request} returns: {r.status_code}")
-            raise SBSException(f"API: {request} returns: {r.status_code}")
+            # still no success after retrying
+            raise SBSException(f"API: giving up after {self.retry} tries")
 
     def health(self):
         return self.api('health')
