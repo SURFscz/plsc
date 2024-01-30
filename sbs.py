@@ -34,7 +34,7 @@ class SBS(object):
         self.password = config.get('passwd', 'changethispassword')
         self.verify_ssl = config.get('verify_ssl', True)
         self.timeout = config.get('timeout', None)
-        self.retry = config.get('retry', 1)
+        self.retry = config.get('retry', 3)
         self.recording_requested = config.get('recorder', False)
 
         if config.get("ipv4_only", False):
@@ -70,7 +70,7 @@ class SBS(object):
         logger.debug(f"API: {request}...")
 
         # retry the entire process a few times`
-        for i in range(1, self.retry):
+        for i in range(0, self.retry):
             try:
                 r = self.session.request(
                     method,
