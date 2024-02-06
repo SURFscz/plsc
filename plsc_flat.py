@@ -20,7 +20,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 # Create phase
 def create(src, dst):
     global vc
-    overruling_status = 'expired'
+    overruling_status = 'active'
 
     services = util.find_ordered_services(src)
     logging.debug(f"s: {services}")
@@ -33,7 +33,8 @@ def create(src, dst):
 
         # voPersonStatus is a special case (per service)
         voPersonStatus = {}
-        dst_entries = {}
+        people_entries = {}
+        group_entries = {}
 
         logging.debug("service: {}".format(service))
 
@@ -54,6 +55,7 @@ def create(src, dst):
             src_dn = src.rfind(f"o={co_id},dc=ordered,dc={service}", '(ObjectClass=organization)')
             src_co = src_dn.get(f"o={co_id},dc=ordered,dc={service},{src.basedn}", {})
             src_mail = src_co.get('mail', [])
+            src_status = src_co.get('organizationalStatus', ['active'])
             logging.debug(f"src_mail: {src_mail}")
 
             co_dn = f"dc=flat,dc={service},{dst.basedn}"
@@ -71,7 +73,7 @@ def create(src, dst):
                     if overruling_status in voPersonStatus[src_uid] else [current_status]
 
                 dst_dn = f"uid={src_uid},ou=People,{co_dn}"
-                dst_entries[dst_dn] = src_entry
+                people_entries[dst_dn] = src_entry
 
             logging.debug("  - Groups")
             grp_dns = src.rfind(f"ou=Groups,o={co_id},dc=ordered,dc={service}", '(objectClass=groupOfMembers)')
@@ -106,13 +108,19 @@ def create(src, dst):
                 new_entry['cn'] = [grp_cn]
                 new_entry['member'] = members
                 new_entry['mail'] = src_mail
+                new_entry['organizationalStatus'] = src_status
 
                 dst_dn = f"cn={grp_cn},ou=Groups,{co_dn}"
+                group_entries[dst_dn] = new_entry
 
-                ldif = dst.store(dst_dn, new_entry)
-                logging.debug("    - store: {}".format(ldif))
+        # We need to write People first so that
+        # memberOf overlay can find the members
+        for dst_dn, dst_entry in people_entries.items():
+            ldif = dst.store(dst_dn, dst_entry)
+            logging.debug(f"    - store: {dst_dn} {ldif}")
 
-        for dst_dn, dst_entry in dst_entries.items():
+        # Then Groups
+        for dst_dn, dst_entry in group_entries.items():
             ldif = dst.store(dst_dn, dst_entry)
             logging.debug(f"    - store: {dst_dn} {ldif}")
 

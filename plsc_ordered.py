@@ -225,6 +225,7 @@ def create(src, dst):
                 co_entry['businessCategory'] = add_scope(values=co.get('tags'),
                                                          scope=co['organisation']['short_name'])
             co_entry['mail'] = list(set(admin.get('email') for admin in co.get('admins')))
+            co_entry['OrganizationalStatus'] = [co.get('status', 'active')]
 
             co_dns = dst.rfind(f"dc=ordered,dc={service}", f"(&(objectClass=organization)(o={co_identifier}))")
 
