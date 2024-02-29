@@ -13,7 +13,7 @@ import datetime
 from sldap import SLdap
 from sbs import SBS
 
-from typing import Tuple, List, Dict, Union, Optional
+from typing import Tuple, List, Dict, Union, Optional, Set
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
@@ -25,7 +25,7 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 vc = {}
 
 
-def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[set[str]]:
+def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[Set[str]]:
     if values is None:
         return None
     return set(f"{scope}{sep}{v}" for v in values)
@@ -34,7 +34,7 @@ def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) ->
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record: LDAPEntry = dict(
-        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson']
+        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson', 'sramObject']
     )
 
     record['eduPersonUniqueId'] = [sbs_uid]
@@ -71,6 +71,11 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
         record['objectClass'].append('ldapPublicKey')
 
     record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
+
+    # sramObject attributes
+    record['sramLastActivityDate'] = ['20240229155838Z']
+    record['sramAUPacceptedDate'] = ['20240229155838Z']
+    record['sramAUPacceptedURI'] = ['https://example.com/']
 
     # clean up the lists, such that we return empty lists if no attribute is present, rather than [None]
     for key, val in record.items():
