@@ -34,7 +34,7 @@ def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) ->
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record: LDAPEntry = dict(
-        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson', 'sramObject']
+        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson', 'sramPerson']
     )
 
     record['eduPersonUniqueId'] = [sbs_uid]
@@ -72,7 +72,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
 
-    # sramObject attributes
+    # sramPerson attributes
     record['sramLastActivityDate'] = ['20240229155838Z']
     record['sramAUPacceptedDate'] = ['20240229155838Z']
     record['sramAUPacceptedURI'] = ['https://example.com/']
