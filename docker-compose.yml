@@ -16,8 +16,10 @@ services:
       LDAP_CUSTOM_SCHEMA_DIR: "/opt/ldap/schema"
       LDAP_SKIP_DEFAULT_TREE: "yes"
       LDAP_ENABLE_TLS: "no"
+      LDAP_ENABLE_SYNCPROV: "yes"
       # LDAP_CUSTOM_LDIF_DIR: "/opt/ldap/ldif"
     volumes:
       - ./misc/schema:/opt/ldap/schema
       - ./misc/ldif:/opt/ldap/ldif
+      - ./backup.ldif:/backup.ldif
       # - ./misc/ldap:/bitnami/openldap

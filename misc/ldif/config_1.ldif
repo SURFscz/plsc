@@ -1,0 +1,29 @@
+dn: cn=module{1},cn=config
+changetype: Modify
+add: olcModuleLoad
+olcModuleLoad: {1}memberof.so
+olcModuleLoad: {2}refint.so
+olcModuleLoad: {3}dynlist.so
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: Modify
+replace: olcDbIndex
+olcDbIndex: objectClass eq,pres
+olcDbIndex: ou,cn,mail,surname,givenname eq,pres,sub
+olcDbIndex: entryUUID eq
+olcDbIndex: o eq
+olcDbIndex: dc eq
+olcDbIndex: entryCSN eq
+
+replace: olcDbMaxSize
+olcDbMaxSize: 1073741824
+
+replace: olcAccess
+olcAccess: {0}to dn.regex="(([^,]+),dc=services,dc=vnet)$" by dn.exact="cn=adm
+ in,dc=services,dc=vnet" write by dn.exact=gidNumber=0+uidNumber=0,cn=peercred
+ ,cn=external,cn=auth write by dn.exact,expand="cn=admin,$1" read by * break
+olcAccess: {1}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external
+ ,cn=auth manage by dn.regex="cn=[^,]+,dc=services,dc=vnet" read  by dn.exact=
+ gidNumber=1000+uidNumber=1000,cn=peercred,cn=external,cn=auth manage  by * br
+ eak
+olcAccess: {2}to attrs=userPassword by self write by anonymous auth by * break
