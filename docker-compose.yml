@@ -1,0 +1,23 @@
+---
+version: "2"
+
+services:
+  ldap:
+    image: ghcr.io/surfscz/sram-ldap:main
+    ports:
+      - 1389:1389
+    environment:
+      LDAP_ROOT: "dc=services,dc=vnet"
+      LDAP_ADMIN_USERNAME: "admin"
+      LDAP_ADMIN_PASSWORD: "changethispassword"
+      LDAP_CONFIG_ADMIN_USERNAME: "admin"
+      LDAP_CONFIG_ADMIN_PASSWORD: "changethispassword"
+      LDAP_CONFIG_ADMIN_ENABLED: "yes"
+      LDAP_CUSTOM_SCHEMA_DIR: "/opt/ldap/schema"
+      LDAP_SKIP_DEFAULT_TREE: "yes"
+      LDAP_ENABLE_TLS: "no"
+      # LDAP_CUSTOM_LDIF_DIR: "/opt/ldap/ldif"
+    volumes:
+      - ./misc/schema:/opt/ldap/schema
+      - ./misc/ldif:/opt/ldap/ldif
+      # - ./misc/ldap:/bitnami/openldap
