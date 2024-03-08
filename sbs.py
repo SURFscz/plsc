@@ -37,6 +37,9 @@ class SBS(object):
         self.retry = config.get('retry', 3)
         self.recording_requested = config.get('recorder', False)
 
+        if self.host == 'test':
+            self.sync = config['sync']
+
         if config.get("ipv4_only", False):
             import urllib3.util.connection as urllib3_connection
 
@@ -68,6 +71,9 @@ class SBS(object):
             pass
 
         logger.debug(f"API: {request}...")
+
+        if self.host == 'test' and request == 'api/plsc/sync':
+            return json.loads(open(self.sync, 'r').read())
 
         # retry the entire process a few times`
         for i in range(0, self.retry):
