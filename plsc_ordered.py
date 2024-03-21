@@ -13,9 +13,13 @@ import datetime
 from sldap import SLdap
 from sbs import SBS
 
-from typing import Tuple, List, Dict, Union, Optional
+from typing import Tuple, List, Dict, Union, Optional, Set
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+
+WEEK = 7
+MONTH = 30
+YEAR = 365
 
 SBSPerson = Dict[str, str]
 LDAPEntry = Dict[str, List[Union[str, int]]]
@@ -25,7 +29,7 @@ LDAPEntry = Dict[str, List[Union[str, int]]]
 vc = {}
 
 
-def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[set[str]]:
+def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) -> Optional[Set[str]]:
     if values is None:
         return None
     return set(f"{scope}{sep}{v}" for v in values)
@@ -34,7 +38,7 @@ def add_scope(scope: str, sep: str = '.', values: Optional[List[str]] = None) ->
 # Here's the magic: Build the new person entry
 def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
     record: LDAPEntry = dict(
-        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson']
+        objectClass=['inetOrgPerson', 'person', 'eduPerson', 'voPerson', 'sramPerson']
     )
 
     record['eduPersonUniqueId'] = [sbs_uid]
@@ -71,6 +75,28 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
         record['objectClass'].append('ldapPublicKey')
 
     record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
+
+    # sramPerson attributes
+    lld = sbs_user.get('last_login_date')
+    if not lld or lld == "None":
+        lld = "1970-01-01 00:00:00"
+
+    last_login_date = datetime.datetime.strptime(lld + "+0000", '%Y-%m-%d %H:%M:%S%z')
+    now = datetime.datetime.now().astimezone()
+    inactive_days = (now - last_login_date).days
+
+    def res(days, interval):
+        (div, mod) = divmod(days, interval)
+        return div * interval
+
+    if inactive_days >= YEAR:
+        inactive_days = res(inactive_days, YEAR)
+    elif inactive_days >= MONTH:
+        inactive_days = res(inactive_days, MONTH)
+    elif inactive_days >= WEEK:
+        inactive_days = res(inactive_days, WEEK)
+
+    record['sramInactiveDays'] = [inactive_days]
 
     # clean up the lists, such that we return empty lists if no attribute is present, rather than [None]
     for key, val in record.items():
@@ -252,9 +278,6 @@ def create(src, dst):
                         dst.rdelete(co_dn)
                 continue
 
-            users = src.users(co)
-            # logging.debug(f"users: {users}")
-
             logging.debug("  - All groups")
             groups = src.groups(co)
             #logging.debug(f"groups: {groups}")
@@ -304,7 +327,8 @@ def create(src, dst):
                 logging.debug("      - store: {}".format(ldif))
 
             logging.debug("  - People")
-
+            users = src.users(co)
+            # logging.debug(f"users: {users}")
             for src_id, src_detail in users.items():
                 # logging.debug(f"user: {src_detail}")
                 src_user = src_detail['user']

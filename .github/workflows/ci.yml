@@ -26,6 +26,8 @@ jobs:
         image: osixia/openldap:latest
         ports:
           - 389:389
+        variables:
+          LDAP_SEED_INTERNAL_SCHEMA_PATH: "${CI_PROJECT_DIR}/misc/schema"
         env:
           LDAP_DOMAIN: services.sram.tld
           LDAP_ADMIN_USERNAME: admin
