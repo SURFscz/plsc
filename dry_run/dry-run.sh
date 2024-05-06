@@ -3,6 +3,14 @@
 set -e
 shopt -s extglob  # for the string postfix matching below
 
+# check if data file are present
+if [ ! -f "backup.ldif" -o ! -f "sync.json" ]; then
+    echo "Data files backup.ldif and/or sync.json not found"
+    echo "Copy ldap backup (slapcat -n1 output) to backup.ldif"
+    echo "Copy SBS plsc sync output to sync.json"
+    exit 1
+fi
+
 # check if we're using a remote docker host
 docker_host=$(docker context inspect -f '{{ .Endpoints.docker.Host }}')
 docker_proto=${docker_host:0:6}
