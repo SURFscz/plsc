@@ -37,6 +37,6 @@ ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /b
 
 echo "Running plsc"
 export PATH=$(pwd)/venv/bin:${PATH}
-./run.sh misc/plsc_test.yml
+../run.sh ./plsc_dryrun.yml
 
 exit 0
