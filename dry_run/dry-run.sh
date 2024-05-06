@@ -29,9 +29,19 @@ COMPOSE_FILE="docker-compose.yml"
 COMPOSE="docker compose --file ${COMPOSE_FILE}"
 
 echo "Starting containers"
-${COMPOSE} kill && ${COMPOSE} rm -f || true
+${COMPOSE} rm --force --stop || true
 ${COMPOSE} up --detach
-sleep 5
+
+echo -n "Waiting for ldap to start"
+while sleep 0.5
+do
+    echo -n "."
+    if docker compose logs | grep -q '\*\* Starting slapd \*\*'
+    then
+        echo " Up!"
+        break
+    fi
+done
 
 echo "Configuring LDAP"
 ${COMPOSE} exec ldap slapmodify -F /opt/bitnami/openldap/etc/slapd.d/ -n 0 -l /opt/ldap/ldif/config_1.ldif

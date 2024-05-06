@@ -7,7 +7,7 @@ services:
     ports:
       - 1389:1389
     environment:
-      LDAP_ROOT: "dc=services,dc=vnet"
+      LDAP_ROOT: "${BASEDN}"
       LDAP_ADMIN_USERNAME: "admin"
       LDAP_ADMIN_PASSWORD: "changethispassword"
       LDAP_CONFIG_ADMIN_USERNAME: "admin"
