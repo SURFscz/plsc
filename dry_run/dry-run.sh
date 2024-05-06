@@ -59,7 +59,7 @@ echo "Loading data"
 ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /backup.ldif
 
 echo "Running plsc"
-export PATH=$(pwd)/venv/bin:${PATH}
-../run.sh ./plsc_dryrun.yml
+export PATH=$(pwd)/../venv/bin:${PATH}
+../run.sh $(pwd)/plsc_dryrun.yml
 
 exit 0
