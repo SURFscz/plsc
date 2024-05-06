@@ -20,6 +20,11 @@ if [ "$docker_proto" == "tcp://" ]; then
     trap "kill $BG_PID" EXIT
 fi
 
+
+# find basedn
+export BASEDN=$( awk '/^dn: / { print $2; exit }' backup.ldif )
+echo "Found basedn '$BASEDN'"
+
 COMPOSE_FILE="docker-compose.yml"
 COMPOSE="docker compose --file ${COMPOSE_FILE}"
 
