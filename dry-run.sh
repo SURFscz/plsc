@@ -35,7 +35,8 @@ ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 0 -l /o
 echo "Loading data"
 ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /backup.ldif
 
-echo "Runnign plsc"
+echo "Running plsc"
+export PATH=$(pwd)/venv/bin:${PATH}
 ./run.sh misc/plsc_test.yml
 
 exit 0
