@@ -3,8 +3,14 @@
 set -e
 shopt -s extglob  # for the string postfix matching below
 
+cleanup() {
+    [ -n "$SOCAT_PID" ] && kill "$SOCAT_PID" 2>/dev/null || true
+    [ -n "$TMPFILE"   ] && rm -f "${TMPFILE}" || true
+}
+trap cleanup EXIT
+
 # check if data file are present
-if [ ! -f "backup.ldif" -o ! -f "sync.json" ]; then
+if [ ! -f "backup.ldif" ] || [ ! -f "sync.json" ]; then
     echo "Data files backup.ldif and/or sync.json not found"
     echo "Copy ldap backup (slapcat -n1 output) to backup.ldif"
     echo "Copy SBS plsc sync output to sync.json"
@@ -21,16 +27,14 @@ if [ "$docker_proto" == "tcp://" ]; then
     HOST=${HOST%:+([[:digit:]])?(/)}
 
     echo "Using remote docker host $HOST ($docker_host)"
-    socat TCP4-LISTEN:1389,fork,reuseaddr TCP4:$HOST:1389 &
-    BG_PID=$!
-
-    # kill socat when exiting
-    trap "kill $BG_PID" EXIT
+    socat "TCP4-LISTEN:1389,fork,reuseaddr" "TCP4:${HOST}:1389" &
+    SOCAT_PID=$!
 fi
 
 
 # find basedn
-export BASEDN=$( awk '/^dn: / { print $2; exit }' backup.ldif )
+BASEDN=$( awk '/^dn: / { print $2; exit }' backup.ldif )
+export BASEDN
 echo "Found basedn '$BASEDN'"
 
 COMPOSE_FILE="docker-compose.yml"
@@ -41,7 +45,7 @@ ${COMPOSE} rm --force --stop || true
 ${COMPOSE} up --detach
 
 echo -n "Waiting for ldap to start"
-while sleep 0.5
+while sleep 0.2
 do
     echo -n "."
     if docker compose logs | grep -q '\*\* Starting slapd \*\*'
@@ -60,8 +64,7 @@ ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /b
 
 # generate plsc config
 echo "Generating plsc config"
-TMPFILE=$(mktemp plsc_XXXXXX.yml)
-trap "rm -f $TMPFILE" EXIT
+TMPFILE=$(mktemp -t plsc_XXXXXX.yml)
 cat <<EOF | sed 's/^    //' > "${TMPFILE}"
     ---
     ldap:
@@ -89,7 +92,7 @@ EOF
 export LOGLEVEL=DEBUG
 echo "Running plsc"
 cd ..
-export PATH=$(pwd)/venv/bin:${PATH}
-./run.sh "./dry_run/${TMPFILE}"
+export PATH="$(pwd)/venv/bin:${PATH}"
+./run.sh "${TMPFILE}"
 
 exit 0
