@@ -1,7 +1,7 @@
 dn: cn=config
 changetype: Modify
 add: olcAttributeOptions
-olcAttributeOptions: "time-"
+olcAttributeOptions: time-
 
 dn: cn=module{1},cn=config
 changetype: Modify
