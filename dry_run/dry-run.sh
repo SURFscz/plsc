@@ -58,8 +58,38 @@ ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 0 -l /o
 echo "Loading data"
 ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /backup.ldif
 
+# generate plsc config
+echo "Generating plsc config"
+TMPFILE=$(mktemp plsc_XXXXXX.yml)
+trap "rm -f $TMPFILE" EXIT
+cat <<EOF | sed 's/^    //' > "${TMPFILE}"
+    ---
+    ldap:
+      src:
+        uri: "ldap://localhost:1389/"
+        basedn: "${BASEDN}"
+        binddn: "cn=admin,${BASEDN}"
+        passwd: "changethispassword"
+        sizelimit: 5
+      dst:
+        uri: "ldap://localhost:1389/"
+        basedn: "${BASEDN}"
+        binddn: "cn=admin,${BASEDN}"
+        passwd: "changethispassword"
+        sizelimit: 5
+    sbs:
+      src:
+        host: "test"
+        sync: "dry_run/sync.json"
+    pwd: '{CRYPT}!'
+    uid: 1000
+    gid: 1000
+EOF
+
+export LOGLEVEL=DEBUG
 echo "Running plsc"
-export PATH=$(pwd)/../venv/bin:${PATH}
-../run.sh $(pwd)/plsc_dryrun.yml
+cd ..
+export PATH=$(pwd)/venv/bin:${PATH}
+./run.sh "./dry_run/${TMPFILE}"
 
 exit 0
