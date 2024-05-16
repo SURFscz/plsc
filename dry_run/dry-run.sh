@@ -56,8 +56,8 @@ do
 done
 
 echo "Configuring LDAP"
-${COMPOSE} exec ldap slapmodify -F /opt/bitnami/openldap/etc/slapd.d/ -n 0 -l /opt/ldap/ldif/config_1.ldif
-${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 0 -l /opt/ldap/ldif/config_2.ldif
+${COMPOSE} exec ldap ldapmodify -H ldap://localhost:1389/ -D cn=admin,cn=config -w changethispassword -f /opt/ldap/ldif/config_1.ldif
+${COMPOSE} exec ldap ldapadd    -H ldap://localhost:1389/ -D cn=admin,cn=config -w changethispassword -f /opt/ldap/ldif/config_2.ldif
 
 echo "Loading data"
 ${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /backup.ldif
@@ -89,7 +89,7 @@ cat <<EOF | sed 's/^    //' > "${TMPFILE}"
     gid: 1000
 EOF
 
-export LOGLEVEL=DEBUG
+# export LOGLEVEL=DEBUG
 echo "Running plsc"
 cd ..
 export PATH="$(pwd)/venv/bin:${PATH}"

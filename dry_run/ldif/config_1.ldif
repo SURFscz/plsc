@@ -6,9 +6,7 @@ olcAttributeOptions: time-
 dn: cn=module{1},cn=config
 changetype: Modify
 add: olcModuleLoad
-olcModuleLoad: {1}memberof.so
-olcModuleLoad: {2}refint.so
-olcModuleLoad: {3}dynlist.so
+olcModuleLoad: {1}dynlist.so
 
 dn: olcDatabase={2}mdb,cn=config
 changetype: Modify

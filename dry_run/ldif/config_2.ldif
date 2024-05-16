@@ -1,21 +1,5 @@
-dn: olcOverlay={1}memberof,olcDatabase={2}mdb,cn=config
-objectClass: olcOverlayConfig
-objectClass: olcMemberOfConfig
-olcOverlay: {1}memberof
-olcMemberOfRefInt: TRUE
-olcMemberOfGroupOC: groupOfMembers
-olcMemberOfMemberAD: member
-olcMemberOfMemberOfAD: memberOf
-
-dn: olcOverlay={2}refint,olcDatabase={2}mdb,cn=config
-objectClass: olcOverlayConfig
-objectClass: olcRefintConfig
-olcOverlay: {2}refint
-olcRefintAttribute: memberof
-olcRefintAttribute: member
-
-dn: olcOverlay={3}dynlist,olcDatabase={2}mdb,cn=config
+dn: olcOverlay={1}dynlist,olcDatabase={2}mdb,cn=config
 objectClass: olcOverlayConfig
 objectClass: olcDynListConfig
-olcOverlay: {3}dynlist
-olcDynListAttrSet: {0}organizationalRole labeledURI roleOccupant
+olcOverlay: {1}dynlist
+olcDynListAttrSet: {0}voPerson labeledURI member+memberOf@groupOfMembers
