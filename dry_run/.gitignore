@@ -1,2 +1,3 @@
-backup.ldif
-sync.json
+backup.ldif*
+result.ldif*
+sync.json*
