@@ -1,0 +1,5 @@
+dn: olcOverlay={1}dynlist,olcDatabase={2}mdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcDynListConfig
+olcOverlay: {1}dynlist
+olcDynListAttrSet: {0}voPerson labeledURI member+memberOf@groupOfMembers
