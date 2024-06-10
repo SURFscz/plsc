@@ -67,7 +67,7 @@ ${COMPOSE} exec ldap ldapmodify -H ldap://localhost:1389/ -D cn=admin,cn=config 
 ${COMPOSE} exec ldap ldapadd    -H ldap://localhost:1389/ -D cn=admin,cn=config -w changethispassword -f /opt/ldap/ldif/config_2.ldif > /dev/null 2>&1
 
 echo "Loading data"
-${COMPOSE} exec ldap slapadd    -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /backup.ldif > /dev/null 2>&1
+${COMPOSE} exec ldap slapadd  -q -F /opt/bitnami/openldap/etc/slapd.d/ -n 2 -l /backup.ldif  2>/dev/null
 
 # generate plsc config
 echo "Generating plsc config"
