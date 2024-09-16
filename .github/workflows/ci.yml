@@ -1,11 +1,11 @@
 name: CI
 
 on:
- push:
- schedule:
-  - cron: "0 5  * * mon"
+  push:
+  schedule:
+    - cron: "0 5  * * mon"
 
-permissions: {}
+permissions: { }
 
 jobs:
   plsc-test:
@@ -26,9 +26,8 @@ jobs:
         image: osixia/openldap:latest
         ports:
           - 389:389
-        variables:
-          LDAP_SEED_INTERNAL_SCHEMA_PATH: "${CI_PROJECT_DIR}/misc/schema"
         env:
+          LDAP_SEED_INTERNAL_SCHEMA_PATH: "${CI_PROJECT_DIR}/misc/schema"
           LDAP_DOMAIN: services.sram.tld
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: secret
@@ -58,10 +57,16 @@ jobs:
           flake8 .
 
       - name: ldap - Initialization...
-        run: |
+        run: >
           sleep 5;
           ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
-          for f in access eduPerson voPerson groupOfMembers config; do ldapadd -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD} -f etc/ldif/$f.ldif; done;
+          for f in access eduPerson voPerson groupOfMembers config;
+          do
+            ldapadd -H ${LDAP_URL}
+                    -D cn=admin,cn=config
+                    -w ${LDAP_CONFIG_PASSWORD}
+                    -f etc/ldif/$f.ldif;
+          done;
         env:
           LDAP_URL: ldap://localhost:389
           LDAP_ADMIN_PASSWORD: secret
