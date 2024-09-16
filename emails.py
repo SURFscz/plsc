@@ -80,22 +80,22 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
 
             if 'security_email' in srvc:
                 contacts.append({
-                "type": "service",
-                "id": s_id,
-                "name": srvc['name'],
-                "role": "sp-security",
-                "mail": srvc['security_email']
-            })
+                    "type": "service",
+                    "id": s_id,
+                    "name": srvc['name'],
+                    "role": "sp-security",
+                    "mail": srvc['security_email']
+                })
 
             if 'support_email' in srvc:
                 contacts.append({
-                "type": "service",
-                "id": s_id,
-                "name": srvc['name'],
-                "role": "sp-suport",
-                "mail": srvc['support_email']
-            })
-            
+                    "type": "service",
+                    "id": s_id,
+                    "name": srvc['name'],
+                    "role": "sp-support",
+                    "mail": srvc['support_email']
+                })
+
             # append service manager and service admin emails
             for user in srvc['service_memberships']:
                 contacts.append({
@@ -105,7 +105,6 @@ def fetch_contacts(src: SBS, org: bool = True, co: bool = True, service: bool = 
                     "role": "sp" + user['role'],
                     "mail": user['user']['email']
                 })
-                
 
     if co:
         collaborations = src.collaborations()
