@@ -14,13 +14,9 @@ on:
       - review_requested
       - closed
 
-permissions:
-  issues: "write"
-  pull-requests: "write"
-
 jobs:
   project_management:
-    uses: SURFscz/SCZ-deploy/.github/workflows/project.yml@main
+    uses: SURFscz/SRAM-deploy/.github/workflows/project.yml@main
     with:
       event: ${{ github.event_name }}
       action: ${{ github.event.action }}
