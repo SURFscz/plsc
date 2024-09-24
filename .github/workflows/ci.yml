@@ -111,5 +111,14 @@ jobs:
           LDAP_URL: ldap://localhost:389
           LDAP_BASE_DN: dc=services,dc=sram,dc=tld
 
+      # Setup tmate session
+      - name: Setup tmate session
+        env:
+          ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG}}
+        if: ${{ failure() && env.ACTIONS_STEP_DEBUG == 'true' }}
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+        timeout-minutes: 60
 
 
