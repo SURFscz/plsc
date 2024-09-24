@@ -21,22 +21,12 @@ jobs:
           - '3.11'
           - '3.12'
 
-    services:
-      ldap:
-        image: osixia/openldap:latest
-        ports:
-          - 389:389
-        env:
-          LDAP_SEED_INTERNAL_SCHEMA_PATH: "${CI_PROJECT_DIR}/misc/schema"
-          LDAP_DOMAIN: services.sram.tld
-          LDAP_ADMIN_USERNAME: admin
-          LDAP_ADMIN_PASSWORD: secret
-          LDAP_CONFIG_PASSWORD: config
-          LDAP_BASE_DN: dc=services,dc=sram,dc=tld
-          LDAP_TLS: true
-
     steps:
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start LDAP container
+        run: ./run-ldapci.sh
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libsasl2-dev libldap2-dev ldap-utils
@@ -60,11 +50,12 @@ jobs:
         run: >
           sleep 5;
           ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
+          ldapwhoami -H ${LDAP_URL} -D cn=admin,cn=config -w ${LDAP_CONFIG_PASSWORD};
           for f in access eduPerson voPerson groupOfMembers config;
           do
-            ldapadd -H ${LDAP_URL}
-                    -D cn=admin,cn=config
-                    -w ${LDAP_CONFIG_PASSWORD}
+            ldapadd -H ${LDAP_URL} \
+                    -D cn=admin,cn=config \
+                    -w ${LDAP_CONFIG_PASSWORD} \
                     -f etc/ldif/$f.ldif;
           done;
         env:
@@ -95,5 +86,14 @@ jobs:
           LDAP_URL: ldap://localhost:389
           LDAP_BASE_DN: dc=services,dc=sram,dc=tld
 
+      # Setup tmate session
+      - name: Setup tmate session
+        env:
+          ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG}}
+        if: ${{ failure() && env.ACTIONS_STEP_DEBUG == 'true' }}
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+        timeout-minutes: 60
 
 
