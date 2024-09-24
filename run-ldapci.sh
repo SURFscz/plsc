@@ -1,6 +1,6 @@
 #!/bin/sh
 docker rm ldap || true
-docker run -ti \
+docker run -d \
     -e "LDAP_SEED_INTERNAL_SCHEMA_PATH=/opt/misc/schema" \
     -e "LDAP_DOMAIN=services.sram.tld" \
     -e "LDAP_ADMIN_USERNAME=admin" \
