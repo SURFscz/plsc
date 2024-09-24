@@ -26,8 +26,10 @@ jobs:
         image: osixia/openldap:latest
         ports:
           - 389:389
+        volumes:
+          - ./misc/schema:/opt/misc/schema
         env:
-          LDAP_SEED_INTERNAL_SCHEMA_PATH: "${CI_PROJECT_DIR}/misc/schema"
+          LDAP_SEED_INTERNAL_SCHEMA_PATH: /opt/misc/schema
           LDAP_DOMAIN: services.sram.tld
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: secret
