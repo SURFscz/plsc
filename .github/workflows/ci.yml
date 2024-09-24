@@ -21,33 +21,12 @@ jobs:
           - '3.11'
           - '3.12'
 
-    services:
-      ldap:
-        image: osixia/openldap:latest
-        ports:
-          - 389:389
-        volumes:
-          - ${{ github.workspace }}/misc/schema:/opt/misc/schema
-        options: --name ldap
-        env:
-          LDAP_SEED_INTERNAL_SCHEMA_PATH: /opt/misc/schema
-          LDAP_DOMAIN: services.sram.tld
-          LDAP_ADMIN_USERNAME: admin
-          LDAP_ADMIN_PASSWORD: secret
-          LDAP_CONFIG_PASSWORD: config
-          LDAP_BASE_DN: dc=services,dc=sram,dc=tld
-          LDAP_TLS: true
-
     steps:
       - name: Checkout
-        uses: actions/checkout@master
-        with:
-          path: plsc
+        uses: actions/checkout@v4
 
-      - name: Restart LDAP container
-        uses: docker://docker
-        with:
-          args: docker restart ldap
+      - name: Start LDAP container
+        run: ./run-ldapci.sh
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libsasl2-dev libldap2-dev ldap-utils
@@ -58,19 +37,16 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        working-directory: ./plsc
         run: |
           python3 -m pip install --upgrade pip flake8 gera2ld-pyserve
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Check syntax
-        working-directory: ./plsc
         run: |
           flake8 .
 
       - name: ldap - Initialization...
-        working-directory: ./plsc
         run: >
           sleep 5;
           ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
@@ -93,7 +69,6 @@ jobs:
       #  uses: mxschmitt/action-tmate@v3
 
       - name: Run pytest...
-        working-directory: ./plsc
         run: |
           export PYTHONPATH="."
           pytest
@@ -104,7 +79,6 @@ jobs:
           LDAP_BIND_DN: cn=admin,dc=services,dc=sram,dc=tld
 
       - name: Dump ldap...
-        working-directory: ./plsc
         run:
           ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub objectclass=organizationalUnit
         env:
