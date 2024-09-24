@@ -1,5 +1,5 @@
 #!/bin/sh
-docker rm ldap-ci || true
+docker rm ldap || true
 docker run -ti \
     -e "LDAP_SEED_INTERNAL_SCHEMA_PATH=/opt/misc/schema" \
     -e "LDAP_DOMAIN=services.sram.tld" \
@@ -10,5 +10,5 @@ docker run -ti \
     -e "LDAP_TLS=true" \
     -v "./misc/schema:/opt/misc/schema" \
     -p 389:389 \
-    --name ldap-ci \
+    --name ldap \
     osixia/openldap:latest
