@@ -60,10 +60,10 @@ jobs:
           ldapwhoami -x -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
           for f in access eduPerson voPerson groupOfMembers config sramPerson;
           do
-            ldapadd -x
-                    -H ${LDAP_URL}
-                    -D cn=admin,cn=config
-                    -w ${LDAP_CONFIG_PASSWORD}
+            ldapadd -x \
+                    -H ${LDAP_URL} \
+                    -D cn=admin,cn=config \
+                    -w ${LDAP_CONFIG_PASSWORD} \
                     -f etc/ldif/$f.ldif;
           done;
         env:
