@@ -153,7 +153,13 @@ You have to mount this file into the container and then run **run.sh** with that
 Example:
 
 ```bash
-docker run -v ${pwd}/my-plsc.yml:/tmp/plsc.yaml plsc ./run.sh /tmp/plsc.yml
+docker run -v ${PWD}:/opt/plsc plsc ./run.sh my-plsc.yaml
+```
+
+If you started the local LDAP via **etc/ldap_start.sh** then you can connect to that if you run this PLSC container in **network = host** mode.
+
+```bash
+docker run -v ${PWD}:/opt/plsc --network host plsc ./run.sh my-plsc.yaml
 ```
 
 **run.sh** is the existing script that runs both _plsc_ordered.py_ and _plsc_flat_

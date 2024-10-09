@@ -5,21 +5,20 @@ on:
   schedule:
     - cron: "0 5  * * mon"
 
-permissions: { }
+permissions: {}
 
 jobs:
   plsc-test:
-
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         python:
-          - '3.9'
-          - '3.10'
-          - '3.11'
-          - '3.12'
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
 
     services:
       ldap:
@@ -27,7 +26,6 @@ jobs:
         ports:
           - 389:389
         env:
-          LDAP_SEED_INTERNAL_SCHEMA_PATH: "${CI_PROJECT_DIR}/misc/schema"
           LDAP_DOMAIN: services.sram.tld
           LDAP_ADMIN_USERNAME: admin
           LDAP_ADMIN_PASSWORD: secret
@@ -60,11 +58,11 @@ jobs:
         run: >
           sleep 5;
           ldapwhoami -H ${LDAP_URL} -D ${LDAP_BIND_DN} -w ${LDAP_ADMIN_PASSWORD};
-          for f in access eduPerson voPerson groupOfMembers config;
+          for f in access eduPerson voPerson groupOfMembers config sramPerson;
           do
-            ldapadd -H ${LDAP_URL}
-                    -D cn=admin,cn=config
-                    -w ${LDAP_CONFIG_PASSWORD}
+            ldapadd -H ${LDAP_URL} \
+                    -D cn=admin,cn=config \
+                    -w ${LDAP_CONFIG_PASSWORD} \
                     -f etc/ldif/$f.ldif;
           done;
         env:
@@ -89,11 +87,7 @@ jobs:
           LDAP_BIND_DN: cn=admin,dc=services,dc=sram,dc=tld
 
       - name: Dump ldap...
-        run:
-          ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub objectclass=organizationalUnit
+        run: ldapsearch -x -H ${LDAP_URL} -b ${LDAP_BASE_DN} -s sub objectclass=organizationalUnit
         env:
           LDAP_URL: ldap://localhost:389
           LDAP_BASE_DN: dc=services,dc=sram,dc=tld
-
-
-
