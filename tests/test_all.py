@@ -156,9 +156,15 @@ class TestAll(BaseTest):
                             break
 
                     if policy_agreement_attribute:
-                        self.assertTrue(aup_found)
+                        self.assertTrue(
+                            aup_found,
+                            f"AUP Not found for: {person['user']['username']} for service: {s['entity_id']}"
+                        )
                     else:
-                        self.assertFalse(aup_found)
+                        self.assertFalse(
+                            aup_found,
+                            f"unexpected AUP found for: {person['user']['username']} for service: {['entity_id']}"
+                        )
 
                 org_sname = c['organisation']['short_name']
 
@@ -208,7 +214,10 @@ class TestAll(BaseTest):
 
                 if object_count(f"dc={s_id},{self.dst_conf['basedn']}") > 0:
                     logger.info(f"*** Checking Admin account: {s_id}")
-                    self.assertTrue('ldap_password' in s)
+                    self.assertTrue(
+                        'ldap_password' in s,
+                        f"No ldap_password found for admin of service {s['entity_id']}"
+                    )
                     admin_object = check_object(f"cn=admin,dc={s_id},"
                                                 f"{self.dst_conf['basedn']}", expected_count=1)
                     ldap_password = s['ldap_password']

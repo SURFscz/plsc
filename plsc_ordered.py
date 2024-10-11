@@ -100,7 +100,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
 
     # clean up the lists, such that we return empty lists if no attribute is present, rather than [None]
     for key, val in record.items():
-        record[key] = list(filter(None, record[key]))
+        record[key] = list(filter(lambda n: n is not None, val))
 
     rdn = f"uid={username}"
 
