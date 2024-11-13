@@ -150,7 +150,7 @@ class TestAll(BaseTest):
 
                     policy_agreement_attribute = False
 
-                    for a in person_object[list(person_object)[0]]:
+                    for a in list(person_object):
                         if a.startswith('voPersonPolicyAgreement'):
                             policy_agreement_attribute = True
                             break
