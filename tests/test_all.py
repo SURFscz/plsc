@@ -63,6 +63,14 @@ class TestAll(BaseTest):
                     self.assertTrue('ldapPublicKey' in user_object[list(user_object)[0]]['objectClass'])
                     self.assertTrue('sshPublicKey' in user_object[list(user_object)[0]].keys())
 
+                # Check sram inactive days
+                if u['user'].get('sram_inactive_days', None):
+                    self.assertTrue('sramInactiveDays' in user_object[list(user_object)[0]].keys())
+                    self.assertEqual(
+                        user_object[list(user_object)[0]]['sramInactiveDays'],
+                        [str(u['user']['sram_inactive_days'])]
+                    )
+
                 # Here a sequence of function can be initiated to verify this person in a particular context
                 for f in context_checks:
                     f(u, user_object)

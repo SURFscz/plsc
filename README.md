@@ -99,16 +99,26 @@ SBS_USER=sysread
 SBS_PASS=secret
 SBS_API_RECORDING=Yes
 SBS_VERIFY_SSL=Yes
+
+CONTAINER_TOOL=docker
 ```
 
-You have the option to run against an operational instance of SBS by specifing the **SBS_URL** and **SBS_USER** /**SBS_PASS** constants as shown above. If you do not want to access an SBS instance, just leave these constant out.
-In that case the SBS API's are immitated by the results listed in the local **api** directory of this repository.
+You have the option to run against an operational instance of SBS by specifying the **SBS_URL** and **SBS_USER**/**SBS_PASS** constants as shown above. If you do not want to access an SBS instance, just leave these constants out.
+In that case, the SBS APIs are imitated by the results listed in the local **api** directory of this repository.
 
-In case you are testing against an operational SBS instance, you have the option to record the API results for later use during mockup testing, just set the environment variable **SBS_API_RECORDING** to "Yes". Now the API requests results will be stored in the local directory under **./api/...**
+In case you are testing against an operational SBS instance, you have the option to record the API results for later use during mockup testing. Just set the environment variable **SBS_API_RECORDING** to "Yes". Now the API request results will be stored in the local directory under **./api/...**
 
-When you omit the **SBS_URL** variable, the tests will run API requests agains the contents off this local **./api/...** directory
+When you omit the **SBS_URL** variable, the tests will run API requests against the contents of this local **./api/...** directory.
 
-When all these preperations are completed, you can now run the tests:
+When you want to make use of a different tool than **docker** for building/running your containers, then specify that as follows:
+
+```
+...
+CONTAINER_TOOL=podman
+...
+```
+
+When all these preparations are completed, you can now run the tests:
 
 ```bash
 pytest -v

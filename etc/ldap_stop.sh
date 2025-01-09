@@ -1,4 +1,7 @@
 #!/bin/bash
 
+# Set CONTAINER_TOOL to 'docker' if not defined
+CONTAINER_TOOL=${CONTAINER_TOOL:-docker}
+
 # Kill previous server
-docker stop my-ldap
+$CONTAINER_TOOL stop my-ldap
