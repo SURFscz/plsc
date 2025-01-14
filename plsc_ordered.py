@@ -75,28 +75,7 @@ def sbs2ldap_record(sbs_uid: str, sbs_user: SBSPerson) -> Tuple[str, LDAPEntry]:
         record['objectClass'].append('ldapPublicKey')
 
     record['voPersonStatus'] = [sbs_user.get('status', 'undefined')]
-
-    # sramPerson attributes
-    lld = sbs_user.get('last_login_date')
-    if not lld or lld == "None":
-        lld = "1970-01-01 00:00:00"
-
-    last_login_date = datetime.datetime.strptime(lld + "+0000", '%Y-%m-%d %H:%M:%S%z')
-    now = datetime.datetime.now().astimezone()
-    inactive_days = (now - last_login_date).days
-
-    def res(days, interval):
-        (div, mod) = divmod(days, interval)
-        return div * interval
-
-    if inactive_days >= YEAR:
-        inactive_days = res(inactive_days, YEAR)
-    elif inactive_days >= MONTH:
-        inactive_days = res(inactive_days, MONTH)
-    elif inactive_days >= WEEK:
-        inactive_days = res(inactive_days, WEEK)
-
-    record['sramInactiveDays'] = [inactive_days]
+    record['sramInactiveDays'] = [sbs_user.get('sram_inactive_days', 'undefined')]
 
     # clean up the lists, such that we return empty lists if no attribute is present, rather than [None]
     for key, val in record.items():

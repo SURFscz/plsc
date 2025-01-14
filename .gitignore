@@ -22,3 +22,4 @@ tests/api/
 plsc.yaml
 .python-version
 Pipfile
+.test.env

@@ -5,91 +5,101 @@
                 {
                     "collaboration_memberships": [
                         {
-                            "collaboration_id": 4086,
-                            "id": 14754,
+                            "collaboration_id": 4193,
+                            "id": 15164,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24313
+                            "user_id": 24591
                         },
                         {
-                            "collaboration_id": 4086,
-                            "id": 14755,
+                            "collaboration_id": 4193,
+                            "id": 15165,
                             "role": "admin",
                             "status": "active",
-                            "user_id": 24316
+                            "user_id": 24594
                         },
                         {
-                            "collaboration_id": 4086,
-                            "id": 14759,
+                            "collaboration_id": 4193,
+                            "id": 15169,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24322
+                            "user_id": 24600
                         },
                         {
-                            "collaboration_id": 4086,
-                            "id": 14760,
+                            "collaboration_id": 4193,
+                            "id": 15170,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24320
+                            "user_id": 24598
                         },
                         {
-                            "collaboration_id": 4086,
-                            "id": 14763,
+                            "collaboration_id": 4193,
+                            "id": 15173,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24321
+                            "user_id": 24599
                         }
                     ],
                     "description": "Artificial Intelligence computing for the Unincorporated Urban Community",
                     "global_urn": "ucc:ai_computing",
                     "groups": [
                         {
-                            "collaboration_id": 4086,
+                            "collaboration_id": 4193,
                             "collaboration_memberships": [
                                 {
-                                    "collaboration_membership_id": 14759,
-                                    "group_id": 1074,
-                                    "user_id": 24322
+                                    "collaboration_membership_id": 15164,
+                                    "group_id": 1100,
+                                    "user_id": 24591
                                 },
                                 {
-                                    "collaboration_membership_id": 14754,
-                                    "group_id": 1074,
-                                    "user_id": 24313
+                                    "collaboration_membership_id": 15169,
+                                    "group_id": 1100,
+                                    "user_id": 24600
                                 }
                             ],
                             "description": "Artificial computing researchers",
                             "global_urn": "uuc:ai_computing:ai_res",
-                            "id": 1074,
+                            "id": 1100,
                             "identifier": "9734e4c4-d23e-4228-b0e0-8e6a5b85e72e",
                             "name": "AI researchers",
                             "short_name": "ai_res"
                         },
                         {
-                            "collaboration_id": 4086,
+                            "collaboration_id": 4193,
                             "collaboration_memberships": [
                                 {
-                                    "collaboration_membership_id": 14754,
-                                    "group_id": 1075,
-                                    "user_id": 24313
+                                    "collaboration_membership_id": 15164,
+                                    "group_id": 1101,
+                                    "user_id": 24591
+                                },
+                                {
+                                    "collaboration_membership_id": 15165,
+                                    "group_id": 1101,
+                                    "user_id": 24594
+                                },
+                                {
+                                    "collaboration_membership_id": 15169,
+                                    "group_id": 1101,
+                                    "user_id": 24600
                                 }
                             ],
                             "description": "Artificial computing developers",
                             "global_urn": "uuc:ai_computing:ai_dev",
-                            "id": 1075,
+                            "id": 1101,
                             "identifier": "4c270cff-de30-49e8-a3bc-df032536b37c",
                             "name": "AI developers",
                             "short_name": "ai_dev"
                         }
                     ],
-                    "id": 4086,
+                    "id": 4193,
                     "identifier": "a71a2b01-4642-4e1a-b3ac-0a06b2bf66f2",
-                    "logo": "https://test.sram.surf.nl/api/images/collaborations/68d6aa1f-9aa7-4f84-a398-ac1e81bc67c9",
+                    "logo": "https://test.sram.surf.nl/api/images/collaborations/d984272a-38e7-4769-8f27-d6e3f8cf421c",
                     "name": "AI computing",
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "sbs_url": "https://test.sram.surf.nl/collaborations/a71a2b01-4642-4e1a-b3ac-0a06b2bf66f2",
                     "services": [
-                        1014,
-                        1019
+                        1068,
+                        1073
                     ],
                     "short_name": "ai_computing",
                     "status": "active",
@@ -104,114 +114,122 @@
                 {
                     "collaboration_memberships": [
                         {
-                            "collaboration_id": 4089,
-                            "id": 14762,
+                            "collaboration_id": 4196,
+                            "id": 15172,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24321
+                            "user_id": 24599
                         },
                         {
-                            "collaboration_id": 4089,
-                            "id": 14770,
+                            "collaboration_id": 4196,
+                            "id": 15180,
                             "role": "admin",
                             "status": "active",
-                            "user_id": 24330
+                            "user_id": 24608
                         }
                     ],
                     "description": "UUC Teachers",
                     "global_urn": "ucc:Teachers",
-                    "groups": [],
-                    "id": 4089,
+                    "groups": [
+                    ],
+                    "id": 4196,
                     "identifier": "033cbc91-45ed-4020-bf86-3cc323e1f1cf",
-                    "logo": "https://test.sram.surf.nl/api/images/collaborations/aa5d19db-394a-436b-8597-02c69f7b2fe0",
+                    "logo": "https://test.sram.surf.nl/api/images/collaborations/9bd39cae-e3d0-49d1-a75d-a7b918808755",
                     "name": "Teachers",
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "sbs_url": "https://test.sram.surf.nl/collaborations/033cbc91-45ed-4020-bf86-3cc323e1f1cf",
-                    "services": [],
+                    "services": [
+                    ],
                     "short_name": "uuc_teachers_short_name",
                     "status": "active",
-                    "tags": [],
-                    "units": [],
+                    "tags": [
+                    ],
+                    "units": [
+                        "Research"
+                    ],
                     "website_url": "https://www.google.nl"
                 },
                 {
                     "collaboration_memberships": [
                         {
-                            "collaboration_id": 4090,
-                            "id": 14764,
+                            "collaboration_id": 4197,
+                            "id": 15174,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24327
+                            "user_id": 24605
                         },
                         {
-                            "collaboration_id": 4090,
-                            "id": 14765,
+                            "collaboration_id": 4197,
+                            "id": 15175,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24321
+                            "user_id": 24599
                         },
                         {
-                            "collaboration_id": 4090,
-                            "id": 14771,
+                            "collaboration_id": 4197,
+                            "id": 15181,
                             "role": "admin",
                             "status": "active",
-                            "user_id": 24330
+                            "user_id": 24608
                         }
                     ],
-                    "description": "CO voor monitoring.  NIET AANKOMEN.",
+                    "description": "CO voor monitoring. NIET AANKOMEN.",
                     "global_urn": "ucc:monitoring1",
-                    "groups": [],
-                    "id": 4090,
+                    "groups": [
+                    ],
+                    "id": 4197,
                     "identifier": "37d55167-23e4-4099-ae20-4f3d8d284b14",
                     "logo": "https://test.sram.surf.nl/api/images/collaborations/b85e2ae6-05f3-4c27-9078-e11a420bdc08",
                     "name": "Monitoring CO numero 1",
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "sbs_url": "https://test.sram.surf.nl/collaborations/37d55167-23e4-4099-ae20-4f3d8d284b14",
                     "services": [
-                        1025
+                        1079
                     ],
                     "short_name": "monitor1",
                     "status": "active",
-                    "tags": [],
-                    "units": [],
+                    "tags": [
+                    ],
+                    "units": [
+                    ],
                     "website_url": "https://www.google.nl"
                 }
             ],
-            "id": 380,
+            "id": 400,
             "identifier": "95306a5f-0a16-4461-b358-8442e09dab20",
-            "logo": "https://test.sram.surf.nl/api/images/organisations/5bb0ece3-2218-4ffc-8b9b-2bbc8bb350b3",
+            "logo": "https://test.sram.surf.nl/api/images/organisations/f09a9f2f-d39c-4631-a459-1da8fa4f1e20",
             "name": "Universiteit van Harderwijk",
             "organisation_memberships": [
                 {
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "role": "admin",
-                    "user_id": 24313
+                    "user_id": 24591
                 },
                 {
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "role": "admin",
-                    "user_id": 24314
+                    "user_id": 24592
                 },
                 {
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "role": "manager",
-                    "user_id": 24318
+                    "user_id": 24596
                 },
                 {
-                    "organisation_id": 380,
+                    "organisation_id": 400,
                     "role": "manager",
-                    "user_id": 24327
+                    "user_id": 24605
                 }
             ],
             "schac_home_organisations": [
                 {
                     "name": "uni-harderwijk.nl",
-                    "organisation_id": 380
+                    "organisation_id": 400
                 }
             ],
             "services": [
-                1018,
-                1021
+                1072,
+                1075
             ],
             "short_name": "uniharderwijk",
             "units": [
@@ -221,224 +239,133 @@
         },
         {
             "collaborations": [
-                {
-                    "collaboration_memberships": [
-                        {
-                            "collaboration_id": 4087,
-                            "id": 14756,
-                            "role": "member",
-                            "status": "active",
-                            "user_id": 24317
-                        },
-                        {
-                            "collaboration_id": 4087,
-                            "id": 14757,
-                            "role": "member",
-                            "status": "active",
-                            "user_id": 24315
-                        },
-                        {
-                            "collaboration_id": 4087,
-                            "id": 14758,
-                            "role": "admin",
-                            "status": "active",
-                            "user_id": 24320
-                        },
-                        {
-                            "collaboration_id": 4087,
-                            "id": 14761,
-                            "role": "member",
-                            "status": "active",
-                            "user_id": 24325
-                        }
-                    ],
-                    "description": "University of Amsterdam Research - Urban Crowd Control",
-                    "global_urn": "ufra:research",
-                    "groups": [
-                        {
-                            "collaboration_id": 4087,
-                            "collaboration_memberships": [
-                                {
-                                    "collaboration_membership_id": 14756,
-                                    "group_id": 1076,
-                                    "user_id": 24317
-                                }
-                            ],
-                            "description": "Science",
-                            "global_urn": "ufra:research:science",
-                            "id": 1076,
-                            "identifier": "e46e388c-9362-4aaa-b23f-a855bf559598",
-                            "name": "Science",
-                            "short_name": "science"
-                        },
-                        {
-                            "collaboration_id": 4087,
-                            "collaboration_memberships": [],
-                            "description": "Provisioned by service Mail Services - Mail group",
-                            "global_urn": "uuc:ai_computing:mail-mail",
-                            "id": 1077,
-                            "identifier": "9946ca40-2a53-40a8-bc63-fb0758e716e3",
-                            "name": "service_group_mail_name",
-                            "short_name": "mail-mail"
-                        }
-                    ],
-                    "id": 4087,
-                    "identifier": "da706611-0afb-4a7a-819b-b0a9c63e9b67",
-                    "logo": "https://test.sram.surf.nl/api/images/collaborations/5dbd13e5-ef3d-4e7c-8f36-e75292571875",
-                    "name": "Research",
-                    "organisation_id": 381,
-                    "sbs_url": "https://test.sram.surf.nl/collaborations/da706611-0afb-4a7a-819b-b0a9c63e9b67",
-                    "services": [
-                        1016,
-                        1017,
-                        1018
-                    ],
-                    "short_name": "research",
-                    "status": "active",
-                    "tags": [
-                        "tag_ufra"
-                    ],
-                    "units": [],
-                    "website_url": "https://www.google.nl"
-                },
-                {
-                    "collaboration_memberships": [
-                        {
-                            "collaboration_id": 4088,
-                            "id": 14768,
-                            "role": "admin",
-                            "status": "active",
-                            "user_id": 24327
-                        },
-                        {
-                            "collaboration_id": 4088,
-                            "id": 14769,
-                            "role": "member",
-                            "status": "active",
-                            "user_id": 24318
-                        }
-                    ],
-                    "description": "Artificiation AI",
-                    "global_urn": "ufra:ai_short",
-                    "groups": [],
-                    "id": 4088,
-                    "identifier": "568eed02-0e46-48ab-83fe-116d2a8a58c5",
-                    "logo": "https://test.sram.surf.nl/api/images/collaborations/cf90b94f-bb46-49eb-a763-8ec1a22777be",
-                    "name": "Robotics",
-                    "organisation_id": 381,
-                    "sbs_url": "https://test.sram.surf.nl/collaborations/568eed02-0e46-48ab-83fe-116d2a8a58c5",
-                    "services": [],
-                    "short_name": "ai_short",
-                    "status": "active",
-                    "tags": [],
-                    "units": [],
-                    "website_url": "https://www.google.nl"
-                }
             ],
-            "id": 381,
+            "id": 401,
             "identifier": "7c60a022-ab09-438c-8603-c361bc1a088d",
-            "logo": "https://test.sram.surf.nl/api/images/organisations/b2d8215c-85f4-4958-93ba-ba36ee8a2bd3",
+            "logo": "https://test.sram.surf.nl/api/images/organisations/70e9ff86-7785-4c6c-8046-bbd1bec75097",
             "name": "Academia Franekerensis",
             "organisation_memberships": [
                 {
-                    "organisation_id": 381,
+                    "organisation_id": 401,
                     "role": "admin",
-                    "user_id": 24322
+                    "user_id": 24600
                 },
                 {
-                    "organisation_id": 381,
+                    "organisation_id": 401,
                     "role": "manager",
-                    "user_id": 24327
+                    "user_id": 24605
                 }
             ],
             "schac_home_organisations": [
                 {
                     "name": "example.org",
-                    "organisation_id": 381
+                    "organisation_id": 401
                 }
             ],
-            "services": [],
+            "services": [
+            ],
             "short_name": "ufra",
-            "units": []
+            "units": [
+                "Cloud Unit",
+                "Infra Unit"
+            ]
         },
         {
             "collaborations": [
                 {
                     "collaboration_memberships": [
                         {
-                            "collaboration_id": 4091,
-                            "id": 14766,
+                            "collaboration_id": 4198,
+                            "id": 15176,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24321
+                            "user_id": 24599
                         },
                         {
-                            "collaboration_id": 4091,
-                            "id": 14767,
+                            "collaboration_id": 4198,
+                            "id": 15177,
                             "role": "member",
                             "status": "active",
-                            "user_id": 24318
+                            "user_id": 24596
                         },
                         {
-                            "collaboration_id": 4091,
-                            "id": 14772,
+                            "collaboration_id": 4198,
+                            "id": 15182,
                             "role": "admin",
                             "status": "active",
-                            "user_id": 24330
+                            "user_id": 24608
                         }
                     ],
-                    "description": "CO voor monitoring.  NIET AANKOMEN.",
+                    "description": "CO voor monitoring. NIET AANKOMEN.",
                     "global_urn": "pekela:monitoring2",
-                    "groups": [],
-                    "id": 4091,
+                    "groups": [
+                    ],
+                    "id": 4198,
                     "identifier": "4c1095e5-ae60-4d6d-8bfe-f711d0f81942",
                     "logo": "https://test.sram.surf.nl/api/images/collaborations/716065e3-5154-4883-b1a6-06d6e32f11e9",
                     "name": "Monitoring CO numero 2",
-                    "organisation_id": 382,
+                    "organisation_id": 402,
                     "sbs_url": "https://test.sram.surf.nl/collaborations/4c1095e5-ae60-4d6d-8bfe-f711d0f81942",
                     "services": [
-                        1025
+                        1079
                     ],
                     "short_name": "monitor2",
                     "status": "active",
-                    "tags": [],
-                    "units": [],
+                    "tags": [
+                    ],
+                    "units": [
+                    ],
                     "website_url": "https://www.google.nl"
                 }
             ],
-            "id": 382,
+            "id": 402,
             "identifier": "65fadfcb-71fd-4962-8428-0ecd15970f8d",
-            "logo": "https://test.sram.surf.nl/api/images/organisations/f945bbdd-84e3-4a79-99c3-a6d0d8764290",
+            "logo": "https://test.sram.surf.nl/api/images/organisations/60b53887-e378-42fa-bbd4-1250cb1acbdd",
             "name": "Universitair Medisch Centrum Zuid-Pekela",
             "organisation_memberships": [
                 {
-                    "organisation_id": 382,
+                    "organisation_id": 402,
                     "role": "admin",
-                    "user_id": 24314
+                    "user_id": 24592
                 }
             ],
-            "schac_home_organisations": [],
-            "services": [],
+            "schac_home_organisations": [
+            ],
+            "services": [
+            ],
             "short_name": "pekela",
-            "units": []
+            "units": [
+            ]
         },
         {
-            "collaborations": [],
-            "id": 383,
+            "collaborations": [
+            ],
+            "id": 403,
             "identifier": "9ba681d0-d70d-11ee-a264-001c4288d429",
-            "logo": "https://test.sram.surf.nl/api/images/organisations/9f90b58f-811e-47a6-bcef-5ec2cb5ce49b",
+            "logo": "https://test.sram.surf.nl/api/images/organisations/0f1db157-921a-482a-8f75-c6ef68d2b736",
             "name": "Test Organisation",
             "organisation_memberships": [
                 {
-                    "organisation_id": 383,
+                    "organisation_id": 403,
                     "role": "admin",
-                    "user_id": 24330
+                    "user_id": 24608
+                },
+                {
+                    "organisation_id": 403,
+                    "role": "manager",
+                    "user_id": 24610
                 }
             ],
-            "schac_home_organisations": [],
-            "services": [],
+            "schac_home_organisations": [
+            ],
+            "services": [
+            ],
             "short_name": "test",
-            "units": []
+            "units": [
+                "Cloudy",
+                "Stormy",
+                "Windy"
+            ]
         }
     ],
     "services": [
@@ -447,11 +374,11 @@
             "accepted_user_policy": "https://google.nl",
             "contact_email": "john@example.org",
             "entity_id": "https://mail",
-            "id": 1014,
+            "id": 1068,
             "ldap_enabled": 0,
-            "ldap_identifier": "4e8bf020-1e30-4452-b92a-ba5864251b39",
+            "ldap_identifier": "1c9acf01-caa4-450c-be09-4d6ae493d3bc",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/170b2c36-1420-4e9f-a115-ffb3beedfbe4",
+            "logo": "https://test.sram.surf.nl/api/images/services/9892b259-ad84-4da2-bc4c-96c457f9b59f",
             "name": "Mail Services",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -462,11 +389,11 @@
             "accepted_user_policy": "https://google.nl",
             "contact_email": "john@example.org",
             "entity_id": "https://wireless",
-            "id": 1015,
+            "id": 1069,
             "ldap_enabled": 0,
-            "ldap_identifier": "f2a41923-2c8f-4465-86bc-07e46b5be8ff",
+            "ldap_identifier": "2f53ba9d-048c-413a-97df-1f289a79c242",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/b4ff4f41-5c3d-471c-bda8-0bad5eb5b48f",
+            "logo": "https://test.sram.surf.nl/api/images/services/6e23e581-e0db-488b-9308-7f9209423fd6",
             "name": "Wireless",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -477,11 +404,11 @@
             "accepted_user_policy": null,
             "contact_email": "james@example.org",
             "entity_id": "https://cloud",
-            "id": 1016,
+            "id": 1070,
             "ldap_enabled": 0,
-            "ldap_identifier": "7b3f896b-beeb-4752-ae88-01991a56def3",
+            "ldap_identifier": "47e75502-1f47-41c2-bf3c-3175d91f4275",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/4235b2e5-0329-44e4-acbf-47f20651f05c",
+            "logo": "https://test.sram.surf.nl/api/images/services/1d075842-e6e3-475c-a645-3bad728f7dca",
             "name": "Cloud",
             "privacy_policy": null,
             "security_email": "sec@org.nl",
@@ -492,11 +419,11 @@
             "accepted_user_policy": "https://google.nl",
             "contact_email": "service_admin@ucc.org",
             "entity_id": "https://storage",
-            "id": 1017,
+            "id": 1071,
             "ldap_enabled": 0,
-            "ldap_identifier": "ccdefbff-9c98-4e08-abc0-90e693e34fe1",
+            "ldap_identifier": "f8b52af8-950c-452a-a56c-4ee6bbbdfe20",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/4a5eb3d8-c123-46ba-88db-803e299543f7",
+            "logo": "https://test.sram.surf.nl/api/images/services/0ab2019c-4fb6-464b-99f3-a6adc60a8672",
             "name": "Storage",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -507,11 +434,11 @@
             "accepted_user_policy": "https://google.nl",
             "contact_email": "help@wiki.com",
             "entity_id": "https://wiki",
-            "id": 1018,
+            "id": 1072,
             "ldap_enabled": 1,
-            "ldap_identifier": "cc826e06-f44a-4234-946f-7fde920dd876",
+            "ldap_identifier": "cf9e69e2-ee47-4787-be1c-275ce0c82ad4",
             "ldap_password": "$2b$12$GLjC5hK59aeDcEe.tHHJMO.SQQjFgIIpZ7VaKTIsBn05z/gE7JQny",
-            "logo": "https://test.sram.surf.nl/api/images/services/46f50d72-9462-409e-a0a5-0f411581b8b8",
+            "logo": "https://test.sram.surf.nl/api/images/services/e58ac7c6-51a1-45d9-b7db-194d99afd655",
             "name": "Wiki",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -522,11 +449,11 @@
             "accepted_user_policy": "https://aup.org",
             "contact_email": "service_admin@ucc.org",
             "entity_id": "https://network",
-            "id": 1019,
+            "id": 1073,
             "ldap_enabled": 0,
-            "ldap_identifier": "aac23560-3dc2-4eb7-bfbc-59adedbd6acc",
+            "ldap_identifier": "9f798436-7fe0-40e1-92a3-75cfed604c7a",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/7b66030f-cbdd-4879-ba08-96b04ac2489d",
+            "logo": "https://test.sram.surf.nl/api/images/services/5f5101e0-d641-49c7-9060-bea67fc5bed4",
             "name": "Network Services",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -537,11 +464,11 @@
             "accepted_user_policy": "https://ssh",
             "contact_email": "help@ssh.com",
             "entity_id": "service_ssh_ufra",
-            "id": 1020,
+            "id": 1074,
             "ldap_enabled": 0,
             "ldap_identifier": "service_ssh_ufra",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/e11f16a3-d4cd-4e9e-ab20-ef04e1a5a445",
+            "logo": "https://test.sram.surf.nl/api/images/services/530b3509-236c-4a48-8204-24db73e8bcee",
             "name": "SSH Service",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -552,11 +479,11 @@
             "accepted_user_policy": "https://google.nl",
             "contact_email": "help@uuc_scheduler.example.com",
             "entity_id": "uuc_scheduler_entity_id",
-            "id": 1021,
+            "id": 1075,
             "ldap_enabled": 0,
-            "ldap_identifier": "1cc16cee-f274-40ff-a182-d7527ba11f00",
+            "ldap_identifier": "f7078ca7-4211-4726-9d63-c68d61a5bb58",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/0b5f3e6e-f76d-4d02-acd2-cd7648e7dafc",
+            "logo": "https://test.sram.surf.nl/api/images/services/69bbc59a-bd91-4304-9e6f-b2a4c2a9792d",
             "name": "Scheduler Service",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -567,11 +494,11 @@
             "accepted_user_policy": "https://google.nl",
             "contact_email": "help@example.com",
             "entity_id": "urn:x-test:empty",
-            "id": 1022,
+            "id": 1076,
             "ldap_enabled": 0,
-            "ldap_identifier": "b4949ffe-0311-439d-a92a-1c2d726f292d",
+            "ldap_identifier": "5e91a735-2292-4b6a-a3bc-d095ec4238ad",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/9bb8693d-7fa1-4545-b77b-876b4c865ec3",
+            "logo": "https://test.sram.surf.nl/api/images/services/024b01ce-4cf8-4c0c-981c-89322a2c5f62",
             "name": "Test service",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@org.nl",
@@ -582,11 +509,11 @@
             "accepted_user_policy": null,
             "contact_email": "sram-beheer@surf.nl",
             "entity_id": "https://demo-sp.sram.surf.nl/saml/module.php/saml/sp/metadata.php/test",
-            "id": 1023,
+            "id": 1077,
             "ldap_enabled": 0,
-            "ldap_identifier": "4af7f5d5-977c-4683-a6a6-1b6b8598939c",
+            "ldap_identifier": "c2f3a104-eff5-48a0-a215-2b9c90ae92b7",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/680e8e7d-e379-4099-bb86-2b628d02e7bd",
+            "logo": "https://test.sram.surf.nl/api/images/services/daaed780-1f02-49f8-bff4-bb782f146a59",
             "name": "SRAM Demo SP",
             "privacy_policy": "https://edu.nl/fcgbd",
             "security_email": "sram-beheer@surf.nl",
@@ -597,11 +524,11 @@
             "accepted_user_policy": null,
             "contact_email": "sram-beheer@surf.nl",
             "entity_id": "APP-18DE6298-7BDD-4CFA-9399-E1CC62E8DE05",
-            "id": 1024,
+            "id": 1078,
             "ldap_enabled": 0,
-            "ldap_identifier": "0a3ac03f-2a08-43c3-b6a0-8af68751fe49",
+            "ldap_identifier": "90523ec6-0dec-411d-a9c1-0ae02d44d0be",
             "ldap_password": null,
-            "logo": "https://test.sram.surf.nl/api/images/services/32eb072f-1d8e-48d3-afb8-094889ebb9e4",
+            "logo": "https://test.sram.surf.nl/api/images/services/f97ebb8c-4e55-4f75-a015-1e77d9934644",
             "name": "SRAM Demo RP",
             "privacy_policy": "https://edu.nl/fcgbd",
             "security_email": "sram-beheer@surf.nl",
@@ -612,11 +539,11 @@
             "accepted_user_policy": "https://example.nl/aup",
             "contact_email": "admin@exmaple.nl",
             "entity_id": "https://ldap-monitor.example.org",
-            "id": 1025,
+            "id": 1079,
             "ldap_enabled": 1,
             "ldap_identifier": "https://ldap-monitor.example.org",
             "ldap_password": "$2b$12$GLjC5hK59aeDcEe.tHHJMO.SQQjFgIIpZ7VaKTIsBn05z/gE7JQny",
-            "logo": "https://test.sram.surf.nl/api/images/services/bf75aad7-1c05-48e8-af76-a6420b1a7455",
+            "logo": "https://test.sram.surf.nl/api/images/services/6c2754ea-d5a6-4631-afb7-f07f25e9cecd",
             "name": "LDAP/SCIM Monitor Service",
             "privacy_policy": "https://privacy.org",
             "security_email": "sec@example.nl",
@@ -625,15 +552,36 @@
     ],
     "users": [
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+                {
+                    "agreed_at": "2025-01-08 14:42:51",
+                    "service_id": 1068,
+                    "url": "https://google.nl"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:42:51",
+                    "service_id": 1073,
+                    "url": "https://aup.org"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:42:51",
+                    "service_id": 1075,
+                    "url": "https://google.nl"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:42:51",
+                    "service_id": 1072,
+                    "url": "https://google.nl"
+                }
+            ],
             "eduperson_principal_name": null,
             "email": "john@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24313,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24591,
             "name": "John Doe",
             "scoped_affiliation": null,
+            "sram_inactive_days": 1,
             "ssh_keys": [
                 "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
             ],
@@ -642,31 +590,35 @@
             "username": "john"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "mary@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24314,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24592,
             "name": "Mary Doe",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:mary",
             "username": "mdoe"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "peter@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24315,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24593,
             "name": "Peter Doe",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:peter",
             "username": "peter"
@@ -674,13 +626,13 @@
         {
             "accepted_aups": [
                 {
-                    "agreed_at": "2024-10-08 08:08:11",
-                    "service_id": 1014,
+                    "agreed_at": "2025-01-08 09:34:08",
+                    "service_id": 1068,
                     "url": "https://google.nl"
                 },
                 {
-                    "agreed_at": "2024-10-08 08:08:11",
-                    "service_id": 1019,
+                    "agreed_at": "2025-01-08 09:34:08",
+                    "service_id": 1073,
                     "url": "https://aup.org"
                 }
             ],
@@ -688,55 +640,61 @@
             "email": "boss@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24316,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24594,
             "name": "The Boss",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:admin",
             "username": "admin"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "roger@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24317,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24595,
             "name": "Roger Doe",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:roger",
             "username": "roger"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "harry@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24318,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24596,
             "name": "Harry Doe",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:harry",
             "username": "harry"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "james@example.org",
             "family_name": null,
             "given_name": "James",
-            "id": 24319,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24597,
             "name": "James Byrd",
             "scoped_affiliation": null,
+            "sram_inactive_days": 1,
             "ssh_keys": [
                 "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/nvjea1zJJNCnyUfT6HLcHDhwCMp7uqr4BzxhDAjBnjWcgW4hZJvtLTqCLspS6mogCq2d0/31DU4DnGb2MO28gk74MiVBtAQWI5+TsO5QHupO3V6aLrKhmn8xn1PKc9JycgjOa4BMQ1meomn3Zmph6oo87MCtF2w75cxYEBJ9dJgHzZsn9mw+w8Z3H1vYnkcBT/i2MIK+qfsue/tvEe8ybi+26bGQIZIPDcd+OmDUBxDLWyBwCbVOyRL5M6ywnWJINLdpIwfqCUk24J1q1qiJ5eZu0m0uDcG5KRzgZ+grnSSYBwCx1xCunoGjMg7iwxEMgScD02nKtiijxEpu8soL okke@Mikes-MBP-2.fritz.box"
             ],
@@ -745,15 +703,41 @@
             "username": "james"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+                {
+                    "agreed_at": "2025-01-08 14:43:19",
+                    "service_id": 1068,
+                    "url": "https://google.nl"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:43:19",
+                    "service_id": 1073,
+                    "url": "https://aup.org"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:43:19",
+                    "service_id": 1075,
+                    "url": "https://google.nl"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:43:19",
+                    "service_id": 1072,
+                    "url": "https://google.nl"
+                },
+                {
+                    "agreed_at": "2025-01-08 14:43:19",
+                    "service_id": 1071,
+                    "url": "https://google.nl"
+                }
+            ],
             "eduperson_principal_name": "sarah@woods.io",
             "email": "sarah@uni-franeker.nl",
             "family_name": null,
             "given_name": null,
-            "id": 24320,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24598,
             "name": "Sarah Cross",
             "scoped_affiliation": null,
+            "sram_inactive_days": 1,
             "ssh_keys": [
                 "some-lame-key"
             ],
@@ -762,166 +746,239 @@
             "username": "sarah"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "betty@uuc.org",
             "family_name": null,
             "given_name": null,
-            "id": 24321,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24599,
             "name": "betty",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:betty",
             "username": "betty"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "jane@ucc.org",
             "family_name": null,
             "given_name": null,
-            "id": 24322,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24600,
             "name": "Jane Doe",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:jane",
             "username": "jane"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "user_suspend_warning@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24323,
-            "last_login_date": "1025-06-21 20:00:00",
+            "id": 24601,
             "name": "user_suspend_warning",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 364635,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:user_suspend_warning",
             "username": "user_suspend_warning"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "user_gets_suspended@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24324,
-            "last_login_date": "1025-06-07 20:00:00",
+            "id": 24602,
             "name": "user_gets_suspended",
             "scoped_affiliation": null,
-            "ssh_keys": [],
-            "status": "active",
+            "sram_inactive_days": 365000,
+            "ssh_keys": [
+            ],
+            "status": "suspended",
             "uid": "urn:user_gets_suspended",
             "username": "1suspend"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "user_deletion_warning@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24325,
-            "last_login_date": "1025-03-16 20:00:00",
+            "id": 24603,
             "name": "user_deletion_warning",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 365000,
+            "ssh_keys": [
+            ],
             "status": "suspended",
             "uid": "urn:user_deletion_warning",
             "username": "user_deletion_warning"
         },
         {
-            "accepted_aups": [],
-            "eduperson_principal_name": null,
-            "email": "user_gets_deleted@example.org",
-            "family_name": null,
-            "given_name": null,
-            "id": 24326,
-            "last_login_date": "1025-03-09 20:00:00",
-            "name": "user_gets_deleted",
-            "scoped_affiliation": null,
-            "ssh_keys": [],
-            "status": "suspended",
-            "uid": "urn:user_gets_deleted",
-            "username": "user_gets_deleted"
-        },
-        {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": "paul@dtrh.io",
             "email": "paul@ucc.org",
             "family_name": null,
             "given_name": null,
-            "id": 24327,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24605,
             "name": "Paul Doe",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:paul",
             "username": "paul"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "hannibal@example.org",
             "family_name": null,
             "given_name": null,
-            "id": 24328,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24606,
             "name": null,
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:hannibal",
             "username": "hlector"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "service_admin@ucc.org",
             "family_name": null,
             "given_name": null,
-            "id": 24329,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24607,
             "name": "Service Admin",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:service_admin",
             "username": "service_admin"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": null,
             "email": "extra_admin@ucc.org",
             "family_name": null,
             "given_name": null,
-            "id": 24330,
-            "last_login_date": "2024-10-07 08:08:11",
+            "id": 24608,
             "name": "Extra Admin",
             "scoped_affiliation": null,
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "urn:extra_admin",
             "username": "extra_admin"
         },
         {
-            "accepted_aups": [],
+            "accepted_aups": [
+            ],
+            "eduperson_principal_name": "admin@example.com",
+            "email": "admin@example.com",
+            "family_name": "Doe",
+            "given_name": "Admin",
+            "id": 24609,
+            "name": "Admin Doe",
+            "scoped_affiliation": null,
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
+            "status": "active",
+            "uid": "6f5e346b55f6b732930591ab88859773ef48e3ba@acc.sram.eduteams.org",
+            "username": "adoe"
+        },
+        {
+            "accepted_aups": [
+            ],
+            "eduperson_principal_name": "plokplok@example.com",
+            "email": "plokplok@example.com",
+            "family_name": "Doe",
+            "given_name": "Plokplok",
+            "id": 24610,
+            "name": "Plokplok Doe",
+            "scoped_affiliation": null,
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
+            "status": "active",
+            "uid": "332aa4d02ba7842f01986646dfbaa70606bf61e0@acc.sram.eduteams.org",
+            "username": "pdoe"
+        },
+        {
+            "accepted_aups": [
+            ],
+            "eduperson_principal_name": "martin.vanes_surf.nl@surfstar-idp.lab.surf.nl",
+            "email": "martin.vanes@surf.nl",
+            "family_name": "van Es",
+            "given_name": "Martin",
+            "id": 24611,
+            "name": "Martin van Es",
+            "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
+            "status": "active",
+            "uid": "ab6146d7888deaa351e85036455596442e54451c@acc.sram.eduteams.org",
+            "username": "mvanes"
+        },
+        {
+            "accepted_aups": [
+            ],
+            "eduperson_principal_name": "floris.fokkinga_surf.nl@surfstar-idp.lab.surf.nl",
+            "email": "floris.fokkinga@surf.nl",
+            "family_name": "Fokkinga",
+            "given_name": "Floris",
+            "id": 24612,
+            "name": "Floris Fokkinga",
+            "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
+            "status": "active",
+            "uid": "ea63ae133e48ed5dedad73565c3760c663222a2e@acc.sram.eduteams.org",
+            "username": "ffokkinga"
+        },
+        {
+            "accepted_aups": [
+            ],
             "eduperson_principal_name": "harry.kodden_surf.nl@surfstar-idp.lab.surf.nl",
             "email": "harry.kodden@surf.nl",
             "family_name": "Kodden",
             "given_name": "Harry",
-            "id": 24331,
-            "last_login_date": "None",
+            "id": 24613,
             "name": "Harry Kodden",
             "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
-            "ssh_keys": [],
+            "sram_inactive_days": 1,
+            "ssh_keys": [
+            ],
             "status": "active",
             "uid": "78bcc51502813d86773a833ac3e43e0378a8d84e@acc.sram.eduteams.org",
             "username": "hkodden"
