@@ -40,7 +40,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libsasl2-dev libldap2-dev ldap-utils
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
 
