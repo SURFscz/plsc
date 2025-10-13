@@ -91,7 +91,6 @@ registered_users = []
 
 # Create phase
 def create(src, dst):
-    global vc
     global registered_users
 
     logging.debug("=== slp-ordered ====")
@@ -455,8 +454,6 @@ def create(src, dst):
 
 # Cleanup phase
 def cleanup(dst):
-    global vc
-    global registered_users
 
     logging.debug("-- Cleanup ---")
     service_dns = dst.find(f"{dst.basedn}", "(&(objectClass=organization))", scope=ldap.SCOPE_ONELEVEL)
