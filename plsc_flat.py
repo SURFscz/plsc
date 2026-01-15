@@ -19,7 +19,6 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 # Create phase
 def create(src, dst):
-    global vc
     overruling_status = 'active'
 
     services = util.find_ordered_services(src)
