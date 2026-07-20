@@ -40,7 +40,7 @@ class SLdap(object):
             rv = []
             for ev in v:
                 rv.append(str(ev).encode('UTF-8'))
-            r[k] = rv
+            r[k] = list(set(rv))
         return r
 
     @staticmethod
