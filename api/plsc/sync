@@ -130,20 +130,17 @@
                     ],
                     "description": "UUC Teachers",
                     "global_urn": "ucc:Teachers",
-                    "groups": [
-                    ],
+                    "groups": [],
                     "id": 4196,
                     "identifier": "033cbc91-45ed-4020-bf86-3cc323e1f1cf",
                     "logo": "https://test.sram.surf.nl/api/images/collaborations/9bd39cae-e3d0-49d1-a75d-a7b918808755",
                     "name": "Teachers",
                     "organisation_id": 400,
                     "sbs_url": "https://test.sram.surf.nl/collaborations/033cbc91-45ed-4020-bf86-3cc323e1f1cf",
-                    "services": [
-                    ],
+                    "services": [],
                     "short_name": "uuc_teachers_short_name",
                     "status": "active",
-                    "tags": [
-                    ],
+                    "tags": [],
                     "units": [
                         "Research"
                     ],
@@ -175,8 +172,7 @@
                     ],
                     "description": "CO voor monitoring. NIET AANKOMEN.",
                     "global_urn": "ucc:monitoring1",
-                    "groups": [
-                    ],
+                    "groups": [],
                     "id": 4197,
                     "identifier": "37d55167-23e4-4099-ae20-4f3d8d284b14",
                     "logo": "https://test.sram.surf.nl/api/images/collaborations/b85e2ae6-05f3-4c27-9078-e11a420bdc08",
@@ -188,10 +184,8 @@
                     ],
                     "short_name": "monitor1",
                     "status": "active",
-                    "tags": [
-                    ],
-                    "units": [
-                    ],
+                    "tags": [],
+                    "units": [],
                     "website_url": "https://www.google.nl"
                 }
             ],
@@ -238,8 +232,7 @@
             ]
         },
         {
-            "collaborations": [
-            ],
+            "collaborations": [],
             "id": 401,
             "identifier": "7c60a022-ab09-438c-8603-c361bc1a088d",
             "logo": "https://test.sram.surf.nl/api/images/organisations/70e9ff86-7785-4c6c-8046-bbd1bec75097",
@@ -262,8 +255,7 @@
                     "organisation_id": 401
                 }
             ],
-            "services": [
-            ],
+            "services": [],
             "short_name": "ufra",
             "units": [
                 "Cloud Unit",
@@ -298,8 +290,7 @@
                     ],
                     "description": "CO voor monitoring. NIET AANKOMEN.",
                     "global_urn": "pekela:monitoring2",
-                    "groups": [
-                    ],
+                    "groups": [],
                     "id": 4198,
                     "identifier": "4c1095e5-ae60-4d6d-8bfe-f711d0f81942",
                     "logo": "https://test.sram.surf.nl/api/images/collaborations/716065e3-5154-4883-b1a6-06d6e32f11e9",
@@ -311,10 +302,8 @@
                     ],
                     "short_name": "monitor2",
                     "status": "active",
-                    "tags": [
-                    ],
-                    "units": [
-                    ],
+                    "tags": [],
+                    "units": [],
                     "website_url": "https://www.google.nl"
                 }
             ],
@@ -329,17 +318,13 @@
                     "user_id": 24592
                 }
             ],
-            "schac_home_organisations": [
-            ],
-            "services": [
-            ],
+            "schac_home_organisations": [],
+            "services": [],
             "short_name": "pekela",
-            "units": [
-            ]
+            "units": []
         },
         {
-            "collaborations": [
-            ],
+            "collaborations": [],
             "id": 403,
             "identifier": "9ba681d0-d70d-11ee-a264-001c4288d429",
             "logo": "https://test.sram.surf.nl/api/images/organisations/0f1db157-921a-482a-8f75-c6ef68d2b736",
@@ -356,10 +341,8 @@
                     "user_id": 24610
                 }
             ],
-            "schac_home_organisations": [
-            ],
-            "services": [
-            ],
+            "schac_home_organisations": [],
+            "services": [],
             "short_name": "test",
             "units": [
                 "Cloudy",
@@ -590,8 +573,7 @@
             "username": "john"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "mary@example.org",
             "family_name": null,
@@ -600,15 +582,13 @@
             "name": "Mary Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:mary",
             "username": "mdoe"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "peter@example.org",
             "family_name": null,
@@ -617,8 +597,7 @@
             "name": "Peter Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:peter",
             "username": "peter"
@@ -644,15 +623,13 @@
             "name": "The Boss",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:admin",
             "username": "admin"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "roger@example.org",
             "family_name": null,
@@ -661,15 +638,13 @@
             "name": "Roger Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:roger",
             "username": "roger"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "harry@example.org",
             "family_name": null,
@@ -678,15 +653,13 @@
             "name": "Harry Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:harry",
             "username": "harry"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "james@example.org",
             "family_name": null,
@@ -746,8 +719,7 @@
             "username": "sarah"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "betty@uuc.org",
             "family_name": null,
@@ -756,15 +728,13 @@
             "name": "betty",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:betty",
             "username": "betty"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "jane@ucc.org",
             "family_name": null,
@@ -773,15 +743,13 @@
             "name": "Jane Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:jane",
             "username": "jane"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "user_suspend_warning@example.org",
             "family_name": null,
@@ -790,15 +758,13 @@
             "name": "user_suspend_warning",
             "scoped_affiliation": null,
             "sram_inactive_days": 364635,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:user_suspend_warning",
             "username": "user_suspend_warning"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "user_gets_suspended@example.org",
             "family_name": null,
@@ -807,15 +773,13 @@
             "name": "user_gets_suspended",
             "scoped_affiliation": null,
             "sram_inactive_days": 365000,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "suspended",
             "uid": "urn:user_gets_suspended",
             "username": "1suspend"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "user_deletion_warning@example.org",
             "family_name": null,
@@ -824,15 +788,13 @@
             "name": "user_deletion_warning",
             "scoped_affiliation": null,
             "sram_inactive_days": 365000,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "suspended",
             "uid": "urn:user_deletion_warning",
             "username": "user_deletion_warning"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": "paul@dtrh.io",
             "email": "paul@ucc.org",
             "family_name": null,
@@ -841,15 +803,13 @@
             "name": "Paul Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:paul",
             "username": "paul"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "hannibal@example.org",
             "family_name": null,
@@ -858,15 +818,13 @@
             "name": null,
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:hannibal",
             "username": "hlector"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "service_admin@ucc.org",
             "family_name": null,
@@ -875,15 +833,13 @@
             "name": "Service Admin",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:service_admin",
             "username": "service_admin"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": null,
             "email": "extra_admin@ucc.org",
             "family_name": null,
@@ -892,15 +848,13 @@
             "name": "Extra Admin",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "urn:extra_admin",
             "username": "extra_admin"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": "admin@example.com",
             "email": "admin@example.com",
             "family_name": "Doe",
@@ -909,15 +863,13 @@
             "name": "Admin Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "6f5e346b55f6b732930591ab88859773ef48e3ba@acc.sram.eduteams.org",
             "username": "adoe"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": "plokplok@example.com",
             "email": "plokplok@example.com",
             "family_name": "Doe",
@@ -926,15 +878,13 @@
             "name": "Plokplok Doe",
             "scoped_affiliation": null,
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "332aa4d02ba7842f01986646dfbaa70606bf61e0@acc.sram.eduteams.org",
             "username": "pdoe"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": "martin.vanes_surf.nl@surfstar-idp.lab.surf.nl",
             "email": "martin.vanes@surf.nl",
             "family_name": "van Es",
@@ -943,15 +893,13 @@
             "name": "Martin van Es",
             "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "ab6146d7888deaa351e85036455596442e54451c@acc.sram.eduteams.org",
             "username": "mvanes"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": "floris.fokkinga_surf.nl@surfstar-idp.lab.surf.nl",
             "email": "floris.fokkinga@surf.nl",
             "family_name": "Fokkinga",
@@ -960,15 +908,13 @@
             "name": "Floris Fokkinga",
             "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "ea63ae133e48ed5dedad73565c3760c663222a2e@acc.sram.eduteams.org",
             "username": "ffokkinga"
         },
         {
-            "accepted_aups": [
-            ],
+            "accepted_aups": [],
             "eduperson_principal_name": "harry.kodden_surf.nl@surfstar-idp.lab.surf.nl",
             "email": "harry.kodden@surf.nl",
             "family_name": "Kodden",
@@ -977,8 +923,7 @@
             "name": "Harry Kodden",
             "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
             "sram_inactive_days": 1,
-            "ssh_keys": [
-            ],
+            "ssh_keys": [],
             "status": "active",
             "uid": "78bcc51502813d86773a833ac3e43e0378a8d84e@acc.sram.eduteams.org",
             "username": "hkodden"
