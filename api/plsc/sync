@@ -736,7 +736,7 @@
             "given_name": null,
             "id": 24598,
             "name": "Sarah Cross",
-            "scoped_affiliation": null,
+            "scoped_affiliation": "member@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl, employee@surfstar-idp.lab.surf.nl",
             "sram_inactive_days": 1,
             "ssh_keys": [
                 "some-lame-key"

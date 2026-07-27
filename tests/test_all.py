@@ -17,7 +17,7 @@ class TestAll(BaseTest):
         """
 
         def object_count(rdn):
-            """ Return the nur of objects that exists under this rdn
+            """ Return the number of objects that exists under this rdn
             """
 
             logger.info(f"*** Object count LDAP: {rdn}")
