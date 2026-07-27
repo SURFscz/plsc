@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from aiohttp import web
+from aiohttp import web_request
 
 from sldap import SLdap
 from sbs import SBS
@@ -20,10 +21,10 @@ logger = logging.getLogger(__name__)
 
 
 class APIHandler:
-    def __init__(self):
+    def __init__(self) -> None:
         logger.debug("Initializng API HANDLER !")
 
-    async def __call__(self, request):
+    async def __call__(self, request: web_request.BaseRequest) -> web.Response:
         method = getattr(self, f'do_{request.method.lower()}', None)
         if method is None:
             raise web.HTTPNotImplemented()
@@ -34,7 +35,7 @@ class APIHandler:
         return result
 
     @staticmethod
-    def do_get(request):
+    def do_get(request: web_request.BaseRequest) ->  web.Response:
         try:
             with open(f".{request.path}", 'r') as f:
                 data = f.read()
@@ -50,6 +51,8 @@ DEFAULT_LOCAL_PORT = 3333
 
 
 class BaseTest(TestCase):
+    loop: asyncio.AbstractEventLoop | None
+    api: threading.Thread
 
     src_conf = {
         'recorder': (os.environ.get("SBS_API_RECORDING", "NO").upper() == "YES"),
@@ -69,10 +72,10 @@ class BaseTest(TestCase):
     }
 
     @classmethod
-    def setUpClass(cls):
-        def start_server(loop):
+    def setUpClass(cls) -> None:
+        def start_server(loop: asyncio.AbstractEventLoop) -> None:
 
-            async def init_api_server(handle, host, port):
+            async def init_api_server(handle: APIHandler, host: str, port: int) -> web.ServerRunner:
                 server = web.ServerRunner(web.Server(handle))
                 await server.setup()
 
@@ -99,7 +102,7 @@ class BaseTest(TestCase):
             finally:
                 loop.close()
 
-        def check_server():
+        def check_server() -> None:
             logger.debug("BaseTest check_server")
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
@@ -119,7 +122,7 @@ class BaseTest(TestCase):
             cls.loop = None
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.loop:
             logger.debug("BaseTest tearDownClass")
             for task in asyncio.all_tasks(cls.loop):
@@ -127,7 +130,7 @@ class BaseTest(TestCase):
             cls.loop.call_soon_threadsafe(cls.loop.stop)
             cls.api.join()
 
-    def setUp(self):
+    def setUp(self) -> None:
         """ Run a complete PLSC cycle, 1st ordered structure, 2nd flat structure...
         """
 
@@ -136,8 +139,8 @@ class BaseTest(TestCase):
         logger.debug(self.src_conf)
         logger.debug(self.dst_conf)
 
-        self.src = SBS(self.src_conf)
-        self.dst = SLdap(self.dst_conf)
+        self.src: SBS = SBS(self.src_conf)
+        self.dst: SLdap = SLdap(self.dst_conf)
 
         logger.info("Creating: Ordered structure...")
         plsc_ordered.create(self.src, self.dst)
@@ -147,5 +150,5 @@ class BaseTest(TestCase):
         plsc_flat.create(self.dst, self.dst)
         plsc_flat.cleanup(self.dst, self.dst)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         logger.info("BaseTest tearDown")

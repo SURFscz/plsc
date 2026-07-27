@@ -66,7 +66,7 @@ class SBS(object):
     def __put_json(data):
         return json.dumps(data)
 
-    def api(self, request, method='GET', headers=None, data=None):
+    def api(self, request: str, method='GET', headers=None, data=None):
         class SBSNoContentException(Exception):
             pass
 
